@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Podcast - I AM MUGERA | Transformative Audio Experiences</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/66rJN5PW/signature(1).png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        /* MODERN PROFESSIONAL CSS - Matching Homepage */
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --primary: #111827;
+            --secondary: #6b7280;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --radius-3xl: 28px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+            font-size: 15px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: var(--secondary);
+        }
+
+        .highlight {
+            color: var(--gold);
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: var(--gold);
+            opacity: 0.2;
+            z-index: -1;
+            border-radius: var(--radius-xs);
+        }
+
+        /* HEADER - Matching Homepage */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            padding: 0;
+            box-shadow: var(--shadow-sm);
+            height: 80px;
+        }
+
+        .header-scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        /* LOGO */
+        .brand-signature {
+            height: 50px;
+            width: auto;
+            transition: var(--transition);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: white;
+            padding: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .brand-signature:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* NAVIGATION */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-nav {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            white-space: nowrap;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link i {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: 1px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            background: rgba(202, 138, 4, 0.05);
+        }
+
+        .nav-link:hover::after {
+            width: 70%;
+        }
+
+        .nav-link.active {
+            color: var(--gold);
+            background: rgba(202, 138, 4, 0.08);
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* BUTTONS */
+        .cta-button {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-button.outline {
+            background: transparent;
+            border: 1.5px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .cta-button.outline:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        /* HERO SECTION FOR PODCAST PAGE */
+        .podcast-hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 10, 0.97) 0%, 
+                rgba(10, 10, 10, 0.92) 50%,
+                rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/9M9YnthW/vecteezy-abstract-background-with-colored-african-patterns-32427619.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 5rem 1.5rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .podcast-hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .podcast-hero-tagline {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(202, 138, 4, 0.1);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(202, 138, 4, 0.2);
+        }
+
+        .podcast-hero-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 4rem 1.5rem;
+        }
+
+        /* FEATURED SHOW SECTION */
+        .featured-show-section {
+            background: linear-gradient(135deg, #fef9f3 0%, var(--white) 100%);
+        }
+
+        .featured-show-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .show-image {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .show-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .show-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .show-content h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .show-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-xs);
+        }
+
+        .show-info {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin: 1.5rem 0;
+            border: 1px solid rgba(202, 138, 4, 0.1);
+        }
+
+        .show-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        .show-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .show-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .show-text h4 {
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .show-text p {
+            margin: 0;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        /* UPCOMING SHOWS SECTION */
+        .upcoming-shows-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upcoming-shows-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .upcoming-shows-header {
+            margin-bottom: 2rem;
+        }
+
+        .upcoming-shows-header h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .show-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+        }
+
+        .show-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 25px rgba(202, 138, 4, 0.2);
+        }
+
+        .show-card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .show-card:hover .show-card-icon {
+            transform: scale(1.05);
+        }
+
+        .show-card h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .show-card p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .coming-soon-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(202, 138, 4, 0.2);
+            color: var(--gold);
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border: 1px solid rgba(202, 138, 4, 0.3);
+        }
+
+        /* EPISODES SECTION */
+        .episodes-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .episodes-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-xs);
+        }
+
+        .no-episodes-message {
+            text-align: center;
+            padding: 3rem;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .no-episodes-message i {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .no-episodes-message h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .no-episodes-message p {
+            color: var(--secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* LIVE SESSION INFO */
+        .live-session {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-session-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .live-session-header {
+            margin-bottom: 2rem;
+        }
+
+        .live-session-header h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .live-countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            min-width: 100px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-platforms {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .platform-button:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .platform-button.youtube {
+            background: linear-gradient(135deg, #FF0000, #CC0000);
+            border: none;
+        }
+
+        .platform-button.zoom {
+            background: linear-gradient(135deg, #2D8CFF, #0066FF);
+            border: none;
+        }
+
+        /* SUBSCRIBE SECTION */
+        .subscribe-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscribe-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .subscribe-container h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-form {
+            max-width: 500px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .subscribe-input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .subscribe-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(202, 138, 4, 0.2);
+        }
+
+        .subscribe-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CONTACT SECTION */
+        .contact {
+            background-color: var(--white);
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-option {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.75rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .contact-option:hover .contact-icon {
+            transform: rotate(5deg);
+        }
+
+        .whatsapp-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            padding: 3rem 1.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .footer-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-column h3 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            position: relative;
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: var(--radius-xs);
+        }
+
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.75rem;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--gold);
+            transform: translateX(4px);
+        }
+
+        .footer-logo {
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-tagline {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* SOCIAL LINKS */
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px) rotate(5deg);
+            box-shadow: 0 6px 15px rgba(202, 138, 4, 0.3);
+        }
+
+        /* Individual social media colors on hover */
+        .social-link[title*="LinkedIn"]:hover {
+            background: #0077B5;
+            border-color: #0077B5;
+        }
+
+        .social-link[title*="Twitter"]:hover {
+            background: #1DA1F2;
+            border-color: #1DA1F2;
+        }
+
+        .social-link[title*="Instagram"]:hover {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            border-color: transparent;
+        }
+
+        .social-link[title*="YouTube"]:hover {
+            background: #FF0000;
+            border-color: #FF0000;
+        }
+
+        .social-link[title*="Facebook"]:hover {
+            background: #1877F2;
+            border-color: #1877F2;
+        }
+
+        .social-link[title*="WhatsApp"]:hover {
+            background: #25D366;
+            border-color: #25D366;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* REGISTRATION MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .registration-modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-2xl);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .registration-modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--black);
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--black);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .mobile-menu-toggle span::before,
+        .mobile-menu-toggle span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: var(--black);
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle span::before {
+            top: -6px;
+        }
+
+        .mobile-menu-toggle span::after {
+            bottom: -6px;
+        }
+
+        .mobile-menu-toggle.active span {
+            background: transparent;
+        }
+
+        .mobile-menu-toggle.active span::before {
+            top: 0;
+            transform: rotate(45deg);
+        }
+
+        .mobile-menu-toggle.active span::after {
+            bottom: 0;
+            transform: rotate(-45deg);
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--white);
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav {
+            list-style: none;
+            flex: 1;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: rgba(202, 138, 4, 0.1);
+            color: var(--gold);
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .nav-container {
+                display: none;
+            }
+
+            .featured-show-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .shows-grid {
+                grid-template-columns: 1fr;
+            }
+
+            html {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 2.25rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            section {
+                padding: 3rem 1.25rem;
+            }
+
+            .podcast-hero {
+                min-height: 60vh;
+                padding: 4rem 1.25rem 2rem;
+            }
+
+            .subscribe-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .live-countdown {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                min-width: 80px;
+                padding: 1rem;
+            }
+
+            .countdown-value {
+                font-size: 2rem;
+            }
+
+            .live-platforms {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .platform-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with consistent navigation -->
+    <header id="mainHeader">
+        <div class="header-container">
+            <div class="brand-container">
+                <a href="index.html">
+                    <img src="https://i.postimg.cc/ncw7xn7V/Untitled-design-18-1.png" alt="I AM MUGERA" class="brand-signature">
+                </a>
+            </div>
+
+            <div class="nav-container">
+                <nav>
+                    <ul class="main-nav">
+                        <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                        <li class="nav-item"><a href="author.html" class="nav-link"><i class="fas fa-book"></i> Author</a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> About</a></li>
+                        <li class="nav-item"><a href="podcast.html" class="nav-link active"><i class="fas fa-podcast"></i> Podcast</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link" onclick="openRegistrationModal('Podcast Registration'); return false;"><i class="fas fa-calendar-check"></i> Booking</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <button class="cta-button" onclick="openRegistrationModal('Podcast Registration')">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Join Live Session</span>
+            </button>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <img src="https://i.postimg.cc/ncw7xn7V/Untitled-design-18-1.png" alt="I AM MUGERA" class="brand-signature" style="height: 40px;">
+        </div>
+        <ul class="mobile-nav">
+            <li class="mobile-nav-item"><a href="index.html" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li class="mobile-nav-item"><a href="author.html" class="mobile-nav-link"><i class="fas fa-book"></i> Author</a></li>
+            <li class="mobile-nav-item"><a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
+            <li class="mobile-nav-item"><a href="about.html" class="mobile-nav-link"><i class="fas fa-user"></i> About</a></li>
+            <li class="mobile-nav-item"><a href="podcast.html" class="mobile-nav-link active"><i class="fas fa-podcast"></i> Podcast</a></li>
+            <li class="mobile-nav-item"><a href="#" class="mobile-nav-link" onclick="openRegistrationModal('Podcast Registration'); return false;"><i class="fas fa-calendar-check"></i> Booking</a></li>
+        </ul>
+        <div class="mobile-menu-footer">
+            <button class="cta-button" onclick="openRegistrationModal('Podcast Registration')" style="width: 100%; justify-content: center;">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Join Live Session</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Podcast Hero Section -->
+    <section class="podcast-hero" id="podcast-hero">
+        <div class="podcast-hero-content">
+            <div class="podcast-hero-tagline">Transformative Audio Experiences</div>
+            <h1>I AM MUGERA <span class="highlight">Podcasts</span></h1>
+            <div class="podcast-hero-subtitle">
+                Welcome to our podcast network. This is your destination for transformative audio content, upcoming shows, and live sessions that empower, inspire, and transform. Explore our current show, discover what's coming next, and join our live conversations.
+            </div>
+            <div class="hero-buttons" style="justify-content: center;">
+                <button class="cta-button" onclick="scrollToFeaturedShow()">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Explore Current Show</span>
+                </button>
+                <button class="cta-button outline" onclick="scrollToUpcomingShows()">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>See Upcoming Shows</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Show Section -->
+    <section class="featured-show-section" id="featured-show">
+        <div class="featured-show-container">
+            <div class="show-image">
+                <img src="https://i.postimg.cc/sgNRzKbd/20260114_1543_Image_Generation_simple_compose_01key8g91re75trpnnjn6j42z5_1.webp" alt="Become What You Believe Podcast">
+            </div>
+            <div class="show-content">
+                <h2>Current <span class="highlight">Show</span></h2>
+                <h3>Become What You Believe</h3>
+                <p>A transformative series that explores the power of belief in shaping our reality, achieving goals, and creating the life we truly desire. Each episode delves into specific aspects of belief systems, mindset transformation, and practical application.</p>
+                
+                <div class="show-info">
+                    <div class="show-details">
+                        <div class="show-item">
+                            <div class="show-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="show-text">
+                                <h4>First Episode</h4>
+                                <p>Feb 7, 2026</p>
+                            </div>
+                        </div>
+                        <div class="show-item">
+                            <div class="show-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="show-text">
+                                <h4>Schedule</h4>
+                                <p>Every Saturday, 7:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="show-item">
+                            <div class="show-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="show-text">
+                                <h4>Format</h4>
+                                <p>Live & Recorded</p>
+                            </div>
+                        </div>
+                        <div class="show-item">
+                            <div class="show-icon">
+                                <i class="fas fa-hourglass-start"></i>
+                            </div>
+                            <div class="show-text">
+                                <h4>Status</h4>
+                                <p>Starting Soon</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>Episode 1 airs on Saturday, Feb 7, 2026 at 7:00 PM. This inaugural episode will explore what belief truly means and how it forms the foundation of all achievement and personal transformation.</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <button class="cta-button" onclick="openRegistrationModal('Become What You Believe Registration')">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Register for Episode 1</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Shows Section -->
+    <section class="upcoming-shows-section" id="upcoming-shows">
+        <div class="upcoming-shows-container">
+            <div class="upcoming-shows-header">
+                <h2>Upcoming <span class="highlight">Shows</span></h2>
+                <p style="color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto; font-size: 1.125rem;">
+                    Explore the transformative audio experiences we're preparing for you. More shows coming soon to cover different aspects of personal and professional growth.
+                </p>
+            </div>
+            
+            <div class="shows-grid">
+                <div class="show-card">
+                    <div class="show-card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Purpose & Passion</h3>
+                    <p>A deep dive into discovering your life's purpose, aligning with your passions, and creating meaningful impact through your unique gifts and talents.</p>
+                    <div class="coming-soon-badge">Coming Soon</div>
+                </div>
+                
+                <div class="show-card">
+                    <div class="show-card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Strategic Leadership</h3>
+                    <p>For emerging and established leaders seeking to develop strategic thinking, team building, and organizational transformation skills.</p>
+                    <div class="coming-soon-badge">In Development</div>
+                </div>
+                
+                <div class="show-card">
+                    <div class="show-card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Conversations</h3>
+                    <p>Panel discussions and interviews with thought leaders, community builders, and transformative voices from across Africa and beyond.</p>
+                    <div class="coming-soon-badge">Planning Phase</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem;">
+                <button class="cta-button outline" onclick="openRegistrationModal('Show Suggestion')" style="background: transparent; border-color: var(--gold); color: var(--white);">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Suggest a Show Idea</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Episodes Section -->
+    <section class="episodes-section" id="episodes">
+        <div class="episodes-container">
+            <div class="section-title">
+                <h2>Episode <span class="highlight">Archive</span></h2>
+                <p style="color: var(--secondary); margin-top: 1rem;">All episodes will appear here once they're published</p>
+            </div>
+            
+            <div class="no-episodes-message">
+                <i class="fas fa-headphones"></i>
+                <h3>No Episodes Published Yet</h3>
+                <p>Our podcast journey begins with "Become What You Believe" on Saturday, March 7, 2026. This space will fill up with transformative conversations, insights, and wisdom as we release new episodes each week.</p>
+                <p>Be the first to know when Episode 1 drops by subscribing to our podcast updates.</p>
+                <button class="cta-button" onclick="scrollToSubscribe()" style="margin-top: 1.5rem;">
+                    <i class="fas fa-bell"></i>
+                    <span>Notify Me for Episode 1</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Session Section -->
+    <section class="live-session" id="live-session">
+        <div class="live-session-container">
+            <div class="live-session-header">
+                <h2>Join Our <span class="highlight">Launch Session</span></h2>
+                <p style="color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto; font-size: 1.125rem;">
+                    Be part of history as we launch "Become What You Believe" with our first live recording session.
+                </p>
+            </div>
+            
+            <div class="live-countdown" id="liveCountdown">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            
+            <div style="margin: 2rem 0;">
+                <h3 style="color: var(--white); margin-bottom: 1rem;">Join the Launch Event</h3>
+                <div class="live-platforms">
+                    <a href="#" class="platform-button" onclick="openRegistrationModal('Live Launch Registration')">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Register for Launch</span>
+                    </a>
+                    <a href="#" class="platform-button youtube">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube Live</span>
+                    </a>
+                    <a href="#" class="platform-button zoom">
+                        <i class="fas fa-video"></i>
+                        <span>Zoom Meeting</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <p style="color: rgba(255, 255, 255, 0.8); max-width: 600px; margin: 0 auto 1.5rem;">
+                    The first episode will be recorded live with audience participation. You'll have the opportunity to ask questions and contribute to the conversation.
+                </p>
+                <button class="cta-button" onclick="openRegistrationModal('Live Launch Registration')" style="font-size: 1rem; padding: 0.875rem 2.5rem;">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Secure Your Spot</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section class="subscribe-section" id="subscribe">
+        <div class="subscribe-container">
+            <h2>Stay <span class="highlight">Updated</span></h2>
+            <p style="color: rgba(255, 255, 255, 0.9); max-width: 600px; margin: 0 auto 1rem;">
+                Subscribe to get notified about new shows, episode releases, live session reminders, and exclusive podcast content.
+            </p>
+            
+            <div class="subscribe-form" id="subscribeForm">
+                <input type="email" class="subscribe-input" id="subscribeEmail" placeholder="Enter your email address" required>
+                <button class="cta-button" onclick="subscribeToPodcast()">
+                    <i class="fas fa-bell"></i>
+                    <span>Subscribe for Updates</span>
+                </button>
+            </div>
+            
+            <div id="subscribeSuccess" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-md);">
+                <p style="color: var(--gold); margin: 0;"><i class="fas fa-check-circle"></i> Successfully subscribed! You'll receive podcast launch updates.</p>
+            </div>
+            
+            <div class="social-links" style="justify-content: center; margin-top: 2rem;">
+                <a href="#" class="social-link" title="Apple Podcasts">
+                    <i class="fas fa-podcast"></i>
+                </a>
+                <a href="#" class="social-link" title="Spotify">
+                    <i class="fab fa-spotify"></i>
+                </a>
+                <a href="#" class="social-link" title="Google Podcasts">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="#" class="social-link" title="RSS Feed">
+                    <i class="fas fa-rss"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-title">
+            <h2>Podcast <span class="highlight">Inquiries</span></h2>
+        </div>
+        <div class="contact-container">
+            <p>Have questions about our podcast network? Want to collaborate or suggest content? Get in touch with us.</p>
+            
+            <div class="contact-options">
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Podcast Email</h3>
+                    <p>podcast@iammugera.com</p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Guest Inquiries</h3>
+                    <p>Apply to be a guest on our shows</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <a href="#" onclick="openRegistrationModal('Guest Speaker'); return false;" style="color: var(--gold); text-decoration: none;">
+                            <i class="fas fa-arrow-right"></i> Apply Now
+                        </a>
+                    </p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Content Ideas</h3>
+                    <p>Suggest topics for future shows</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <a href="#" onclick="openRegistrationModal('Topic Suggestion'); return false;" style="color: var(--gold); text-decoration: none;">
+                            <i class="fas fa-arrow-right"></i> Suggest Idea
+                        </a>
+                    </p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Collaborations</h3>
+                    <p>Partner with our podcast network</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <a href="#" onclick="openRegistrationModal('Collaboration'); return false;" style="color: var(--gold); text-decoration: none;">
+                            <i class="fas fa-arrow-right"></i> Partner With Us
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <a href="https://wa.me/254727211191?text=Hi%20Mugera,%20I%20have%20a%20question%20about%20your%20podcast%20network" class="whatsapp-button" target="_blank">
+                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <img src="https://i.postimg.cc/02f4k9ww/signature(2).png" alt="I AM MUGERA" class="footer-signature" style="height: 40px;">
+                <div class="footer-tagline">Transformative Podcast Network</div>
+                <p>Launching with "Become What You Believe" on March 7, 2026. More transformative audio experiences coming soon.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://whatsapp.com/channel/0029VbBQKpAJJhzWClgEGF2P" class="social-link" title="SonGa WhatsApp Channel" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="author.html">Author</a>
+                <a href="events.html">Events</a>
+                <a href="about.html">About</a>
+                <a href="podcast.html">Podcast</a>
+                <a href="#" onclick="openRegistrationModal('Podcast Registration'); return false;">Join Launch Session</a>
+            </div>
+            <div class="footer-column">
+                <h3>Podcast Network</h3>
+                <a href="#featured-show">Current Show</a>
+                <a href="#upcoming-shows">Upcoming Shows</a>
+                <a href="#live-session">Launch Session</a>
+                <a href="#subscribe">Subscribe</a>
+                <a href="index.html#current-talk">Talk Series Info</a>
+                <a href="index.html#programs">Inspired.Me Program</a>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                <p><i class="fas fa-phone"></i> +254 727 211 191</p>
+                <p><i class="fas fa-envelope"></i> podcast@iammugera.com</p>
+                <p><i class="fas fa-calendar"></i> Launch: March 7, 2026</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear());</script> I AM MUGERA. All rights reserved. | Podcast Network Launching March 2026</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">"Become What You Believe" premieres Saturday, March 7, 2026 at 7:00 PM • More shows coming soon</p>
+        </div>
+    </footer>
+
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="registrationModal">
+        <div class="registration-modal">
+            <button class="modal-close" onclick="closeRegistrationModal()">&times;</button>
+            <h2 class="modal-title" id="modalTitle">Podcast Registration</h2>
+            <p class="modal-subtitle" id="modalSubtitle">Register for our podcast launch or submit your inquiry</p>
+            
+            <div class="registration-form" id="registrationForm">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-user"></i> Full Name *</label>
+                    <input type="text" class="form-input" id="fullName" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email *</label>
+                        <input type="email" class="form-input" id="email" required placeholder="your.email@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-phone"></i> Phone</label>
+                        <input type="tel" class="form-input" id="phone" placeholder="+254 XXX XXX XXX">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-calendar"></i> Registration Type *</label>
+                    <select class="form-select" id="registrationType" required>
+                        <option value="">Select registration type</option>
+                        <option value="Launch Registration">Join Podcast Launch (March 7, 2026)</option>
+                        <option value="Episode Updates">Get Episode Updates</option>
+                        <option value="Guest Speaker">Apply as Guest Speaker</option>
+                        <option value="Topic Suggestion">Suggest a Topic/Show Idea</option>
+                        <option value="Collaboration">Collaboration Inquiry</option>
+                        <option value="General Inquiry">General Inquiry</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-comment"></i> Message/Question</label>
+                    <textarea class="form-textarea" id="message" placeholder="Tell us more about your interest or inquiry..."></textarea>
+                </div>
+                
+                <button type="submit" class="form-submit" onclick="submitPodcastRegistration()" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Submit Registration</span>
+                </button>
+            </div>
+            
+            <div class="form-success" id="formSuccess" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <h3>Registration Successful!</h3>
+                <p>Thank you for your interest in our podcast network. We'll contact you with launch details and updates.</p>
+                <button class="cta-button" onclick="closeRegistrationModal()" style="margin-top: 1rem;">
+                    <i class="fas fa-check"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+
+        // Initialize Firebase
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initSmoothScrolling();
+            initHeaderScroll();
+            initCountdown();
+        });
+
+        function initMobileMenu() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+                mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+            }
+
+            function toggleMobileMenu() {
+                mobileMenuToggle.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mobile-nav-link')) {
+                    toggleMobileMenu();
+                }
+            });
+        }
+
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        function initHeaderScroll() {
+            const header = document.getElementById('mainHeader');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+        }
+
+        function scrollToFeaturedShow() {
+            const featuredShow = document.getElementById('featured-show');
+            if (featuredShow) {
+                window.scrollTo({
+                    top: featuredShow.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function scrollToUpcomingShows() {
+            const upcomingShows = document.getElementById('upcoming-shows');
+            if (upcomingShows) {
+                window.scrollTo({
+                    top: upcomingShows.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function scrollToSubscribe() {
+            const subscribe = document.getElementById('subscribe');
+            if (subscribe) {
+                window.scrollTo({
+                    top: subscribe.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function initCountdown() {
+            // Set launch date to March 7, 2026 at 7:00 PM
+            const launchDate = new Date('Feb 7, 2026 19:00:00').getTime();
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const timeDifference = launchDate - now;
+
+                if (timeDifference > 0) {
+                    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+                } else {
+                    // If launch date has passed (for testing)
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                }
+            }
+
+            // Initial update
+            updateCountdown();
+            
+            // Update every second
+            setInterval(updateCountdown, 1000);
+        }
+
+        function openRegistrationModal(registrationType = 'Podcast Registration') {
+            const modal = document.getElementById('registrationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const registrationTypeSelect = document.getElementById('registrationType');
+            
+            switch(registrationType) {
+                case 'Become What You Believe Registration':
+                    modalTitle.textContent = 'Register for Podcast Launch';
+                    modalSubtitle.textContent = 'Join "Become What You Believe" Episode 1 on March 7, 2026';
+                    registrationTypeSelect.value = 'Launch Registration';
+                    break;
+                case 'Live Launch Registration':
+                    modalTitle.textContent = 'Join Live Launch Event';
+                    modalSubtitle.textContent = 'Be part of our podcast launch recording session';
+                    registrationTypeSelect.value = 'Launch Registration';
+                    break;
+                case 'Guest Speaker':
+                    modalTitle.textContent = 'Apply as Guest Speaker';
+                    modalSubtitle.textContent = 'Share your expertise on our podcast network';
+                    registrationTypeSelect.value = 'Guest Speaker';
+                    break;
+                case 'Topic Suggestion':
+                    modalTitle.textContent = 'Suggest Content Idea';
+                    modalSubtitle.textContent = 'Share ideas for future shows or episodes';
+                    registrationTypeSelect.value = 'Topic Suggestion';
+                    break;
+                case 'Show Suggestion':
+                    modalTitle.textContent = 'Suggest a New Show';
+                    modalSubtitle.textContent = 'Help us develop future podcast concepts';
+                    registrationTypeSelect.value = 'Topic Suggestion';
+                    break;
+                case 'Collaboration':
+                    modalTitle.textContent = 'Collaboration Inquiry';
+                    modalSubtitle.textContent = 'Partner with our podcast network';
+                    registrationTypeSelect.value = 'Collaboration';
+                    break;
+                case 'Podcast Registration':
+                    modalTitle.textContent = 'Podcast Network Registration';
+                    modalSubtitle.textContent = 'Choose how you want to engage with our podcasts';
+                    registrationTypeSelect.value = 'Launch Registration';
+                    break;
+                default:
+                    modalTitle.textContent = 'Podcast Registration';
+                    modalSubtitle.textContent = 'Register for podcast updates and sessions';
+                    registrationTypeSelect.value = 'Launch Registration';
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            clearForm();
+        }
+
+        function closeRegistrationModal() {
+            const modal = document.getElementById('registrationModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('registrationForm').style.display = 'flex';
+            document.getElementById('formSuccess').style.display = 'none';
+        }
+
+        function clearForm() {
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('message').value = '';
+        }
+
+        async function submitPodcastRegistration() {
+            const submitBtn = document.getElementById('submitBtn');
+            const form = document.getElementById('registrationForm');
+            const successMsg = document.getElementById('formSuccess');
+            
+            const registrationData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                registrationType: document.getElementById('registrationType').value,
+                message: document.getElementById('message').value.trim(),
+                timestamp: new Date().toISOString(),
+                status: 'pending',
+                source: 'podcast-page',
+                page: 'podcast'
+            };
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
+                
+                const registrationId = 'podcast_reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Save to Firebase
+                await database.ref('podcast_registrations/' + registrationId).set(registrationData);
+                
+                form.style.display = 'none';
+                successMsg.style.display = 'block';
+                
+                console.log('Podcast registration submitted successfully');
+                
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit Registration</span>';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error submitting podcast registration:', error);
+                
+                alert('There was an error submitting your registration. Please try again or contact us directly at podcast@iammugera.com');
+                
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit Registration</span>';
+            }
+        }
+
+        function subscribeToPodcast() {
+            const email = document.getElementById('subscribeEmail').value.trim();
+            const successMsg = document.getElementById('subscribeSuccess');
+            
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            // Save subscription to Firebase
+            const subscriptionId = 'podcast_sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const subscriptionData = {
+                email: email,
+                timestamp: new Date().toISOString(),
+                source: 'podcast-page',
+                type: 'podcast_launch_updates',
+                subscribedTo: 'Become What You Believe'
+            };
+            
+            database.ref('podcast_subscriptions/' + subscriptionId).set(subscriptionData)
+                .then(() => {
+                    successMsg.style.display = 'block';
+                    document.getElementById('subscribeEmail').value = '';
+                    
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 5000);
+                })
+                .catch(error => {
+                    console.error('Error saving podcast subscription:', error);
+                    alert('Subscription failed. Please try again.');
+                });
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeRegistrationModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('registrationModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('registrationModal')) {
+                closeRegistrationModal();
+            }
+        });
+    </script>
+</body>
+</html>

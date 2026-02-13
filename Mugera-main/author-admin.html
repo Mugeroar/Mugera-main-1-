@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>I AM MUGERA – Publications Editor</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png">
+    <!-- Firebase SDK 9+ with compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- PERFECT DARK THEME – EXACTLY AS YOUR EVENTS PAGE ---------- */
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --teal: #14b8a6;
+            --pink: #ec4899;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 15px; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        .professional-bg {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(10, 10, 10, 0.92) 0%, 
+                    rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/Hn3fK4jT/20260206-1227-Image-Generation-remix-01kgs4ccqtf63rvv82pa8tmgzm.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* ---------- LOGIN CARD ---------- */
+        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+        .login-card {
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl); padding: 3.5rem; width: 100%; max-width: 480px;
+            box-shadow: var(--shadow-2xl); border: 1px solid rgba(255,255,255,0.15);
+            position: relative; overflow: hidden;
+        }
+        .login-card::before { content: ''; position: absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); }
+        .login-logo { text-align: center; margin-bottom: 2.5rem; }
+        .login-logo img { height: 90px; width: auto; margin-bottom:1rem; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2)); padding:12px; background:rgba(255,255,255,0.1); border-radius:var(--radius-lg); }
+        .login-logo h1 { font-size:2rem; color:var(--white); margin-bottom:0.5rem; font-weight:700; }
+        .form-input { width:100%; padding:1rem 1.25rem; border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-md); background:rgba(255,255,255,0.1); color:var(--white); font-family:'Inter',sans-serif; }
+        .form-input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 4px rgba(202,138,4,0.25); background:rgba(255,255,255,0.15); }
+        .btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white); border: none; border-radius: var(--radius-md); padding: 1rem 2rem;
+            font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap:0.75rem;
+            transition: var(--transition); width:100%; position: relative; overflow: hidden;
+            justify-content: center;
+        }
+        .btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); transition:0.5s; }
+        .btn:hover::before { left:100%; }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(202,138,4,0.5); }
+        .btn-outline { background: transparent; border: 2px solid rgba(202,138,4,0.4); color: var(--gold); }
+        .btn-outline:hover { background: var(--gold); color: white; }
+        .btn-sm { padding: 0.75rem 1.5rem; font-size: 0.9rem; width: auto; }
+
+        /* ---------- ADMIN PANEL – SIDEBAR ---------- */
+        .admin-container { display: none; min-height: 100vh; background: linear-gradient(135deg, rgba(10,10,10,0.94), rgba(10,10,10,0.9)), url('https://i.postimg.cc/Hn3fK4jT/20260206_1227_Image_Generation_remix_01kgs4ccqtf63rvv82pa8tmgzm.png'); background-size: cover; background-attachment: fixed; }
+        .sidebar { width: 280px; background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); position: fixed; height: 100vh; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        .sidebar-header { padding: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .sidebar-header::after { content:''; position: absolute; bottom:-1px; left:2rem; right:2rem; height:2px; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); }
+        .sidebar-logo { text-align: center; }
+        .sidebar-logo img { height: 70px; width: auto; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); padding:12px; background:rgba(255,255,255,0.1); border-radius:var(--radius-lg); }
+        .sidebar-title { font-size:1.5rem; font-weight:700; color:white; margin-bottom:0.25rem; text-align:center; }
+        .sidebar-subtitle { font-size:0.85rem; color:rgba(255,255,255,0.8); text-align:center; }
+        .nav-menu { list-style: none; padding: 2rem 0; }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link { display: flex; align-items: center; gap:1rem; padding: 1rem 2rem; color: rgba(255,255,255,0.8); text-decoration: none; transition: var(--transition); position: relative; font-weight:500; }
+        .nav-link::before { content:''; position: absolute; left:0; top:0; width:3px; height:100%; background: var(--gold); transform: scaleY(0); transition: var(--transition); }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-link:hover::before { transform: scaleY(1); }
+        .nav-link.active { background: linear-gradient(90deg, rgba(202,138,4,0.2), transparent); color: var(--gold); }
+        .nav-link.active::before { transform: scaleY(1); }
+        .nav-icon { width: 20px; text-align: center; }
+        .nav-badge { margin-left: auto; background: var(--gold); color: white; font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:10px; min-width:24px; text-align:center; }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .main-content { margin-left: 280px; padding: 2rem; min-height: 100vh; }
+        .header {
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl); padding: 1.5rem 2rem; margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;
+            align-items: center; position: relative;
+        }
+        .header::before { content:''; position: absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); }
+        .page-title { font-size:1.75rem; font-weight:700; color:white; margin:0; }
+        .page-subtitle { color: rgba(255,255,255,0.8); font-size:0.875rem; display: flex; align-items: center; gap:0.5rem; }
+        .user-avatar { width:42px; height:42px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; text-transform:uppercase; }
+        .logout-btn { background:transparent; border:2px solid rgba(239,68,68,0.4); color: var(--error); padding:0.5rem 1rem; border-radius:var(--radius-md); display:flex; align-items:center; gap:0.5rem; cursor:pointer; transition:var(--transition); font-weight:600; }
+        .logout-btn:hover { background:var(--error); color:white; border-color:var(--error); }
+
+        /* ---------- CONTENT SECTIONS – GLASS CARDS ---------- */
+        .content-section {
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1); position: relative;
+        }
+        .content-section::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+        .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; gap:1rem; }
+        .section-title { font-size:1.5rem; font-weight:700; color:white; margin:0; display:flex; align-items:center; gap:0.75rem; }
+        .section-tools { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+
+        /* ---------- DASHBOARD STATS CARDS ---------- */
+        .dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.5rem; margin-bottom:2rem; }
+        .stat-card {
+            background: rgba(255,255,255,0.08); backdrop-filter:blur(20px);
+            border-radius:var(--radius-xl); padding:2rem; border:1px solid rgba(255,255,255,0.1);
+            transition:var(--transition); cursor:pointer; position:relative;
+        }
+        .stat-card:hover { transform:translateY(-5px); border-color:rgba(202,138,4,0.3); }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--gold), var(--gold-dark)); border-radius:var(--radius-xl) var(--radius-xl) 0 0; }
+        .stat-icon { width:60px; height:60px; background:rgba(202,138,4,0.2); border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:var(--gold); margin-bottom:1rem; }
+        .stat-value { font-size:2.5rem; font-weight:800; color:white; line-height:1; }
+        .stat-label { color:rgba(255,255,255,0.8); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; font-size:0.85rem; }
+
+        /* ---------- GRID CARDS ---------- */
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(360px,1fr)); gap:1.5rem; margin-top:1.5rem; }
+        .publication-card {
+            background: rgba(255,255,255,0.08); backdrop-filter:blur(20px);
+            border-radius:var(--radius-lg); padding:1.75rem; border:1px solid rgba(255,255,255,0.1);
+            transition:var(--transition); display:flex; flex-direction:column;
+        }
+        .publication-card:hover { border-color:rgba(202,138,4,0.3); transform:translateY(-3px); }
+        .card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem; }
+        .card-title { font-size:1.2rem; font-weight:700; color:white; }
+        .status-badge { padding:0.25rem 0.75rem; border-radius:20px; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; display:inline-flex; align-items:center; gap:0.25rem; }
+        .status-published { background:rgba(16,185,129,0.2); color:var(--success); border:1px solid rgba(16,185,129,0.3); }
+        .status-coming-soon { background:rgba(245,158,11,0.2); color:var(--gold); border:1px solid rgba(245,158,11,0.3); }
+        .status-draft { background:rgba(107,114,128,0.2); color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.2); }
+        .status-available { background:rgba(16,185,129,0.2); color:var(--success); border:1px solid rgba(16,185,129,0.3); }
+        .status-in-progress { background:rgba(59,130,246,0.2); color:var(--info); border:1px solid rgba(59,130,246,0.3); }
+        .card-meta { display:flex; gap:1rem; flex-wrap:wrap; margin:0.75rem 0; color:rgba(255,255,255,0.8); font-size:0.85rem; }
+        .card-meta i { color:var(--gold); width:18px; }
+        .card-description { color:rgba(255,255,255,0.9); font-size:0.9rem; line-height:1.5; margin-bottom:1rem; flex:1; }
+        .card-footer { display:flex; gap:0.5rem; margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; }
+        .action-btn { padding:0.5rem 1rem; border:none; border-radius:var(--radius-md); font-size:0.8rem; display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; transition:var(--transition); font-weight:600; background:rgba(255,255,255,0.1); color:white; }
+        .action-btn:hover { transform:translateY(-2px); }
+        .action-btn.edit { background:rgba(202,138,4,0.2); color:var(--gold); border:1px solid rgba(202,138,4,0.3); }
+        .action-btn.edit:hover { background:rgba(202,138,4,0.3); }
+        .action-btn.delete { background:rgba(239,68,68,0.2); color:var(--error); border:1px solid rgba(239,68,68,0.3); }
+        .action-btn.view { background:rgba(59,130,246,0.2); color:var(--info); border:1px solid rgba(59,130,246,0.3); }
+
+        /* ---------- MODAL – FULLY EDITABLE FORMS ---------- */
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center; z-index:2000; opacity:0; visibility:hidden; transition:var(--transition); padding:1rem; }
+        .modal-overlay.active { opacity:1; visibility:visible; }
+        .modal { background:rgba(255,255,255,0.12); backdrop-filter:blur(30px); border-radius:var(--radius-2xl); padding:2.5rem; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); color:white; box-shadow:var(--shadow-2xl); }
+        .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .modal-title { font-size:1.5rem; font-weight:700; color:white; }
+        .modal-close { background:rgba(255,255,255,0.1); border:none; width:36px; height:36px; border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:var(--transition); }
+        .modal-close:hover { background:rgba(255,255,255,0.2); }
+        .form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; margin-bottom:1.5rem; }
+        .form-group { margin-bottom:1rem; }
+        .form-label { display:block; margin-bottom:0.5rem; color:rgba(255,255,255,0.9); font-weight:600; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem; }
+        .form-label i { color:var(--gold); }
+        .form-control { width:100%; padding:0.75rem 1rem; border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-md); background:rgba(255,255,255,0.1); color:white; font-family:'Inter',sans-serif; }
+        .form-control:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(202,138,4,0.25); }
+        textarea.form-control { min-height:100px; resize:vertical; }
+        .image-preview { width:100%; min-height:160px; border:2px dashed rgba(255,255,255,0.2); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2); margin-bottom:1rem; padding:0.5rem; }
+        .image-preview img { max-width:100%; max-height:160px; object-fit:contain; }
+        .form-actions { display:flex; gap:1rem; justify-content:flex-end; margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.1); }
+
+        /* ---------- NOTIFICATION & LOADING ---------- */
+        .loading-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center; z-index:3000; opacity:0; visibility:hidden; transition:var(--transition); }
+        .loading-overlay.active { opacity:1; visibility:visible; }
+        .loading-content { background:rgba(255,255,255,0.12); backdrop-filter:blur(30px); padding:2rem; border-radius:var(--radius-xl); display:flex; flex-direction:column; align-items:center; gap:1rem; }
+        .loading-spinner { width:50px; height:50px; border:3px solid rgba(202,138,4,0.1); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .notification-container { position:fixed; top:1rem; right:1rem; z-index:9999; max-width:350px; }
+        .notification { background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:0.75rem; box-shadow:var(--shadow-xl); display:flex; align-items:center; gap:0.75rem; border-left:4px solid; color:white; animation:slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+        .empty-state { text-align:center; padding:3rem 1rem; color:rgba(255,255,255,0.7); grid-column:1/-1; }
+        .empty-state-icon { font-size:3rem; color:var(--gold); opacity:0.5; margin-bottom:1rem; }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width:992px) { .sidebar { transform:translateX(-100%); position:fixed; transition:transform 0.3s ease; } .sidebar.active { transform:translateX(0); } .main-content { margin-left:0; } }
+        @media (max-width:768px) { .header { flex-direction:column; gap:1rem; } }
+    </style>
+</head>
+<body class="professional-bg">
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png" alt="I AM MUGERA">
+                <h1>Publications Editor</h1>
+                <p style="color:rgba(255,255,255,0.8);">Full control over articles, books & research</p>
+            </div>
+            <div id="authError" style="display:none; background:rgba(239,68,68,0.15); padding:1rem; border-radius:var(--radius-md); margin-bottom:1.5rem; border-left:4px solid var(--error); color:white;">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText">Invalid credentials</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-envelope"></i> Admin Email</label>
+                <input type="email" id="authEmail" class="form-input" placeholder="admin@iammugera.com" value="mugera.developer@gmail.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="authPassword" class="form-input" placeholder="••••••••" value="Test1234">
+            </div>
+            <button type="button" class="btn" id="authBtn"><i class="fas fa-sign-in-alt"></i> Sign In to Editor</button>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL – MATCHES EXACT FIREBASE STRUCTURE -->
+    <div id="adminPanel" class="admin-container">
+        <!-- SIDEBAR -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png" alt="I AM MUGERA">
+                </div>
+                <h2 class="sidebar-title">Publications</h2>
+                <p class="sidebar-subtitle">Firebase editor • Live data</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt nav-icon"></i><span>Dashboard</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="articles"><i class="fas fa-newspaper nav-icon"></i><span>Articles</span><span class="nav-badge" id="articleCount">0</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="books"><i class="fas fa-book nav-icon"></i><span>Books</span><span class="nav-badge" id="bookCount">0</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="research"><i class="fas fa-flask nav-icon"></i><span>Research Papers</span><span class="nav-badge" id="researchCount">0</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="author"><i class="fas fa-user nav-icon"></i><span>Author Profile</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="featured"><i class="fas fa-star nav-icon"></i><span>Featured Carousel</span><span class="nav-badge" id="featuredCount">0</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-page="waitlists"><i class="fas fa-clock nav-icon"></i><span>Waitlists</span><span class="nav-badge" id="waitlistCount">0</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                    <div class="page-subtitle"><i class="fas fa-database"></i> <span id="pageSubtitle">i-am-publications Firebase</span></div>
+                </div>
+                <div class="user-actions" style="display:flex; gap:1rem; align-items:center;">
+                    <div class="user-avatar" id="userAvatar">M</div>
+                    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </header>
+
+            <!-- ========== DASHBOARD PAGE ========== -->
+            <div id="dashboardPage" class="page-content">
+                <div class="dashboard-grid">
+                    <div class="stat-card" onclick="showPage('articles')">
+                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="stat-value" id="dashArticleCount">0</div>
+                        <div class="stat-label">Articles</div>
+                    </div>
+                    <div class="stat-card" onclick="showPage('books')">
+                        <div class="stat-icon"><i class="fas fa-book"></i></div>
+                        <div class="stat-value" id="dashBookCount">0</div>
+                        <div class="stat-label">Books</div>
+                    </div>
+                    <div class="stat-card" onclick="showPage('research')">
+                        <div class="stat-icon"><i class="fas fa-flask"></i></div>
+                        <div class="stat-value" id="dashResearchCount">0</div>
+                        <div class="stat-label">Research Papers</div>
+                    </div>
+                    <div class="stat-card" onclick="showPage('waitlists')">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value" id="dashWaitlistCount">0</div>
+                        <div class="stat-label">Waitlist Signups</div>
+                    </div>
+                </div>
+
+                <!-- Recent Publications -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-clock"></i> Recent Publications</h2>
+                        <button class="btn btn-sm" onclick="loadAllData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                    <div class="cards-grid" id="recentPublicationsGrid"></div>
+                </div>
+
+                <!-- Author Profile Snapshot -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-user"></i> Author Profile</h2>
+                        <button class="btn btn-outline btn-sm" onclick="editAuthorProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+                    </div>
+                    <div id="authorProfilePreview" class="featured-card"></div>
+                </div>
+            </div>
+
+            <!-- ========== ARTICLES PAGE ========== -->
+            <div id="articlesPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-newspaper"></i> Articles</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="loadAllData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button class="btn btn-outline btn-sm" onclick="addNewArticle()"><i class="fas fa-plus"></i> New Article</button>
+                        </div>
+                    </div>
+                    <div class="filters">
+                        <select id="articleStatusFilter" class="filter-select" onchange="filterArticles()">
+                            <option value="all">All status</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                        <select id="articleCategoryFilter" class="filter-select" onchange="filterArticles()">
+                            <option value="all">All categories</option>
+                        </select>
+                    </div>
+                    <div class="cards-grid" id="articlesListContainer"></div>
+                </div>
+            </div>
+
+            <!-- ========== BOOKS PAGE ========== -->
+            <div id="booksPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-book"></i> Books</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="loadAllData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button class="btn btn-outline btn-sm" onclick="addNewBook()"><i class="fas fa-plus"></i> New Book</button>
+                        </div>
+                    </div>
+                    <div class="filters">
+                        <select id="bookStatusFilter" class="filter-select" onchange="filterBooks()">
+                            <option value="all">All status</option>
+                            <option value="available">Available</option>
+                            <option value="coming-soon">Coming Soon</option>
+                        </select>
+                    </div>
+                    <div class="cards-grid" id="booksListContainer"></div>
+                </div>
+            </div>
+
+            <!-- ========== RESEARCH PAPERS PAGE ========== -->
+            <div id="researchPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-flask"></i> Research Papers</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="loadAllData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button class="btn btn-outline btn-sm" onclick="addNewResearch()"><i class="fas fa-plus"></i> New Research</button>
+                        </div>
+                    </div>
+                    <div class="filters">
+                        <select id="researchStatusFilter" class="filter-select" onchange="filterResearch()">
+                            <option value="all">All status</option>
+                            <option value="published">Published</option>
+                            <option value="in-progress">In Progress</option>
+                        </select>
+                    </div>
+                    <div class="cards-grid" id="researchListContainer"></div>
+                </div>
+            </div>
+
+            <!-- ========== AUTHOR PROFILE PAGE ========== -->
+            <div id="authorPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-user"></i> Author Profile</h2>
+                        <button class="btn btn-outline btn-sm" onclick="editAuthorProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+                    </div>
+                    <div id="authorProfileFull" class="featured-card"></div>
+                </div>
+            </div>
+
+            <!-- ========== FEATURED CAROUSEL PAGE ========== -->
+            <div id="featuredPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-star"></i> Featured Carousel</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="loadAllData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button class="btn btn-outline btn-sm" onclick="addFeaturedItem()"><i class="fas fa-plus"></i> Add to Carousel</button>
+                        </div>
+                    </div>
+                    <div class="cards-grid" id="featuredListContainer"></div>
+                </div>
+            </div>
+
+            <!-- ========== WAITLISTS PAGE ========== -->
+            <div id="waitlistsPage" class="page-content" style="display:none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-clock"></i> Publication Waitlists</h2>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="stat-card" id="ancestralCodeWaitlist">
+                            <div class="stat-icon"><i class="fas fa-book"></i></div>
+                            <div class="stat-value" id="ancestralWaitlistCount">0</div>
+                            <div class="stat-label">The Ancestral Code</div>
+                        </div>
+                        <div class="stat-card" id="researchWaitlist">
+                            <div class="stat-icon"><i class="fas fa-flask"></i></div>
+                            <div class="stat-value" id="researchWaitlistCount">0</div>
+                            <div class="stat-label">Ancestral Leadership Research</div>
+                        </div>
+                    </div>
+                    <div id="waitlistEntries" class="content-section" style="margin-top:1rem;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="articleModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="articleModalTitle">Edit Article</h3><button class="modal-close" onclick="hideModal('articleModal')">&times;</button></div><div id="articleModalContent"></div></div></div>
+    <div class="modal-overlay" id="bookModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="bookModalTitle">Edit Book</h3><button class="modal-close" onclick="hideModal('bookModal')">&times;</button></div><div id="bookModalContent"></div></div></div>
+    <div class="modal-overlay" id="researchModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="researchModalTitle">Edit Research</h3><button class="modal-close" onclick="hideModal('researchModal')">&times;</button></div><div id="researchModalContent"></div></div></div>
+    <div class="modal-overlay" id="authorModal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Edit Author Profile</h3><button class="modal-close" onclick="hideModal('authorModal')">&times;</button></div><div id="authorModalContent"></div></div></div>
+    <div class="modal-overlay" id="featuredModal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Add to Featured Carousel</h3><button class="modal-close" onclick="hideModal('featuredModal')">&times;</button></div><div id="featuredModalContent"></div></div></div>
+
+    <!-- LOADING & NOTIFICATION -->
+    <div class="loading-overlay" id="loadingOverlay"><div class="loading-content"><div class="loading-spinner"></div><p id="loadingText">Loading from Firebase...</p></div></div>
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // --------------------------------------------------------------
+        //  NEW FIREBASE CONFIGURATION - i-am-publications
+        // --------------------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyDF0C1QPJ0CfDfBCtupIuyI-ezgpr6tE0w",
+            authDomain: "i-am-publications.firebaseapp.com",
+            databaseURL: "https://i-am-publications-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "i-am-publications",
+            storageBucket: "i-am-publications.firebasestorage.app",
+            messagingSenderId: "947226391862",
+            appId: "1:947226391862:web:00ed4587bedbf970c1af97"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // ---------- GLOBAL STATE – MATCHES YOUR JSON STRUCTURE ----------
+        let currentUser = null;
+        let dbData = null;
+        
+        // Data collections
+        let articles = {};
+        let books = {};
+        let researchPapers = {};
+        let authorProfile = null;
+        let featuredCarousel = [];
+        let waitlists = {};
+        
+        // Filtered copies
+        let filteredArticles = [];
+        let filteredBooks = [];
+        let filteredResearch = [];
+
+        // ---------- UTILITIES ----------
+        function showLoading(msg) { 
+            document.getElementById('loadingText').innerText = msg || 'Loading...'; 
+            document.getElementById('loadingOverlay').classList.add('active'); 
+        }
+        function hideLoading() { 
+            document.getElementById('loadingOverlay').classList.remove('active'); 
+        }
+        function showNotification(msg, type = 'info') {
+            const c = document.getElementById('notificationContainer');
+            const n = document.createElement('div'); 
+            n.className = `notification ${type}`;
+            const icons = { success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle', info: 'info-circle' };
+            n.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i><span>${msg}</span>`;
+            c.appendChild(n);
+            setTimeout(() => { 
+                n.style.opacity = '0'; 
+                n.style.transform = 'translateX(100%)'; 
+                setTimeout(() => n.remove(), 300); 
+            }, 3500);
+        }
+        function hideModal(modalId) { 
+            document.getElementById(modalId).classList.remove('active'); 
+        }
+        function showModal(modalId) { 
+            document.getElementById(modalId).classList.add('active'); 
+        }
+        function escapeHTML(str) { 
+            if (!str) return '';
+            return String(str).replace(/[&<>"]/g, function(c) { 
+                return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; 
+            }); 
+        }
+        function getStatusLabel(s) { 
+            const map = { 
+                'published':'Published',
+                'coming-soon':'Coming Soon',
+                'draft':'Draft',
+                'available':'Available',
+                'in-progress':'In Progress'
+            }; 
+            return map[s] || s; 
+        }
+        function formatDate(timestamp) {
+            if (!timestamp) return 'No date';
+            if (typeof timestamp === 'string') return timestamp;
+            if (typeof timestamp === 'number') return new Date(timestamp).toLocaleDateString();
+            return String(timestamp);
+        }
+
+        // ---------- AUTHENTICATION ----------
+        async function authenticate() {
+            showLoading("Authenticating...");
+            
+            // Check for existing session
+            const token = localStorage.getItem('adminToken');
+            const email = localStorage.getItem('adminEmail');
+            
+            if (token && email) {
+                try { 
+                    if (!auth.currentUser) await auth.signInWithCustomToken(token); 
+                    currentUser = auth.currentUser; 
+                    await loadAllData(); 
+                    hideLoading(); 
+                    showPanel(); 
+                    return; 
+                } catch (e) { 
+                    console.warn(e);
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminEmail');
+                }
+            }
+            
+            hideLoading();
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        async function login(email, password) {
+            showLoading("Signing in...");
+            try {
+                const uc = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = uc.user;
+                const token = await currentUser.getIdToken();
+                localStorage.setItem('adminToken', token);
+                localStorage.setItem('adminEmail', email);
+                await loadAllData();
+                showPanel();
+                showNotification("Welcome back, Mugera!", "success");
+            } catch(e) {
+                showNotification(e.message, "error");
+                document.getElementById('authError').style.display = 'block';
+                document.getElementById('errorText').innerText = e.message;
+            } finally { 
+                hideLoading(); 
+            }
+        }
+
+        function logout() {
+            showLoading("Logging out...");
+            auth.signOut().then(() => {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminEmail');
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('adminPanel').style.display = 'none';
+                hideLoading();
+            }).catch(() => hideLoading());
+        }
+
+        function showPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            updateUserAvatar();
+            showPage('dashboard');
+        }
+
+        // ---------- LOAD EVERYTHING FROM FIREBASE (EXACT STRUCTURE) ----------
+        async function loadAllData() {
+            showLoading("Fetching publications data...");
+            try {
+                const snap = await database.ref('/').once('value');
+                dbData = snap.val() || {};
+                
+                // 1. Articles
+                articles = dbData.articles || {};
+                
+                // 2. Books
+                books = dbData.books || {};
+                
+                // 3. Research Papers
+                researchPapers = dbData.researchPapers || {};
+                
+                // 4. Author Profile
+                authorProfile = dbData.authorProfile || null;
+                
+                // 5. Featured Carousel
+                featuredCarousel = dbData.featuredCarousel?.latestPublications || [];
+                
+                // 6. Waitlists
+                waitlists = dbData.waitlists || {};
+                
+                // Update counts
+                const articleCount = Object.keys(articles).length;
+                const bookCount = Object.keys(books).length;
+                const researchCount = Object.keys(researchPapers).length;
+                const waitlistCount = Object.keys(waitlists).length;
+                
+                document.getElementById('articleCount').innerText = articleCount;
+                document.getElementById('bookCount').innerText = bookCount;
+                document.getElementById('researchCount').innerText = researchCount;
+                document.getElementById('waitlistCount').innerText = waitlistCount;
+                document.getElementById('featuredCount').innerText = featuredCarousel.length;
+                
+                document.getElementById('dashArticleCount').innerText = articleCount;
+                document.getElementById('dashBookCount').innerText = bookCount;
+                document.getElementById('dashResearchCount').innerText = researchCount;
+                document.getElementById('dashWaitlistCount').innerText = waitlistCount;
+                
+                // Waitlist specific counts
+                if (waitlists.book_ancestral_code?.totalCount) {
+                    document.getElementById('ancestralWaitlistCount').innerText = waitlists.book_ancestral_code.totalCount;
+                } else if (waitlists.book_ancestral_code?.entries) {
+                    document.getElementById('ancestralWaitlistCount').innerText = Object.keys(waitlists.book_ancestral_code.entries || {}).length;
+                }
+                
+                if (waitlists.research_ancestral_leadership?.totalCount) {
+                    document.getElementById('researchWaitlistCount').innerText = waitlists.research_ancestral_leadership.totalCount;
+                }
+                
+                // Set up filter dropdowns
+                setupCategoryFilters();
+                
+                // Render everything
+                renderRecentPublications();
+                renderAuthorProfilePreview();
+                
+                showNotification("All data loaded successfully", "success");
+            } catch(e) {
+                console.error(e);
+                showNotification("Error loading data: " + e.message, "error");
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // ---------- SETUP FILTERS ----------
+        function setupCategoryFilters() {
+            const categorySelect = document.getElementById('articleCategoryFilter');
+            if (!categorySelect) return;
+            
+            // Clear existing options
+            categorySelect.innerHTML = '<option value="all">All categories</option>';
+            
+            // Get unique categories from articles
+            const categories = new Set();
+            Object.values(articles).forEach(article => {
+                if (article.category) categories.add(article.category);
+            });
+            
+            // Add to dropdown
+            Array.from(categories).sort().forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // ---------- RENDERING FUNCTIONS ----------
+        function renderRecentPublications() {
+            const grid = document.getElementById('recentPublicationsGrid');
+            grid.innerHTML = '';
+            
+            // Combine and sort recent publications
+            let allPublications = [];
+            
+            // Add articles
+            Object.entries(articles).forEach(([id, article]) => {
+                allPublications.push({
+                    id,
+                    type: 'article',
+                    title: article.title || 'Untitled Article',
+                    subtitle: article.subtitle || '',
+                    date: article.publishedDate || article.updatedDate || '',
+                    status: article.status || 'draft',
+                    category: article.category || 'Uncategorized',
+                    image: article.featuredImage || ''
+                });
+            });
+            
+            // Add books
+            Object.entries(books).forEach(([id, book]) => {
+                allPublications.push({
+                    id,
+                    type: 'book',
+                    title: book.title || 'Untitled Book',
+                    subtitle: book.subtitle || '',
+                    date: book.year || book.publishedDate || '',
+                    status: book.status || 'coming-soon',
+                    image: book.coverImage || ''
+                });
+            });
+            
+            // Add research
+            Object.entries(researchPapers).forEach(([id, paper]) => {
+                allPublications.push({
+                    id,
+                    type: 'research',
+                    title: paper.title || 'Untitled Research',
+                    subtitle: paper.subtitle || '',
+                    date: paper.year || '',
+                    status: paper.status || paper.peerReviewed ? 'published' : 'in-progress',
+                    journal: paper.publishedIn || ''
+                });
+            });
+            
+            // Sort by date (newest first)
+            allPublications.sort((a, b) => {
+                const dateA = a.date || '';
+                const dateB = b.date || '';
+                return dateB.localeCompare(dateA);
+            });
+            
+            // Take first 4
+            allPublications.slice(0, 4).forEach(pub => {
+                grid.appendChild(createPublicationCard(pub));
+            });
+            
+            if (allPublications.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-book-open empty-state-icon"></i><h3>No publications yet</h3></div>';
+            }
+        }
+
+        function createPublicationCard(item) {
+            const div = document.createElement('div'); 
+            div.className = 'publication-card';
+            
+            let typeIcon = 'newspaper';
+            let typeLabel = 'Article';
+            
+            if (item.type === 'book') {
+                typeIcon = 'book';
+                typeLabel = 'Book';
+            } else if (item.type === 'research') {
+                typeIcon = 'flask';
+                typeLabel = 'Research';
+            }
+            
+            div.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">${escapeHTML(item.title)}</h3>
+                    <span class="status-badge status-${item.status}">${getStatusLabel(item.status)}</span>
+                </div>
+                <div class="card-meta">
+                    <i class="fas fa-${typeIcon}"></i> ${typeLabel}
+                    ${item.category ? `<i class="fas fa-tag" style="margin-left:0.75rem;"></i> ${escapeHTML(item.category)}` : ''}
+                    ${item.date ? `<i class="fas fa-calendar" style="margin-left:0.75rem;"></i> ${item.date}` : ''}
+                </div>
+                <div class="card-description">
+                    ${escapeHTML(item.subtitle || '')}
+                </div>
+                <div class="card-footer">
+                    <button class="action-btn edit" onclick="edit${item.type.charAt(0).toUpperCase() + item.type.slice(1)}('${item.id}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn view" onclick="view${item.type.charAt(0).toUpperCase() + item.type.slice(1)}('${item.id}')">
+                        <i class="fas fa-info-circle"></i> View
+                    </button>
+                </div>
+            `;
+            return div;
+        }
+
+        function renderAuthorProfilePreview() {
+            const preview = document.getElementById('authorProfilePreview');
+            const full = document.getElementById('authorProfileFull');
+            
+            if (!authorProfile) {
+                const emptyHtml = '<div class="empty-state">No author profile found. Click "Edit Profile" to create one.</div>';
+                if (preview) preview.innerHTML = emptyHtml;
+                if (full) full.innerHTML = emptyHtml;
+                return;
+            }
+            
+            const html = `
+                <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap;">
+                    <div>
+                        <img src="${escapeHTML(authorProfile.avatarUrl || 'https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png')}" 
+                             style="width:120px; height:120px; border-radius:50%; border:3px solid var(--gold); object-fit:cover;">
+                    </div>
+                    <div style="flex:1;">
+                        <h2 style="color:white; margin-bottom:0.5rem;">${escapeHTML(authorProfile.name || 'I AM MUGERA')}</h2>
+                        <p style="color:var(--gold); font-weight:600; margin-bottom:0.5rem;">${escapeHTML(authorProfile.title || '')}</p>
+                        <p style="color:rgba(255,255,255,0.9);">${escapeHTML(authorProfile.tagline || '')}</p>
+                        <p style="color:rgba(255,255,255,0.8); margin-top:1rem;">${escapeHTML(authorProfile.bio || '')}</p>
+                        <p style="color:rgba(255,255,255,0.7); margin-top:0.5rem;"><i class="fas fa-map-marker-alt"></i> ${escapeHTML(authorProfile.location || '')}</p>
+                    </div>
+                </div>
+            `;
+            
+            if (preview) preview.innerHTML = html;
+            if (full) full.innerHTML = html;
+        }
+
+        // ---------- ARTICLES ----------
+        function renderArticlesList() {
+            const container = document.getElementById('articlesListContainer');
+            container.innerHTML = '';
+            
+            let articlesList = Object.entries(articles).map(([id, article]) => ({ id, ...article }));
+            
+            // Apply filters
+            const statusFilter = document.getElementById('articleStatusFilter')?.value || 'all';
+            const categoryFilter = document.getElementById('articleCategoryFilter')?.value || 'all';
+            
+            if (statusFilter !== 'all') {
+                articlesList = articlesList.filter(a => a.status === statusFilter);
+            }
+            if (categoryFilter !== 'all') {
+                articlesList = articlesList.filter(a => a.category === categoryFilter);
+            }
+            
+            if (articlesList.length === 0) {
+                container.innerHTML = '<div class="empty-state">No articles found</div>';
+                return;
+            }
+            
+            articlesList.sort((a, b) => (b.publishedDate || '').localeCompare(a.publishedDate || ''));
+            
+            articlesList.forEach(article => {
+                const card = document.createElement('div'); 
+                card.className = 'publication-card';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${escapeHTML(article.title || '')}</h3>
+                        <span class="status-badge status-${article.status || 'draft'}">${getStatusLabel(article.status)}</span>
+                    </div>
+                    <div class="card-meta">
+                        <i class="fas fa-newspaper"></i> Article
+                        <i class="fas fa-tag" style="margin-left:0.75rem;"></i> ${escapeHTML(article.category || 'Uncategorized')}
+                        <i class="fas fa-calendar" style="margin-left:0.75rem;"></i> ${article.publishedDate || 'No date'}
+                    </div>
+                    <div class="card-description">
+                        ${escapeHTML(article.subtitle || '')}
+                    </div>
+                    <div class="card-footer">
+                        <button class="action-btn edit" onclick="editArticle('${article.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn view" onclick="viewArticle('${article.id}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        <button class="action-btn delete" onclick="deleteArticle('${article.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addNewArticle() {
+            const newId = 'article_' + Date.now();
+            const form = `
+                <form id="articleForm" onsubmit="saveNewArticle(event, '${newId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-heading"></i> Title *</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag"></i> Category</label>
+                            <input type="text" name="category" class="form-control" value="Philosophy & Technology">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-clock"></i> Status</label>
+                            <select name="status" class="form-control">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-subscript"></i> Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-image"></i> Featured Image URL</label>
+                            <input type="text" name="featuredImage" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hourglass"></i> Reading Time</label>
+                            <input type="text" name="readingTime" class="form-control" value="5 min">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hashtag"></i> Slug</label>
+                            <input type="text" name="slug" class="form-control" placeholder="url-friendly-title">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('articleModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Create Article</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('articleModalTitle').innerText = 'Create New Article';
+            document.getElementById('articleModalContent').innerHTML = form;
+            showModal('articleModal');
+        }
+
+        async function saveNewArticle(e, articleId) {
+            e.preventDefault(); 
+            showLoading("Creating article...");
+            const fd = new FormData(e.target);
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            const article = {
+                author: "Mugera W.",
+                authorId: "author_mugera",
+                category: fd.get('category') || 'Philosophy & Technology',
+                title: fd.get('title'),
+                subtitle: fd.get('subtitle') || '',
+                featuredImage: fd.get('featuredImage') || '',
+                status: fd.get('status') || 'draft',
+                readingTime: fd.get('readingTime') || '5 min',
+                slug: fd.get('slug') || fd.get('title').toLowerCase().replace(/\s+/g, '-'),
+                publishedDate: fd.get('status') === 'published' ? today : '',
+                updatedDate: today,
+                visibility: "public",
+                reactions: { comments: 0, likes: 0, shares: 0 },
+                comments: {}
+            };
+            
+            try { 
+                await database.ref(`articles/${articleId}`).set(article); 
+                await loadAllData(); 
+                hideModal('articleModal'); 
+                showNotification("Article created successfully", "success"); 
+                showPage('articles'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } finally { 
+                hideLoading(); 
+            }
+        }
+
+        function editArticle(articleId) {
+            const article = articles[articleId];
+            if (!article) return;
+            
+            const form = `
+                <form id="articleForm" onsubmit="updateArticle(event, '${articleId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" value="${escapeHTML(article.title || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <input type="text" name="category" class="form-control" value="${escapeHTML(article.category || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-control">
+                                <option value="draft" ${article.status === 'draft' ? 'selected' : ''}>Draft</option>
+                                <option value="published" ${article.status === 'published' ? 'selected' : ''}>Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control" value="${escapeHTML(article.subtitle || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Featured Image URL</label>
+                            <input type="text" name="featuredImage" class="form-control" value="${escapeHTML(article.featuredImage || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reading Time</label>
+                            <input type="text" name="readingTime" class="form-control" value="${escapeHTML(article.readingTime || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slug</label>
+                            <input type="text" name="slug" class="form-control" value="${escapeHTML(article.slug || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Published Date</label>
+                            <input type="text" name="publishedDate" class="form-control" value="${escapeHTML(article.publishedDate || '')}">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('articleModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Update Article</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('articleModalTitle').innerText = `Edit: ${article.title}`;
+            document.getElementById('articleModalContent').innerHTML = form;
+            showModal('articleModal');
+        }
+
+        async function updateArticle(e, articleId) {
+            e.preventDefault(); 
+            showLoading("Updating..."); 
+            const fd = new FormData(e.target);
+            
+            const updates = {
+                title: fd.get('title'),
+                category: fd.get('category'),
+                status: fd.get('status'),
+                subtitle: fd.get('subtitle'),
+                featuredImage: fd.get('featuredImage'),
+                readingTime: fd.get('readingTime'),
+                slug: fd.get('slug'),
+                publishedDate: fd.get('publishedDate'),
+                updatedDate: new Date().toISOString().split('T')[0]
+            };
+            
+            try { 
+                await database.ref(`articles/${articleId}`).update(updates); 
+                await loadAllData(); 
+                hideModal('articleModal'); 
+                showNotification("Article updated", "success"); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        async function deleteArticle(articleId) { 
+            if (!confirm("Delete this article permanently?")) return; 
+            showLoading(); 
+            try { 
+                await database.ref(`articles/${articleId}`).remove(); 
+                await loadAllData(); 
+                showNotification("Article deleted", "warning"); 
+                showPage('articles'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        function viewArticle(articleId) {
+            const article = articles[articleId];
+            if (!article) return;
+            
+            const json = JSON.stringify(article, null, 2);
+            document.getElementById('articleModalTitle').innerText = article.title || 'Article Details';
+            document.getElementById('articleModalContent').innerHTML = `
+                <pre style="background:rgba(0,0,0,0.3); padding:1rem; border-radius:8px; max-height:400px; overflow:auto; color:white;">${escapeHTML(json)}</pre>
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="hideModal('articleModal')">Close</button>
+                </div>
+            `;
+            showModal('articleModal');
+        }
+
+        function filterArticles() { renderArticlesList(); }
+
+        // ---------- BOOKS ----------
+        function renderBooksList() {
+            const container = document.getElementById('booksListContainer');
+            container.innerHTML = '';
+            
+            let booksList = Object.entries(books).map(([id, book]) => ({ id, ...book }));
+            
+            const statusFilter = document.getElementById('bookStatusFilter')?.value || 'all';
+            if (statusFilter !== 'all') {
+                booksList = booksList.filter(b => b.status === statusFilter);
+            }
+            
+            if (booksList.length === 0) {
+                container.innerHTML = '<div class="empty-state">No books found</div>';
+                return;
+            }
+            
+            booksList.forEach(book => {
+                const card = document.createElement('div'); 
+                card.className = 'publication-card';
+                
+                const hasFormats = book.formats && Array.isArray(book.formats);
+                const priceDisplay = hasFormats ? book.formats[0]?.price || '' : '';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${escapeHTML(book.title || '')}</h3>
+                        <span class="status-badge status-${book.status || 'coming-soon'}">${getStatusLabel(book.status)}</span>
+                    </div>
+                    <div class="card-meta">
+                        <i class="fas fa-book"></i> Book
+                        ${book.year ? `<i class="fas fa-calendar" style="margin-left:0.75rem;"></i> ${book.year}` : ''}
+                        ${book.pages ? `<i class="fas fa-file-alt" style="margin-left:0.75rem;"></i> ${book.pages} pages` : ''}
+                    </div>
+                    <div class="card-description">
+                        ${escapeHTML(book.subtitle || book.description || '').substring(0, 150)}...
+                    </div>
+                    <div class="card-footer">
+                        <button class="action-btn edit" onclick="editBook('${book.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn view" onclick="viewBook('${book.id}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        <button class="action-btn delete" onclick="deleteBook('${book.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addNewBook() {
+            const newId = 'book_' + Date.now();
+            const form = `
+                <form id="bookForm" onsubmit="saveNewBook(event, '${newId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-heading"></i> Title *</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag"></i> Status</label>
+                            <select name="status" class="form-control">
+                                <option value="coming-soon">Coming Soon</option>
+                                <option value="available">Available</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-subscript"></i> Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-image"></i> Cover Image URL</label>
+                            <input type="text" name="coverImage" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-file-alt"></i> Pages</label>
+                            <input type="number" name="pages" class="form-control" value="200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-calendar"></i> Year</label>
+                            <input type="text" name="year" class="form-control" value="${new Date().getFullYear()}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-align-left"></i> Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('bookModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Create Book</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('bookModalTitle').innerText = 'Create New Book';
+            document.getElementById('bookModalContent').innerHTML = form;
+            showModal('bookModal');
+        }
+
+        async function saveNewBook(e, bookId) {
+            e.preventDefault(); 
+            showLoading("Creating book...");
+            const fd = new FormData(e.target);
+            
+            const book = {
+                title: fd.get('title'),
+                status: fd.get('status') || 'coming-soon',
+                subtitle: fd.get('subtitle') || '',
+                coverImage: fd.get('coverImage') || '',
+                description: fd.get('description') || '',
+                pages: parseInt(fd.get('pages')) || 0,
+                year: fd.get('year') || new Date().getFullYear(),
+                authorName: "Mugera W.",
+                authorBio: "Mugera W. is a transformational leadership expert, speaker, and author.",
+                authorPhoto: "https://i.postimg.cc/85hH3msy/20251121_0818_HD_Premium_Portrait_remix_01kajddmedf97rr1b00axpavek.webp",
+                rating: 0,
+                reviewCount: 0
+            };
+            
+            try { 
+                await database.ref(`books/${bookId}`).set(book); 
+                await loadAllData(); 
+                hideModal('bookModal'); 
+                showNotification("Book created successfully", "success"); 
+                showPage('books'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } finally { 
+                hideLoading(); 
+            }
+        }
+
+        function editBook(bookId) {
+            const book = books[bookId];
+            if (!book) return;
+            
+            const form = `
+                <form id="bookForm" onsubmit="updateBook(event, '${bookId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" value="${escapeHTML(book.title || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-control">
+                                <option value="coming-soon" ${book.status === 'coming-soon' ? 'selected' : ''}>Coming Soon</option>
+                                <option value="available" ${book.status === 'available' ? 'selected' : ''}>Available</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control" value="${escapeHTML(book.subtitle || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cover Image URL</label>
+                            <input type="text" name="coverImage" class="form-control" value="${escapeHTML(book.coverImage || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pages</label>
+                            <input type="number" name="pages" class="form-control" value="${book.pages || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Year</label>
+                            <input type="text" name="year" class="form-control" value="${book.year || ''}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3">${escapeHTML(book.description || '')}</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('bookModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Update Book</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('bookModalTitle').innerText = `Edit: ${book.title}`;
+            document.getElementById('bookModalContent').innerHTML = form;
+            showModal('bookModal');
+        }
+
+        async function updateBook(e, bookId) {
+            e.preventDefault(); 
+            showLoading("Updating..."); 
+            const fd = new FormData(e.target);
+            
+            const updates = {
+                title: fd.get('title'),
+                status: fd.get('status'),
+                subtitle: fd.get('subtitle'),
+                coverImage: fd.get('coverImage'),
+                pages: parseInt(fd.get('pages')) || 0,
+                year: fd.get('year'),
+                description: fd.get('description')
+            };
+            
+            try { 
+                await database.ref(`books/${bookId}`).update(updates); 
+                await loadAllData(); 
+                hideModal('bookModal'); 
+                showNotification("Book updated", "success"); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        async function deleteBook(bookId) { 
+            if (!confirm("Delete this book permanently?")) return; 
+            showLoading(); 
+            try { 
+                await database.ref(`books/${bookId}`).remove(); 
+                await loadAllData(); 
+                showNotification("Book deleted", "warning"); 
+                showPage('books'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        function viewBook(bookId) {
+            const book = books[bookId];
+            if (!book) return;
+            
+            const json = JSON.stringify(book, null, 2);
+            document.getElementById('bookModalTitle').innerText = book.title || 'Book Details';
+            document.getElementById('bookModalContent').innerHTML = `
+                <pre style="background:rgba(0,0,0,0.3); padding:1rem; border-radius:8px; max-height:400px; overflow:auto; color:white;">${escapeHTML(json)}</pre>
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="hideModal('bookModal')">Close</button>
+                </div>
+            `;
+            showModal('bookModal');
+        }
+
+        function filterBooks() { renderBooksList(); }
+
+        // ---------- RESEARCH PAPERS ----------
+        function renderResearchList() {
+            const container = document.getElementById('researchListContainer');
+            container.innerHTML = '';
+            
+            let researchList = Object.entries(researchPapers).map(([id, paper]) => ({ id, ...paper }));
+            
+            const statusFilter = document.getElementById('researchStatusFilter')?.value || 'all';
+            if (statusFilter !== 'all') {
+                researchList = researchList.filter(r => {
+                    if (statusFilter === 'published') return r.peerReviewed === true || r.status === 'published';
+                    if (statusFilter === 'in-progress') return r.status === 'in-progress' || r.preprintAvailable === false;
+                    return true;
+                });
+            }
+            
+            if (researchList.length === 0) {
+                container.innerHTML = '<div class="empty-state">No research papers found</div>';
+                return;
+            }
+            
+            researchList.forEach(paper => {
+                const card = document.createElement('div'); 
+                card.className = 'publication-card';
+                
+                const status = paper.status || (paper.peerReviewed ? 'published' : 'in-progress');
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${escapeHTML(paper.title || '')}</h3>
+                        <span class="status-badge status-${status}">${getStatusLabel(status)}</span>
+                    </div>
+                    <div class="card-meta">
+                        <i class="fas fa-flask"></i> Research
+                        ${paper.publishedIn ? `<i class="fas fa-book-open" style="margin-left:0.75rem;"></i> ${escapeHTML(paper.publishedIn)}` : ''}
+                        ${paper.year ? `<i class="fas fa-calendar" style="margin-left:0.75rem;"></i> ${paper.year}` : ''}
+                    </div>
+                    <div class="card-description">
+                        ${escapeHTML(paper.subtitle || paper.abstract || '').substring(0, 150)}...
+                    </div>
+                    <div class="card-footer">
+                        <button class="action-btn edit" onclick="editResearch('${paper.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn view" onclick="viewResearch('${paper.id}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        <button class="action-btn delete" onclick="deleteResearch('${paper.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addNewResearch() {
+            const newId = 'research_' + Date.now();
+            const form = `
+                <form id="researchForm" onsubmit="saveNewResearch(event, '${newId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-heading"></i> Title *</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag"></i> Status</label>
+                            <select name="status" class="form-control">
+                                <option value="in-progress">In Progress</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-subscript"></i> Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-building"></i> Published In</label>
+                            <input type="text" name="publishedIn" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-calendar"></i> Year</label>
+                            <input type="text" name="year" class="form-control" value="${new Date().getFullYear()}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hashtag"></i> DOI</label>
+                            <input type="text" name="doi" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-align-left"></i> Abstract</label>
+                        <textarea name="abstract" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('researchModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Create Research</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('researchModalTitle').innerText = 'Create New Research Paper';
+            document.getElementById('researchModalContent').innerHTML = form;
+            showModal('researchModal');
+        }
+
+        async function saveNewResearch(e, researchId) {
+            e.preventDefault(); 
+            showLoading("Creating research paper...");
+            const fd = new FormData(e.target);
+            
+            const status = fd.get('status');
+            const isPublished = status === 'published';
+            
+            const research = {
+                title: fd.get('title'),
+                subtitle: fd.get('subtitle') || '',
+                status: status,
+                publishedIn: fd.get('publishedIn') || '',
+                year: fd.get('year') || new Date().getFullYear(),
+                abstract: fd.get('abstract') || '',
+                doi: fd.get('doi') || '',
+                peerReviewed: isPublished,
+                openAccess: true,
+                preprintAvailable: !isPublished,
+                authors: [{ name: "Mugera W.", affiliation: "Sankofa Leadership Institute" }],
+                downloadCount: 0,
+                citationCount: 0,
+                reactions: { comments: 0, likes: 0, shares: 0 }
+            };
+            
+            try { 
+                await database.ref(`researchPapers/${researchId}`).set(research); 
+                await loadAllData(); 
+                hideModal('researchModal'); 
+                showNotification("Research paper created", "success"); 
+                showPage('research'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } finally { 
+                hideLoading(); 
+            }
+        }
+
+        function editResearch(researchId) {
+            const paper = researchPapers[researchId];
+            if (!paper) return;
+            
+            const status = paper.status || (paper.peerReviewed ? 'published' : 'in-progress');
+            
+            const form = `
+                <form id="researchForm" onsubmit="updateResearch(event, '${researchId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" value="${escapeHTML(paper.title || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-control">
+                                <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="published" ${status === 'published' ? 'selected' : ''}>Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control" value="${escapeHTML(paper.subtitle || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Published In</label>
+                            <input type="text" name="publishedIn" class="form-control" value="${escapeHTML(paper.publishedIn || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Year</label>
+                            <input type="text" name="year" class="form-control" value="${escapeHTML(paper.year || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">DOI</label>
+                            <input type="text" name="doi" class="form-control" value="${escapeHTML(paper.doi || '')}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Abstract</label>
+                        <textarea name="abstract" class="form-control" rows="4">${escapeHTML(paper.abstract || '')}</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('researchModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Update Research</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('researchModalTitle').innerText = `Edit: ${paper.title}`;
+            document.getElementById('researchModalContent').innerHTML = form;
+            showModal('researchModal');
+        }
+
+        async function updateResearch(e, researchId) {
+            e.preventDefault(); 
+            showLoading("Updating..."); 
+            const fd = new FormData(e.target);
+            
+            const status = fd.get('status');
+            const isPublished = status === 'published';
+            
+            const updates = {
+                title: fd.get('title'),
+                status: status,
+                subtitle: fd.get('subtitle'),
+                publishedIn: fd.get('publishedIn'),
+                year: fd.get('year'),
+                abstract: fd.get('abstract'),
+                doi: fd.get('doi'),
+                peerReviewed: isPublished,
+                preprintAvailable: !isPublished
+            };
+            
+            try { 
+                await database.ref(`researchPapers/${researchId}`).update(updates); 
+                await loadAllData(); 
+                hideModal('researchModal'); 
+                showNotification("Research paper updated", "success"); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        async function deleteResearch(researchId) { 
+            if (!confirm("Delete this research paper permanently?")) return; 
+            showLoading(); 
+            try { 
+                await database.ref(`researchPapers/${researchId}`).remove(); 
+                await loadAllData(); 
+                showNotification("Research paper deleted", "warning"); 
+                showPage('research'); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        function viewResearch(researchId) {
+            const paper = researchPapers[researchId];
+            if (!paper) return;
+            
+            const json = JSON.stringify(paper, null, 2);
+            document.getElementById('researchModalTitle').innerText = paper.title || 'Research Details';
+            document.getElementById('researchModalContent').innerHTML = `
+                <pre style="background:rgba(0,0,0,0.3); padding:1rem; border-radius:8px; max-height:400px; overflow:auto; color:white;">${escapeHTML(json)}</pre>
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="hideModal('researchModal')">Close</button>
+                </div>
+            `;
+            showModal('researchModal');
+        }
+
+        function filterResearch() { renderResearchList(); }
+
+        // ---------- AUTHOR PROFILE ----------
+        function editAuthorProfile() {
+            const profile = authorProfile || {};
+            
+            const form = `
+                <form id="authorForm" onsubmit="saveAuthorProfile(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-user"></i> Name</label>
+                            <input type="text" name="name" class="form-control" value="${escapeHTML(profile.name || 'I AM MUGERA')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag"></i> Title</label>
+                            <input type="text" name="title" class="form-control" value="${escapeHTML(profile.title || 'Transformational Leadership Expert & Author')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-quote-right"></i> Tagline</label>
+                            <input type="text" name="tagline" class="form-control" value="${escapeHTML(profile.tagline || 'Author • Speaker • Thinker')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-image"></i> Avatar URL</label>
+                            <input type="text" name="avatarUrl" class="form-control" value="${escapeHTML(profile.avatarUrl || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-image"></i> Hero Image URL</label>
+                            <input type="text" name="heroImage" class="form-control" value="${escapeHTML(profile.heroImage || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <input type="text" name="location" class="form-control" value="${escapeHTML(profile.location || 'Nairobi, Kenya')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" name="email" class="form-control" value="${escapeHTML(profile.email || 'info.iammugera@gmail.com')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-globe"></i> Website</label>
+                            <input type="text" name="website" class="form-control" value="${escapeHTML(profile.website || 'https://iammugera.com')}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-align-left"></i> Bio</label>
+                        <textarea name="bio" class="form-control" rows="4">${escapeHTML(profile.bio || 'Stop waiting for inspiration. Start writing the script. For your family, your team, your legacy.')}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-twitter"></i> Twitter</label>
+                        <input type="text" name="twitter" class="form-control" value="${escapeHTML(profile.social?.twitter || 'https://twitter.com/iammugera')}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-linkedin"></i> LinkedIn</label>
+                        <input type="text" name="linkedin" class="form-control" value="${escapeHTML(profile.social?.linkedin || 'https://linkedin.com/in/mugera')}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-instagram"></i> Instagram</label>
+                        <input type="text" name="instagram" class="form-control" value="${escapeHTML(profile.social?.instagram || 'https://instagram.com/iammugera')}">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('authorModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Save Profile</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('authorModalContent').innerHTML = form;
+            showModal('authorModal');
+        }
+
+        async function saveAuthorProfile(e) {
+            e.preventDefault(); 
+            showLoading("Saving author profile...");
+            const fd = new FormData(e.target);
+            
+            const profile = {
+                name: fd.get('name'),
+                title: fd.get('title'),
+                tagline: fd.get('tagline'),
+                avatarUrl: fd.get('avatarUrl'),
+                heroImage: fd.get('heroImage'),
+                location: fd.get('location'),
+                email: fd.get('email'),
+                website: fd.get('website'),
+                bio: fd.get('bio'),
+                social: {
+                    twitter: fd.get('twitter'),
+                    linkedin: fd.get('linkedin'),
+                    instagram: fd.get('instagram')
+                }
+            };
+            
+            try { 
+                await database.ref('authorProfile').set(profile); 
+                await loadAllData(); 
+                hideModal('authorModal'); 
+                showNotification("Author profile saved", "success"); 
+            } catch(e) { 
+                showNotification(e.message, "error"); 
+            } 
+            hideLoading(); 
+        }
+
+        // ---------- FEATURED CAROUSEL ----------
+        function renderFeaturedList() {
+            const container = document.getElementById('featuredListContainer');
+            container.innerHTML = '';
+            
+            if (!featuredCarousel || featuredCarousel.length === 0) {
+                container.innerHTML = '<div class="empty-state">No featured items. Add your first carousel item.</div>';
+                return;
+            }
+            
+            featuredCarousel.forEach((item, index) => {
+                const card = document.createElement('div'); 
+                card.className = 'publication-card';
+                
+                let typeIcon = 'book';
+                let typeLabel = item.type || 'publication';
+                
+                if (item.type === 'article') typeIcon = 'newspaper';
+                if (item.type === 'research') typeIcon = 'flask';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${escapeHTML(item.title || '')}</h3>
+                        <span class="status-badge status-published">Featured #${index + 1}</span>
+                    </div>
+                    <div class="card-meta">
+                        <i class="fas fa-${typeIcon}"></i> ${typeLabel}
+                    </div>
+                    <div class="card-description">
+                        ${escapeHTML(item.subtitle || item.description || '')}
+                    </div>
+                    <div class="card-footer">
+                        <button class="action-btn edit" onclick="editFeaturedItem(${index})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn delete" onclick="deleteFeaturedItem(${index})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addFeaturedItem() {
+            // Get list of available publications
+            let options = '<option value="">Select a publication...</option>';
+            
+            // Add articles
+            Object.entries(articles).forEach(([id, article]) => {
+                if (article.status === 'published') {
+                    options += `<option value="article:${id}">📰 Article: ${article.title}</option>`;
+                }
+            });
+            
+            // Add books
+            Object.entries(books).forEach(([id, book]) => {
+                options += `<option value="book:${id}">📘 Book: ${book.title}</option>`;
+            });
+            
+            // Add research
+            Object.entries(researchPapers).forEach(([id, paper]) => {
+                options += `<option value="research:${id}">🔬 Research: ${paper.title}</option>`;
+            });
+            
+            const form = `
+                <form id="featuredForm" onsubmit="saveFeaturedItem(event)">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-list"></i> Select Publication</label>
+                        <select name="publicationId" class="form-control" required>
+                            ${options}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-image"></i> Custom Image (optional)</label>
+                        <input type="text" name="customImage" class="form-control" placeholder="Leave blank to use default">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-align-left"></i> Custom Description (optional)</label>
+                        <textarea name="customDescription" class="form-control" rows="2" placeholder="Leave blank to use default"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal('featuredModal')">Cancel</button>
+                        <button type="submit" class="btn"><i class="fas fa-plus"></i> Add to Carousel</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('featuredModalContent').innerHTML = form;
+            showModal('featuredModal');
+        }
+
+        async function saveFeaturedItem(e) {
+            e.preventDefault();
+            showLoading("Adding to carousel...");
+            const fd = new FormData(e.target);
+            const pubValue = fd.get('publicationId');
+            
+            if (!pubValue) {
+                showNotification("Please select a publication", "error");
+                hideLoading();
+                return;
+            }
+            
+            const [type, id] = pubValue.split(':');
+            
+            let newItem = null;
+            
+            if (type === 'article' && articles[id]) {
+                const article = articles[id];
+                newItem = {
+                    type: 'article',
+                    id: id,
+                    title: article.title,
+                    subtitle: article.subtitle || article.title,
+                    excerpt: article.content?.intro || article.subtitle || '',
+                    featuredImage: fd.get('customImage') || article.featuredImage || '',
+                    readButtonText: 'Read Free',
+                    readUrl: `reader.html?article=${id.replace('article_', '')}`,
+                    reactionCounts: article.reactions || { comments: 0, likes: 0, shares: 0 }
+                };
+            } else if (type === 'book' && books[id]) {
+                const book = books[id];
+                newItem = {
+                    type: 'book',
+                    id: id,
+                    title: book.title,
+                    subtitle: book.subtitle || book.title,
+                    description: fd.get('customDescription') || book.description || '',
+                    coverImage: fd.get('customImage') || book.coverImage || '',
+                    orderButtonText: book.status === 'available' ? 'Order Now' : 'Join Waitlist',
+                    orderUrl: book.orderUrls?.paperback || book.waitlistUrl || '#',
+                    price: book.formats?.[0]?.price || (book.price ? `KSh ${book.price.KSh}` : '')
+                };
+            } else if (type === 'research' && researchPapers[id]) {
+                const paper = researchPapers[id];
+                newItem = {
+                    type: 'research',
+                    id: id,
+                    title: paper.title,
+                    subtitle: paper.subtitle || paper.title,
+                    authors: 'Mugera W.',
+                    publishedIn: paper.publishedIn || '',
+                    year: paper.year || '',
+                    readButtonText: 'Access Paper',
+                    readUrl: paper.pdfUrl || `reader.html?research=${id}`,
+                    reactionCounts: paper.reactions || { comments: 0, likes: 0, shares: 0 }
+                };
+            }
+            
+            if (!newItem) {
+                showNotification("Could not find the selected publication", "error");
+                hideLoading();
+                return;
+            }
+            
+            try {
+                const currentCarousel = featuredCarousel || [];
+                const updatedCarousel = [...currentCarousel, newItem];
+                
+                await database.ref('featuredCarousel/latestPublications').set(updatedCarousel);
+                await loadAllData();
+                hideModal('featuredModal');
+                showNotification("Added to featured carousel", "success");
+                showPage('featured');
+            } catch(e) {
+                showNotification(e.message, "error");
+            }
+            hideLoading();
+        }
+
+        function editFeaturedItem(index) {
+            const item = featuredCarousel[index];
+            if (!item) return;
+            
+            // Simple edit form - just allow reorder and delete
+            showNotification("To edit, remove and add again", "info");
+        }
+
+        async function deleteFeaturedItem(index) {
+            if (!confirm("Remove this item from the featured carousel?")) return;
+            showLoading();
+            
+            try {
+                const updatedCarousel = [...featuredCarousel];
+                updatedCarousel.splice(index, 1);
+                
+                await database.ref('featuredCarousel/latestPublications').set(updatedCarousel);
+                await loadAllData();
+                showNotification("Removed from featured carousel", "success");
+                showPage('featured');
+            } catch(e) {
+                showNotification(e.message, "error");
+            }
+            hideLoading();
+        }
+
+        // ---------- PAGE CONTROLLER ----------
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+            const page = document.getElementById(pageId + 'Page'); 
+            if (page) page.style.display = 'block';
+            
+            let title = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+            document.getElementById('pageTitle').innerText = title;
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
+            
+            // Render specific page content
+            if (pageId === 'articles') renderArticlesList();
+            if (pageId === 'books') renderBooksList();
+            if (pageId === 'research') renderResearchList();
+            if (pageId === 'author') renderAuthorProfilePreview();
+            if (pageId === 'featured') renderFeaturedList();
+            if (pageId === 'waitlists') renderWaitlists();
+        }
+
+        function renderWaitlists() {
+            const container = document.getElementById('waitlistEntries');
+            if (!container) return;
+            
+            let html = '<h3 style="color:white; margin-bottom:1rem;">Recent Waitlist Signups</h3>';
+            
+            if (waitlists.book_ancestral_code?.entries) {
+                const entries = waitlists.book_ancestral_code.entries;
+                html += '<div style="background:rgba(255,255,255,0.05); border-radius:var(--radius-lg); padding:1.5rem; margin-bottom:1rem;">';
+                html += '<h4 style="color:var(--gold); margin-bottom:1rem;">📘 The Ancestral Code</h4>';
+                
+                const entriesList = Object.values(entries);
+                if (entriesList.length > 0) {
+                    html += '<table style="width:100%; border-collapse:collapse;">';
+                    html += '<thead><tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><th style="text-align:left; padding:0.5rem;">Name</th><th style="text-align:left; padding:0.5rem;">Email</th><th style="text-align:left; padding:0.5rem;">Date</th></tr></thead>';
+                    html += '<tbody>';
+                    
+                    entriesList.slice(0, 5).forEach(entry => {
+                        html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:0.5rem;">${escapeHTML(entry.fullName || 'Anonymous')}</td>
+                            <td style="padding:0.5rem;">${escapeHTML(entry.email || '')}</td>
+                            <td style="padding:0.5rem;">${entry.signedUpAt ? new Date(entry.signedUpAt).toLocaleDateString() : ''}</td>
+                        </tr>`;
+                    });
+                    
+                    html += '</tbody></table>';
+                } else {
+                    html += '<p style="color:rgba(255,255,255,0.6);">No signups yet</p>';
+                }
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // ---------- USER AVATAR ----------
+        function updateUserAvatar() { 
+            const email = localStorage.getItem('adminEmail') || 'admin'; 
+            document.getElementById('userAvatar').innerText = email.charAt(0).toUpperCase(); 
+        }
+
+        // ---------- EVENT LISTENERS ----------
+        document.getElementById('authBtn').addEventListener('click', () => { 
+            login(document.getElementById('authEmail').value, document.getElementById('authPassword').value); 
+        });
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.querySelectorAll('.nav-link').forEach(link => { 
+            link.addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                showPage(link.dataset.page); 
+            }); 
+        });
+
+        // ---------- INITIALIZE ----------
+        window.addEventListener('DOMContentLoaded', authenticate);
+
+        // EXPOSE GLOBALLY
+        window.showPage = showPage;
+        window.loadAllData = loadAllData;
+        window.hideModal = hideModal;
+        window.showModal = showModal;
+        
+        // Articles
+        window.addNewArticle = addNewArticle;
+        window.editArticle = editArticle;
+        window.deleteArticle = deleteArticle;
+        window.viewArticle = viewArticle;
+        window.filterArticles = filterArticles;
+        
+        // Books
+        window.addNewBook = addNewBook;
+        window.editBook = editBook;
+        window.deleteBook = deleteBook;
+        window.viewBook = viewBook;
+        window.filterBooks = filterBooks;
+        
+        // Research
+        window.addNewResearch = addNewResearch;
+        window.editResearch = editResearch;
+        window.deleteResearch = deleteResearch;
+        window.viewResearch = viewResearch;
+        window.filterResearch = filterResearch;
+        
+        // Author
+        window.editAuthorProfile = editAuthorProfile;
+        
+        // Featured
+        window.addFeaturedItem = addFeaturedItem;
+        window.editFeaturedItem = editFeaturedItem;
+        window.deleteFeaturedItem = deleteFeaturedItem;
+    </script>
+</body>
+</html>

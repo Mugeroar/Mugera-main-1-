@@ -1,0 +1,3879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>I AM MUGERA - Webpage Management</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/66rJN5PW/signature(1).png">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --teal: #14b8a6;
+            --pink: #ec4899;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .professional-bg {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(10, 10, 10, 0.92) 0%, 
+                    rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/Hn3fK4jT/20260206_1227_Image_Generation_remix_01kgs4ccqtf63rvv82pa8tmgzm.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 1;
+            transform: translateY(0);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2xl), 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo img {
+            height: 90px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .login-logo p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .alert {
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.75rem;
+            display: none;
+            border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-error {
+            border-left-color: var(--error);
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+        }
+
+        .alert-success {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+        }
+
+        .alert.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.25);
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(202, 138, 4, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(202, 138, 4, 0.4);
+            color: var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Admin Panel */
+        .admin-container {
+            display: none;
+            min-height: 100vh;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(10, 10, 10, 0.92) 0%, 
+                    rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/Hn3fK4jT/20260206_1227_Image_Generation_remix_01kgs4ccqtf63rvv82pa8tmgzm.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-logo img {
+            height: 70px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--gold);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(202, 138, 4, 0.2), transparent);
+            color: var(--gold);
+        }
+
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 2px solid rgba(202, 138, 4, 0.4);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(202, 138, 4, 0.4);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            color: var(--error);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .section-tools {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Preview Box */
+        .preview-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .preview-label {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-2xl);
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(202, 138, 4, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+        }
+
+        .notification.error {
+            border-left-color: var(--error);
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+        }
+
+        .notification.info {
+            border-left-color: var(--info);
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--white);
+        }
+
+        .tab.active {
+            color: var(--gold);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(202, 138, 4, 0.3);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .product-meta-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .section-tools {
+                justify-content: center;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-card {
+                padding: 2.5rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar-header {
+                padding: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .modal {
+                padding: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="professional-bg">
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://i.postimg.cc/Kzsb3tX6/I_AM_MUGERA.png" alt="I AM MUGERA">
+                <h1>Webpage Management</h1>
+                <p>Admin Authentication Required</p>
+            </div>
+            
+            <div id="authError" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials or session expired</span>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    Admin Email
+                </label>
+                <input type="email" id="authEmail" class="form-input" placeholder="admin@iammugera.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <input type="password" id="authPassword" class="form-input" placeholder="••••••••" required>
+            </div>
+            
+            <button type="button" class="btn" id="authBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In to Webpage Manager
+            </button>
+            
+            <a href="events-admin.html" class="btn btn-outline" style="margin-top: 1rem;">
+                <i class="fas fa-arrow-left"></i>
+                Back to Events Portal
+            </a>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.85rem;">
+                <i class="fas fa-shield-alt"></i> Secure Admin Access
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://i.postimg.cc/Kzsb3tX6/I_AM_MUGERA.png" alt="I AM MUGERA">
+                </div>
+                <h2 class="sidebar-title">Webpage Management</h2>
+                <p class="sidebar-subtitle">Complete Website Structure Control</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="hero">
+                        <i class="fas fa-star nav-icon"></i>
+                        <span>Hero Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="about">
+                        <i class="fas fa-user nav-icon"></i>
+                        <span>About Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="author">
+                        <i class="fas fa-book nav-icon"></i>
+                        <span>Author Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="communities">
+                        <i class="fas fa-users nav-icon"></i>
+                        <span>Communities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="conference">
+                        <i class="fas fa-calendar-day nav-icon"></i>
+                        <span>Conference</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="store">
+                        <i class="fas fa-store nav-icon"></i>
+                        <span>Store & Products</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="contact">
+                        <i class="fas fa-address-card nav-icon"></i>
+                        <span>Contact Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="settings">
+                        <i class="fas fa-cog nav-icon"></i>
+                        <span>Site Settings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div style="padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto;">
+                <p style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); text-align: center;">
+                    <i class="fas fa-lock"></i> Secure Session Active
+                </p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div>
+                    <h1 class="page-title" id="pageTitle">Webpage Dashboard</h1>
+                    <div class="page-subtitle">
+                        <i class="fas fa-code"></i>
+                        <span id="pageSubtitle">Complete Website Structure Management</span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <a href="events-admin.html" class="back-btn">
+                        <i class="fas fa-calendar-alt"></i>
+                        Events Portal
+                    </a>
+                    <div class="user-avatar" id="userAvatar">
+                        A
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page-content">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Webpage Management Overview</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="refreshAllData()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh All Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-bottom: 1.5rem; color: rgba(255, 255, 255, 0.9);">
+                        Welcome to the Webpage Management Panel. Here you can update all sections of the I AM MUGERA website including hero content, about sections, author information, communities, conference details, store products, and site settings.
+                    </p>
+                    
+                    <div class="form-grid">
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('hero')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-star"></i> Hero Section
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Manage main title, subtitle, tagline, and call-to-action buttons
+                            </p>
+                        </div>
+                        
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('about')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-user"></i> About Section
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Update brand description, sections, and about image
+                            </p>
+                        </div>
+                        
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('author')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-book"></i> Author Section
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Manage books, featured articles, and author spotlight
+                            </p>
+                        </div>
+                        
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('communities')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-users"></i> Communities
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Manage all brand communities and platforms
+                            </p>
+                        </div>
+                        
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('conference')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-calendar-day"></i> Conference
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Update conference details, features, and registration
+                            </p>
+                        </div>
+                        
+                        <div class="content-section" style="cursor: pointer;" onclick="showPage('store')">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">
+                                <i class="fas fa-store"></i> Store
+                            </h3>
+                            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                Manage products, pricing, and store settings
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Quick Actions</h2>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-outline btn-sm" onclick="showPage('hero')">
+                            <i class="fas fa-star"></i>
+                            Update Hero
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="showPage('store')">
+                            <i class="fas fa-store"></i>
+                            Add Product
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="showPage('settings')">
+                            <i class="fas fa-cog"></i>
+                            Site Settings
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="backupData()">
+                            <i class="fas fa-download"></i>
+                            Backup Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Section Page -->
+            <div id="heroPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Hero Section Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveHeroSection()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="heroForm">
+                        <div class="form-grid">
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-heading"></i>
+                                    Main Title
+                                </label>
+                                <input type="text" id="heroMainTitle" class="form-input" placeholder="I AM MUGERA" required>
+                            </div>
+                            
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-quote-left"></i>
+                                    Subtitle
+                                </label>
+                                <textarea id="heroSubtitle" class="form-input form-textarea" placeholder="Stop waiting for inspiration. Start writing the script..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-tag"></i>
+                                    Tagline
+                                </label>
+                                <input type="text" id="heroTagline" class="form-input" placeholder="Transformative Speaking • Strategic Coaching • Impactful Writing" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-image"></i>
+                                    Background Image URL
+                                </label>
+                                <input type="text" id="heroBackgroundImage" class="form-input" placeholder="Leave empty for default">
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Call-to-Action Buttons</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Primary Button Text</label>
+                                <input type="text" id="heroBtnPrimaryText" class="form-input" placeholder="Book Speaking Event" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Primary Button Icon</label>
+                                <input type="text" id="heroBtnPrimaryIcon" class="form-input" placeholder="fas fa-microphone" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Secondary Button Text</label>
+                                <input type="text" id="heroBtnSecondaryText" class="form-input" placeholder="Schedule Consultation" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Secondary Button Icon</label>
+                                <input type="text" id="heroBtnSecondaryIcon" class="form-input" placeholder="fas fa-calendar-check" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Save Hero Section
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- About Section Page -->
+            <div id="aboutPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">About Section Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveAboutSection()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="aboutForm">
+                        <div class="form-grid">
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-heading"></i>
+                                    Section Title
+                                </label>
+                                <input type="text" id="aboutTitle" class="form-input" placeholder="About I AM MUGERA" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-image"></i>
+                                    About Image URL
+                                </label>
+                                <input type="text" id="aboutImage" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-tag"></i>
+                                    Name/Headline
+                                </label>
+                                <input type="text" id="aboutName" class="form-input" placeholder="Transformational Leadership Experts" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-paragraph"></i>
+                                Section 1
+                            </label>
+                            <textarea id="aboutSection1" class="form-input form-textarea" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-paragraph"></i>
+                                Section 2
+                            </label>
+                            <textarea id="aboutSection2" class="form-input form-textarea" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-paragraph"></i>
+                                Section 3
+                            </label>
+                            <textarea id="aboutSection3" class="form-input form-textarea" rows="4" required></textarea>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Call-to-Action Button</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Button Text</label>
+                                <input type="text" id="aboutCtaText" class="form-input" placeholder="Work With Mugera" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Button Icon</label>
+                                <input type="text" id="aboutCtaIcon" class="form-input" placeholder="fas fa-handshake" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Registration Event Type</label>
+                                <input type="text" id="aboutCtaEventType" class="form-input" placeholder="Executive Coaching" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Save About Section
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Author Section Page -->
+            <div id="authorPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Author Section Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveAuthorSection()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab active" data-tab="featured">Featured Article</button>
+                        <button class="tab" data-tab="books">Books</button>
+                        <button class="tab" data-tab="section">Section Info</button>
+                    </div>
+                    
+                    <!-- Featured Article Tab -->
+                    <div id="featuredTab" class="tab-content active">
+                        <form id="featuredArticleForm">
+                            <div class="form-grid">
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-heading"></i>
+                                        Article Title
+                                    </label>
+                                    <input type="text" id="featuredArticleTitle" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-image"></i>
+                                        Article Image URL
+                                    </label>
+                                    <input type="text" id="featuredArticleImage" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-tag"></i>
+                                        Article Tag
+                                    </label>
+                                    <input type="text" id="featuredArticleTag" class="form-input" placeholder="Coming Soon">
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-align-left"></i>
+                                        Short Description
+                                    </label>
+                                    <textarea id="featuredArticleDescription" class="form-input form-textarea" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-align-justify"></i>
+                                        Long Description
+                                    </label>
+                                    <textarea id="featuredArticleLongDescription" class="form-input form-textarea" rows="5" required></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="switchTab('books')">
+                                    Next: Books
+                                </button>
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-save"></i>
+                                    Save Featured Article
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Books Tab -->
+                    <div id="booksTab" class="tab-content">
+                        <div id="booksContainer">
+                            <!-- Books will be loaded here -->
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="switchTab('featured')">
+                                Previous: Featured Article
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="switchTab('section')">
+                                Next: Section Info
+                            </button>
+                            <button type="button" class="btn" onclick="addBook()">
+                                <i class="fas fa-plus"></i>
+                                Add New Book
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Section Info Tab -->
+                    <div id="sectionTab" class="tab-content">
+                        <form id="authorSectionForm">
+                            <div class="form-grid">
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-heading"></i>
+                                        Section Title
+                                    </label>
+                                    <input type="text" id="authorSectionTitle" class="form-input" placeholder='Author <span class="highlight">Spotlight</span>' required>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-quote-left"></i>
+                                        Section Subtitle
+                                    </label>
+                                    <input type="text" id="authorSectionSubtitle" class="form-input" placeholder="Explore transformative insights through published and upcoming works" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="switchTab('books')">
+                                    Previous: Books
+                                </button>
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-save"></i>
+                                    Save Section Info
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communities Page -->
+            <div id="communitiesPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Communities Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveCommunitiesSection()">
+                                <i class="fas fa-save"></i>
+                                Save All Changes
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="addCommunity()">
+                                <i class="fas fa-plus"></i>
+                                Add Community
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group form-full">
+                            <label class="form-label">
+                                <i class="fas fa-heading"></i>
+                                Section Title
+                            </label>
+                            <input type="text" id="communitiesTitle" class="form-input" placeholder='Brand <span class="highlight">Communities</span>' required>
+                        </div>
+                        
+                        <div class="form-group form-full">
+                            <label class="form-label">
+                                <i class="fas fa-quote-left"></i>
+                                Section Subtitle
+                            </label>
+                            <input type="text" id="communitiesSubtitle" class="form-input" placeholder="Three distinct platforms for holistic growth and transformative connection" required>
+                        </div>
+                    </div>
+                    
+                    <div id="communitiesContainer">
+                        <!-- Communities will be loaded here -->
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                            Back to Dashboard
+                        </button>
+                        <button type="button" class="btn" onclick="saveCommunitiesSection()">
+                            <i class="fas fa-save"></i>
+                            Save All Communities
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conference Page -->
+            <div id="conferencePage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Conference Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveConferenceSection()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="conferenceForm">
+                        <div class="form-grid">
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-heading"></i>
+                                    Section Title
+                                </label>
+                                <input type="text" id="conferenceTitle" class="form-input" placeholder='Annual <span class="highlight">Conference</span>' required>
+                            </div>
+                            
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-quote-left"></i>
+                                    Section Subtitle
+                                </label>
+                                <input type="text" id="conferenceSubtitle" class="form-input" placeholder="A premier gathering of visionary leaders and transformative thinkers" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-tag"></i>
+                                    Conference Name
+                                </label>
+                                <input type="text" id="conferenceName" class="form-input" placeholder='"The Making of An Icon"' required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i>
+                                    Conference Date
+                                </label>
+                                <input type="text" id="conferenceDate" class="form-input" placeholder="April 5th, 2026" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-image"></i>
+                                    Conference Image URL
+                                </label>
+                                <input type="text" id="conferenceImage" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-ticket-alt"></i>
+                                    Registration Event Type
+                                </label>
+                                <input type="text" id="conferenceEventType" class="form-input" placeholder="The Making of An Icon Conference" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-align-justify"></i>
+                                Conference Description
+                            </label>
+                            <textarea id="conferenceDescription" class="form-input form-textarea" rows="4" required></textarea>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Conference Features</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Vision Title</label>
+                                <input type="text" id="conferenceVisionTitle" class="form-input" placeholder="Strategic Vision" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Vision Description</label>
+                                <textarea id="conferenceVisionDescription" class="form-input" rows="2" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Legacy Title</label>
+                                <input type="text" id="conferenceLegacyTitle" class="form-input" placeholder="Legacy Building" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Legacy Description</label>
+                                <textarea id="conferenceLegacyDescription" class="form-input" rows="2" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Impact Title</label>
+                                <input type="text" id="conferenceImpactTitle" class="form-input" placeholder="Social Impact" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Impact Description</label>
+                                <textarea id="conferenceImpactDescription" class="form-input" rows="2" required></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Save Conference Section
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Store Page -->
+            <div id="storePage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Store Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveStoreSection()">
+                                <i class="fas fa-save"></i>
+                                Save All Changes
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="addProduct()">
+                                <i class="fas fa-plus"></i>
+                                Add Product
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab active" data-tab="products">Products</button>
+                        <button class="tab" data-tab="store-settings">Store Settings</button>
+                        <button class="tab" data-tab="store-info">Section Info</button>
+                    </div>
+                    
+                    <!-- Products Tab -->
+                    <div id="productsTab" class="tab-content active">
+                        <div id="productsContainer" class="product-grid">
+                            <!-- Products will be loaded here -->
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn" onclick="addProduct()">
+                                <i class="fas fa-plus"></i>
+                                Add New Product
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Store Settings Tab -->
+                    <div id="storeSettingsTab" class="tab-content">
+                        <form id="storeSettingsForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Currency</label>
+                                    <input type="text" id="storeCurrency" class="form-input" placeholder="KSh" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Shipping Info</label>
+                                    <textarea id="storeShippingInfo" class="form-input" rows="2" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Store Notice</label>
+                                    <textarea id="storeNotice" class="form-input" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">Payment Methods (comma separated)</label>
+                                    <input type="text" id="storePaymentMethods" class="form-input" placeholder="M-Pesa, Bank Transfer, Cash on Delivery" required>
+                                </div>
+                            </div>
+                            
+                            <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Delivery Options</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Standard Delivery Name</label>
+                                    <input type="text" id="deliveryStandardName" class="form-input" placeholder="Standard Delivery" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Standard Delivery Price</label>
+                                    <input type="number" id="deliveryStandardPrice" class="form-input" placeholder="150" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Standard Delivery Days</label>
+                                    <input type="text" id="deliveryStandardDays" class="form-input" placeholder="3-5 business days" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Standard Delivery Icon</label>
+                                    <input type="text" id="deliveryStandardIcon" class="form-input" placeholder="fas fa-truck" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Express Delivery Name</label>
+                                    <input type="text" id="deliveryExpressName" class="form-input" placeholder="Express Delivery" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Express Delivery Price</label>
+                                    <input type="number" id="deliveryExpressPrice" class="form-input" placeholder="300" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Express Delivery Days</label>
+                                    <input type="text" id="deliveryExpressDays" class="form-input" placeholder="1-2 business days" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Express Delivery Icon</label>
+                                    <input type="text" id="deliveryExpressIcon" class="form-input" placeholder="fas fa-bolt" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="switchTab('products')">
+                                    Previous: Products
+                                </button>
+                                <button type="button" class="btn btn-outline" onclick="switchTab('store-info')">
+                                    Next: Section Info
+                                </button>
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-save"></i>
+                                    Save Store Settings
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Store Info Tab -->
+                    <div id="storeInfoTab" class="tab-content">
+                        <form id="storeInfoForm">
+                            <div class="form-grid">
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-heading"></i>
+                                        Section Title
+                                    </label>
+                                    <input type="text" id="storeTitle" class="form-input" placeholder='Featured <span class="highlight">Products</span>' required>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">
+                                        <i class="fas fa-quote-left"></i>
+                                        Section Subtitle
+                                    </label>
+                                    <input type="text" id="storeSubtitle" class="form-input" placeholder="Curated collection of transformative materials and premium merchandise" required>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label class="form-label">Product Categories (comma separated)</label>
+                                    <input type="text" id="storeCategories" class="form-input" placeholder="apparel, books, materials, general" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="switchTab('store-settings')">
+                                    Previous: Store Settings
+                                </button>
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-save"></i>
+                                    Save Section Info
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Page -->
+            <div id="contactPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Contact Section Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveContactSection()">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="contactForm">
+                        <div class="form-grid">
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-heading"></i>
+                                    Section Title
+                                </label>
+                                <input type="text" id="contactTitle" class="form-input" placeholder="Get In Touch" required>
+                            </div>
+                            
+                            <div class="form-group form-full">
+                                <label class="form-label">
+                                    <i class="fas fa-quote-left"></i>
+                                    Section Subtitle
+                                </label>
+                                <textarea id="contactSubtitle" class="form-input" rows="2" required></textarea>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Contact Methods</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="contactEmail" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="text" id="contactPhone" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" id="contactLocation" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">WhatsApp</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">WhatsApp URL</label>
+                                <input type="text" id="whatsappUrl" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">WhatsApp Text</label>
+                                <input type="text" id="whatsappText" class="form-input" placeholder="Message on WhatsApp" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">WhatsApp Icon</label>
+                                <input type="text" id="whatsappIcon" class="form-input" placeholder="fab fa-whatsapp" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Save Contact Section
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Site Settings Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="saveSettings()">
+                                <i class="fas fa-save"></i>
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="settingsForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Site Title</label>
+                                <input type="text" id="siteTitle" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Meta Description</label>
+                                <textarea id="metaDescription" class="form-input" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Favicon URL</label>
+                                <input type="text" id="favicon" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Theme Colors</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Primary Color</label>
+                                <input type="color" id="primaryColor" class="form-input" style="height: 50px; padding: 0.5rem;">
+                                <input type="text" id="primaryColorText" class="form-input" style="margin-top: 0.5rem;" placeholder="#ca8a04">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Secondary Color</label>
+                                <input type="color" id="secondaryColor" class="form-input" style="height: 50px; padding: 0.5rem;">
+                                <input type="text" id="secondaryColorText" class="form-input" style="margin-top: 0.5rem;" placeholder="#a16207">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Background Color</label>
+                                <input type="color" id="backgroundColor" class="form-input" style="height: 50px; padding: 0.5rem;">
+                                <input type="text" id="backgroundColorText" class="form-input" style="margin-top: 0.5rem;" placeholder="#ffffff">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Text Color</label>
+                                <input type="color" id="textColor" class="form-input" style="height: 50px; padding: 0.5rem;">
+                                <input type="text" id="textColorText" class="form-input" style="margin-top: 0.5rem;" placeholder="#0a0a0a">
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--white); margin: 1.5rem 0 1rem;">Footer Settings</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Copyright Text</label>
+                                <textarea id="copyright" class="form-input" rows="2" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Footer Description</label>
+                                <textarea id="footerDescription" class="form-input" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Footer Note</label>
+                                <textarea id="footerNote" class="form-input" rows="2" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Tagline</label>
+                                <input type="text" id="footerTagline" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Save All Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p style="color: var(--white); font-weight: 600;">Loading Webpage Management System...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Modal for Products/Communities -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Edit Item</h3>
+                <button class="modal-close" onclick="hideModal()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- Dynamic form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+
+        // Initialize Firebase
+        let app;
+        let auth;
+        let database;
+        
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            database = firebase.database();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showNotification("Firebase initialization failed. Please refresh the page.", "error");
+        }
+
+        // Global State
+        let currentUser = null;
+        let websiteData = null;
+        let currentSection = null;
+
+        // Utility Functions
+        function showLoading(message = "Loading...") {
+            const loading = document.getElementById('loadingOverlay');
+            loading.querySelector('p').textContent = message;
+            loading.classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icons[type] || 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function hideModal() {
+            document.getElementById('itemModal').classList.remove('active');
+        }
+
+        function showModal(content, title = 'Modal') {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('itemModal').classList.add('active');
+        }
+
+        // Authentication
+        async function authenticate() {
+            showLoading("Checking authentication...");
+            
+            // Check for stored session
+            const storedEmail = localStorage.getItem('adminEmail');
+            const storedToken = localStorage.getItem('adminToken');
+            
+            if (storedEmail && storedToken) {
+                try {
+                    // Check if user is already signed in
+                    if (auth.currentUser) {
+                        currentUser = auth.currentUser;
+                        await loadWebsiteData();
+                        showPanel();
+                        hideLoading();
+                        showNotification("Welcome back to Webpage Manager!", "success");
+                        return true;
+                    }
+                } catch (error) {
+                    console.error("Session check failed:", error);
+                }
+            }
+            
+            // Check URL for token from master portal
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlToken = urlParams.get('token');
+            
+            if (urlToken) {
+                try {
+                    await auth.signInWithCustomToken(urlToken);
+                    currentUser = auth.currentUser;
+                    
+                    // Store session
+                    localStorage.setItem('adminToken', urlToken);
+                    localStorage.setItem('adminEmail', currentUser.email);
+                    
+                    await loadWebsiteData();
+                    showPanel();
+                    hideLoading();
+                    showNotification("Access granted from master portal", "success");
+                    
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                    return true;
+                } catch (error) {
+                    console.error("Custom token login failed:", error);
+                    showNotification("Access token invalid or expired", "error");
+                }
+            }
+            
+            // No valid session found
+            hideLoading();
+            document.getElementById('loginPage').style.display = 'flex';
+            return false;
+        }
+
+        async function login(email, password) {
+            try {
+                showLoading("Authenticating...");
+                document.getElementById('authError').style.display = 'none';
+                
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                // Get ID token
+                const token = await currentUser.getIdToken();
+                
+                // Store session
+                localStorage.setItem('adminToken', token);
+                localStorage.setItem('adminEmail', email);
+                
+                await loadWebsiteData();
+                showPanel();
+                hideLoading();
+                showNotification("Successfully logged in!", "success");
+                
+                return true;
+            } catch (error) {
+                console.error("Login error:", error);
+                document.getElementById('authError').style.display = 'flex';
+                document.getElementById('errorText').textContent = error.message;
+                hideLoading();
+                return false;
+            }
+        }
+
+        async function logout() {
+            try {
+                showLoading("Logging out...");
+                await auth.signOut();
+                
+                // Clear session
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminEmail');
+                currentUser = null;
+                
+                // Reset UI
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('authEmail').value = '';
+                document.getElementById('authPassword').value = '';
+                document.getElementById('authError').style.display = 'none';
+                
+                hideLoading();
+                showNotification("Successfully logged out", "success");
+            } catch (error) {
+                console.error("Logout error:", error);
+                hideLoading();
+                showNotification("Logout failed", "error");
+            }
+        }
+
+        function showPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            updateUserInfo();
+            
+            // Show dashboard by default
+            showPage('dashboard');
+        }
+
+        // Data Management
+        async function loadWebsiteData() {
+            try {
+                showLoading("Loading website data...");
+                
+                // Load website data
+                const snapshot = await database.ref('iam-mugera').once('value');
+                websiteData = snapshot.val();
+                
+                if (!websiteData) {
+                    throw new Error("No website data found");
+                }
+                
+                // Load all form data
+                loadHeroData();
+                loadAboutData();
+                loadAuthorData();
+                loadCommunitiesData();
+                loadConferenceData();
+                loadStoreData();
+                loadContactData();
+                loadSettingsData();
+                
+                hideLoading();
+                showNotification("Website data loaded successfully", "success");
+                
+            } catch (error) {
+                console.error("Error loading data:", error);
+                hideLoading();
+                showNotification(`Failed to load data: ${error.message}`, "error");
+            }
+        }
+
+        function loadHeroData() {
+            const hero = websiteData.hero;
+            if (hero) {
+                document.getElementById('heroMainTitle').value = hero.mainTitle || '';
+                document.getElementById('heroSubtitle').value = hero.subtitle || '';
+                document.getElementById('heroTagline').value = hero.tagline || '';
+                document.getElementById('heroBackgroundImage').value = hero.backgroundImage || '';
+                
+                if (hero.buttons) {
+                    if (hero.buttons.primary) {
+                        document.getElementById('heroBtnPrimaryText').value = hero.buttons.primary.text || '';
+                        document.getElementById('heroBtnPrimaryIcon').value = hero.buttons.primary.icon || '';
+                    }
+                    if (hero.buttons.secondary) {
+                        document.getElementById('heroBtnSecondaryText').value = hero.buttons.secondary.text || '';
+                        document.getElementById('heroBtnSecondaryIcon').value = hero.buttons.secondary.icon || '';
+                    }
+                }
+            }
+        }
+
+        function loadAboutData() {
+            const about = websiteData.about;
+            if (about) {
+                document.getElementById('aboutTitle').value = about.title || '';
+                document.getElementById('aboutImage').value = about.image || '';
+                document.getElementById('aboutName').value = about.name || '';
+                
+                if (about.sections) {
+                    document.getElementById('aboutSection1').value = about.sections.section1 || '';
+                    document.getElementById('aboutSection2').value = about.sections.section2 || '';
+                    document.getElementById('aboutSection3').value = about.sections.section3 || '';
+                }
+                
+                if (about.ctaButton) {
+                    document.getElementById('aboutCtaText').value = about.ctaButton.text || '';
+                    document.getElementById('aboutCtaIcon').value = about.ctaButton.icon || '';
+                    document.getElementById('aboutCtaEventType').value = about.ctaButton.registrationEventType || '';
+                }
+            }
+        }
+
+        function loadAuthorData() {
+            const author = websiteData.author;
+            if (author) {
+                document.getElementById('authorSectionTitle').value = author.title || '';
+                document.getElementById('authorSectionSubtitle').value = author.subtitle || '';
+                
+                if (author.featuredArticle) {
+                    document.getElementById('featuredArticleTitle').value = author.featuredArticle.title || '';
+                    document.getElementById('featuredArticleImage').value = author.featuredArticle.image || '';
+                    document.getElementById('featuredArticleTag').value = author.featuredArticle.tag || '';
+                    document.getElementById('featuredArticleDescription').value = author.featuredArticle.description || '';
+                    document.getElementById('featuredArticleLongDescription').value = author.featuredArticle.longDescription || '';
+                }
+                
+                // Load books
+                loadBooksData();
+            }
+        }
+
+        function loadBooksData() {
+            const container = document.getElementById('booksContainer');
+            container.innerHTML = '';
+            
+            const books = websiteData.author?.books;
+            if (books) {
+                Object.entries(books).forEach(([bookId, book]) => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'content-section';
+                    bookCard.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <h4 style="color: var(--gold); margin-bottom: 0.5rem;">${book.title || 'Untitled Book'}</h4>
+                            <span class="status-indicator ${book.status === 'coming-soon' ? 'status-inactive' : 'status-active'}">
+                                ${book.status || 'planned'}
+                            </span>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem; font-size: 0.9rem;">
+                            ${book.description || 'No description'}
+                        </p>
+                        <div class="product-actions">
+                            <button class="btn btn-outline btn-sm" onclick="editBook('${bookId}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="deleteBook('${bookId}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(bookCard);
+                });
+            }
+            
+            if (!books || Object.keys(books).length === 0) {
+                container.innerHTML = `
+                    <div class="content-section" style="text-align: center; padding: 2rem;">
+                        <p style="color: rgba(255, 255, 255, 0.7);">
+                            <i class="fas fa-book" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i><br>
+                            No books added yet
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function loadCommunitiesData() {
+            const communities = websiteData.communities;
+            if (communities) {
+                document.getElementById('communitiesTitle').value = communities.title || '';
+                document.getElementById('communitiesSubtitle').value = communities.subtitle || '';
+                
+                // Load communities
+                loadCommunitiesList();
+            }
+        }
+
+        function loadCommunitiesList() {
+            const container = document.getElementById('communitiesContainer');
+            container.innerHTML = '';
+            
+            const communities = websiteData.communities?.items;
+            if (communities) {
+                Object.entries(communities).forEach(([communityId, community]) => {
+                    const communityCard = document.createElement('div');
+                    communityCard.className = 'content-section';
+                    communityCard.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <img src="${community.logo || ''}" alt="${community.name || ''}" style="width: 60px; height: 60px; border-radius: var(--radius-md); object-fit: cover;">
+                            <div>
+                                <h4 style="color: var(--gold); margin-bottom: 0.25rem;">${community.name || 'Unnamed Community'}</h4>
+                                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">Order: ${community.order || 'Not set'}</p>
+                            </div>
+                            <span class="status-indicator ${community.visible ? 'status-active' : 'status-inactive'}" style="margin-left: auto;">
+                                ${community.visible ? 'Visible' : 'Hidden'}
+                            </span>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem; font-size: 0.9rem;">
+                            ${community.description || 'No description'}
+                        </p>
+                        <div class="product-actions">
+                            <button class="btn btn-outline btn-sm" onclick="editCommunity('${communityId}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="deleteCommunity('${communityId}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(communityCard);
+                });
+            }
+        }
+
+        function loadConferenceData() {
+            const conference = websiteData.conference;
+            if (conference) {
+                document.getElementById('conferenceTitle').value = conference.title || '';
+                document.getElementById('conferenceSubtitle').value = conference.subtitle || '';
+                document.getElementById('conferenceName').value = conference.name || '';
+                document.getElementById('conferenceDate').value = conference.date || '';
+                document.getElementById('conferenceImage').value = conference.image || '';
+                document.getElementById('conferenceEventType').value = conference.registrationEventType || '';
+                document.getElementById('conferenceDescription').value = conference.description || '';
+                
+                if (conference.features) {
+                    if (conference.features.vision) {
+                        document.getElementById('conferenceVisionTitle').value = conference.features.vision.title || '';
+                        document.getElementById('conferenceVisionDescription').value = conference.features.vision.description || '';
+                    }
+                    if (conference.features.legacy) {
+                        document.getElementById('conferenceLegacyTitle').value = conference.features.legacy.title || '';
+                        document.getElementById('conferenceLegacyDescription').value = conference.features.legacy.description || '';
+                    }
+                    if (conference.features.impact) {
+                        document.getElementById('conferenceImpactTitle').value = conference.features.impact.title || '';
+                        document.getElementById('conferenceImpactDescription').value = conference.features.impact.description || '';
+                    }
+                }
+            }
+        }
+
+        function loadStoreData() {
+            const store = websiteData.store;
+            if (store) {
+                // Section info
+                document.getElementById('storeTitle').value = store.title || '';
+                document.getElementById('storeSubtitle').value = store.subtitle || '';
+                
+                // Categories
+                if (store.categories) {
+                    const categories = Object.values(store.categories).join(', ');
+                    document.getElementById('storeCategories').value = categories;
+                }
+                
+                // Store settings
+                if (store.settings) {
+                    document.getElementById('storeCurrency').value = store.settings.currency || '';
+                    document.getElementById('storeShippingInfo').value = store.settings.shippingInfo || '';
+                    document.getElementById('storeNotice').value = store.settings.storeNotice || '';
+                    
+                    if (store.settings.paymentMethods) {
+                        document.getElementById('storePaymentMethods').value = store.settings.paymentMethods.join(', ') || '';
+                    }
+                    
+                    if (store.settings.deliveryOptions) {
+                        const standard = store.settings.deliveryOptions.standard;
+                        const express = store.settings.deliveryOptions.express;
+                        
+                        if (standard) {
+                            document.getElementById('deliveryStandardName').value = standard.name || '';
+                            document.getElementById('deliveryStandardPrice').value = standard.price || '';
+                            document.getElementById('deliveryStandardDays').value = standard.days || '';
+                            document.getElementById('deliveryStandardIcon').value = standard.icon || '';
+                        }
+                        
+                        if (express) {
+                            document.getElementById('deliveryExpressName').value = express.name || '';
+                            document.getElementById('deliveryExpressPrice').value = express.price || '';
+                            document.getElementById('deliveryExpressDays').value = express.days || '';
+                            document.getElementById('deliveryExpressIcon').value = express.icon || '';
+                        }
+                    }
+                }
+                
+                // Load products
+                loadProductsData();
+            }
+        }
+
+        function loadProductsData() {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = '';
+            
+            const products = websiteData.store?.products;
+            if (products) {
+                Object.entries(products).forEach(([productId, product]) => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.innerHTML = `
+                        <div class="product-header">
+                            <h3 class="product-title">${product.name || 'Unnamed Product'}</h3>
+                            <div class="product-price">${product.price || ''}</div>
+                        </div>
+                        <div class="product-meta">
+                            <span class="product-meta-item">${product.category || 'general'}</span>
+                            <span class="product-meta-item">Stock: ${product.stock || 0}</span>
+                            <span class="product-meta-item">${product.status || 'available'}</span>
+                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-bottom: 1rem;">
+                            ${product.description || 'No description'}
+                        </p>
+                        <div class="product-actions">
+                            <button class="btn btn-outline btn-sm" onclick="editProduct('${productId}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="deleteProduct('${productId}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(productCard);
+                });
+            }
+            
+            if (!products || Object.keys(products).length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+                        <i class="fas fa-store-slash" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No products added yet</p>
+                    </div>
+                `;
+            }
+        }
+
+        function loadContactData() {
+            const contact = websiteData.contact;
+            if (contact) {
+                document.getElementById('contactTitle').value = contact.title || '';
+                document.getElementById('contactSubtitle').value = contact.subtitle || '';
+                
+                if (contact.methods) {
+                    if (contact.methods.email) {
+                        document.getElementById('contactEmail').value = contact.methods.email.value || '';
+                    }
+                    if (contact.methods.phone) {
+                        document.getElementById('contactPhone').value = contact.methods.phone.value || '';
+                    }
+                    if (contact.methods.location) {
+                        document.getElementById('contactLocation').value = contact.methods.location.value || '';
+                    }
+                }
+                
+                if (contact.whatsapp) {
+                    document.getElementById('whatsappUrl').value = contact.whatsapp.url || '';
+                    document.getElementById('whatsappText').value = contact.whatsapp.text || '';
+                    document.getElementById('whatsappIcon').value = contact.whatsapp.icon || '';
+                }
+            }
+        }
+
+        function loadSettingsData() {
+            const settings = websiteData.settings;
+            if (settings) {
+                document.getElementById('siteTitle').value = settings.siteTitle || '';
+                document.getElementById('metaDescription').value = settings.metaDescription || '';
+                document.getElementById('favicon').value = settings.favicon || '';
+                
+                if (settings.theme) {
+                    document.getElementById('primaryColor').value = settings.theme.primaryColor || '#ca8a04';
+                    document.getElementById('primaryColorText').value = settings.theme.primaryColor || '#ca8a04';
+                    document.getElementById('secondaryColor').value = settings.theme.secondaryColor || '#a16207';
+                    document.getElementById('secondaryColorText').value = settings.theme.secondaryColor || '#a16207';
+                    document.getElementById('backgroundColor').value = settings.theme.backgroundColor || '#ffffff';
+                    document.getElementById('backgroundColorText').value = settings.theme.backgroundColor || '#ffffff';
+                    document.getElementById('textColor').value = settings.theme.textColor || '#0a0a0a';
+                    document.getElementById('textColorText').value = settings.theme.textColor || '#0a0a0a';
+                }
+            }
+            
+            const footer = websiteData.footer;
+            if (footer) {
+                document.getElementById('copyright').value = footer.copyright || '';
+                document.getElementById('footerDescription').value = footer.description || '';
+                document.getElementById('footerNote').value = footer.note || '';
+                document.getElementById('footerTagline').value = footer.tagline || '';
+            }
+        }
+
+        // Page Management
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            const page = document.getElementById(pageId + 'Page');
+            if (page) {
+                page.style.display = 'block';
+                
+                // Update page title
+                const titles = {
+                    'dashboard': 'Webpage Dashboard',
+                    'hero': 'Hero Section Management',
+                    'about': 'About Section Management',
+                    'author': 'Author Section Management',
+                    'communities': 'Communities Management',
+                    'conference': 'Conference Management',
+                    'store': 'Store Management',
+                    'contact': 'Contact Section Management',
+                    'settings': 'Site Settings Management'
+                };
+                
+                const subtitles = {
+                    'dashboard': 'Complete Website Structure Management',
+                    'hero': 'Manage main hero section content',
+                    'about': 'Update about section and brand description',
+                    'author': 'Manage books and author information',
+                    'communities': 'Manage all brand communities',
+                    'conference': 'Update conference details',
+                    'store': 'Manage products and store settings',
+                    'contact': 'Update contact information',
+                    'settings': 'Configure site-wide settings'
+                };
+                
+                document.getElementById('pageTitle').textContent = titles[pageId] || pageId;
+                document.getElementById('pageSubtitle').textContent = subtitles[pageId] || '';
+                
+                // Load page-specific content if needed
+                if (pageId === 'author') {
+                    loadBooksData();
+                } else if (pageId === 'communities') {
+                    loadCommunitiesList();
+                } else if (pageId === 'store') {
+                    loadProductsData();
+                }
+            }
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
+            
+            // Reset tabs to first tab
+            if (pageId === 'author' || pageId === 'store') {
+                switchTab('featured');
+            }
+        }
+
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const tabContent = document.getElementById(tabId + 'Tab');
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        function updateUserInfo() {
+            const email = localStorage.getItem('adminEmail') || currentUser?.email || 'admin@iammugera.com';
+            const name = email.split('@')[0];
+            
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        // Save Functions
+        async function saveHeroSection() {
+            try {
+                showLoading("Saving hero section...");
+                
+                const heroData = {
+                    mainTitle: document.getElementById('heroMainTitle').value,
+                    subtitle: document.getElementById('heroSubtitle').value,
+                    tagline: document.getElementById('heroTagline').value,
+                    backgroundImage: document.getElementById('heroBackgroundImage').value,
+                    buttons: {
+                        primary: {
+                            text: document.getElementById('heroBtnPrimaryText').value,
+                            icon: document.getElementById('heroBtnPrimaryIcon').value,
+                            onclick: "openRegistrationModal('Speaking Engagement')"
+                        },
+                        secondary: {
+                            text: document.getElementById('heroBtnSecondaryText').value,
+                            icon: document.getElementById('heroBtnSecondaryIcon').value,
+                            onclick: "openRegistrationModal('General Inquiry')"
+                        }
+                    }
+                };
+                
+                await database.ref('iam-mugera/hero').update(heroData);
+                
+                hideLoading();
+                showNotification("Hero section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving hero section:", error);
+                hideLoading();
+                showNotification("Failed to save hero section: " + error.message, "error");
+            }
+        }
+
+        async function saveAboutSection() {
+            try {
+                showLoading("Saving about section...");
+                
+                const aboutData = {
+                    title: document.getElementById('aboutTitle').value,
+                    image: document.getElementById('aboutImage').value,
+                    name: document.getElementById('aboutName').value,
+                    sections: {
+                        section1: document.getElementById('aboutSection1').value,
+                        section2: document.getElementById('aboutSection2').value,
+                        section3: document.getElementById('aboutSection3').value
+                    },
+                    ctaButton: {
+                        text: document.getElementById('aboutCtaText').value,
+                        icon: document.getElementById('aboutCtaIcon').value,
+                        registrationEventType: document.getElementById('aboutCtaEventType').value
+                    }
+                };
+                
+                await database.ref('iam-mugera/about').update(aboutData);
+                
+                hideLoading();
+                showNotification("About section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving about section:", error);
+                hideLoading();
+                showNotification("Failed to save about section: " + error.message, "error");
+            }
+        }
+
+        async function saveAuthorSection() {
+            try {
+                showLoading("Saving author section...");
+                
+                const authorData = {
+                    title: document.getElementById('authorSectionTitle').value,
+                    subtitle: document.getElementById('authorSectionSubtitle').value,
+                    featuredArticle: {
+                        title: document.getElementById('featuredArticleTitle').value,
+                        image: document.getElementById('featuredArticleImage').value,
+                        tag: document.getElementById('featuredArticleTag').value,
+                        description: document.getElementById('featuredArticleDescription').value,
+                        longDescription: document.getElementById('featuredArticleLongDescription').value
+                    }
+                };
+                
+                await database.ref('iam-mugera/author').update(authorData);
+                
+                hideLoading();
+                showNotification("Author section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving author section:", error);
+                hideLoading();
+                showNotification("Failed to save author section: " + error.message, "error");
+            }
+        }
+
+        async function saveCommunitiesSection() {
+            try {
+                showLoading("Saving communities section...");
+                
+                const communitiesData = {
+                    title: document.getElementById('communitiesTitle').value,
+                    subtitle: document.getElementById('communitiesSubtitle').value
+                };
+                
+                await database.ref('iam-mugera/communities').update(communitiesData);
+                
+                hideLoading();
+                showNotification("Communities section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving communities section:", error);
+                hideLoading();
+                showNotification("Failed to save communities section: " + error.message, "error");
+            }
+        }
+
+        async function saveConferenceSection() {
+            try {
+                showLoading("Saving conference section...");
+                
+                const conferenceData = {
+                    title: document.getElementById('conferenceTitle').value,
+                    subtitle: document.getElementById('conferenceSubtitle').value,
+                    name: document.getElementById('conferenceName').value,
+                    date: document.getElementById('conferenceDate').value,
+                    image: document.getElementById('conferenceImage').value,
+                    registrationEventType: document.getElementById('conferenceEventType').value,
+                    description: document.getElementById('conferenceDescription').value,
+                    features: {
+                        vision: {
+                            title: document.getElementById('conferenceVisionTitle').value,
+                            description: document.getElementById('conferenceVisionDescription').value
+                        },
+                        legacy: {
+                            title: document.getElementById('conferenceLegacyTitle').value,
+                            description: document.getElementById('conferenceLegacyDescription').value
+                        },
+                        impact: {
+                            title: document.getElementById('conferenceImpactTitle').value,
+                            description: document.getElementById('conferenceImpactDescription').value
+                        }
+                    }
+                };
+                
+                await database.ref('iam-mugera/conference').update(conferenceData);
+                
+                hideLoading();
+                showNotification("Conference section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving conference section:", error);
+                hideLoading();
+                showNotification("Failed to save conference section: " + error.message, "error");
+            }
+        }
+
+        async function saveStoreSection() {
+            try {
+                showLoading("Saving store section...");
+                
+                const categories = document.getElementById('storeCategories').value.split(',').map(cat => cat.trim());
+                const categoriesObj = {};
+                categories.forEach((cat, index) => {
+                    categoriesObj[`category${index + 1}`] = cat;
+                });
+                
+                const storeData = {
+                    title: document.getElementById('storeTitle').value,
+                    subtitle: document.getElementById('storeSubtitle').value,
+                    categories: categoriesObj,
+                    settings: {
+                        currency: document.getElementById('storeCurrency').value,
+                        shippingInfo: document.getElementById('storeShippingInfo').value,
+                        storeNotice: document.getElementById('storeNotice').value,
+                        paymentMethods: document.getElementById('storePaymentMethods').value.split(',').map(method => method.trim()),
+                        deliveryOptions: {
+                            standard: {
+                                name: document.getElementById('deliveryStandardName').value,
+                                price: parseInt(document.getElementById('deliveryStandardPrice').value) || 0,
+                                days: document.getElementById('deliveryStandardDays').value,
+                                icon: document.getElementById('deliveryStandardIcon').value
+                            },
+                            express: {
+                                name: document.getElementById('deliveryExpressName').value,
+                                price: parseInt(document.getElementById('deliveryExpressPrice').value) || 0,
+                                days: document.getElementById('deliveryExpressDays').value,
+                                icon: document.getElementById('deliveryExpressIcon').value
+                            }
+                        }
+                    }
+                };
+                
+                await database.ref('iam-mugera/store').update(storeData);
+                
+                hideLoading();
+                showNotification("Store section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving store section:", error);
+                hideLoading();
+                showNotification("Failed to save store section: " + error.message, "error");
+            }
+        }
+
+        async function saveContactSection() {
+            try {
+                showLoading("Saving contact section...");
+                
+                const contactData = {
+                    title: document.getElementById('contactTitle').value,
+                    subtitle: document.getElementById('contactSubtitle').value,
+                    methods: {
+                        email: {
+                            icon: "fas fa-envelope",
+                            label: "Email",
+                            order: 1,
+                            value: document.getElementById('contactEmail').value,
+                            visible: true
+                        },
+                        phone: {
+                            icon: "fas fa-phone",
+                            label: "Phone",
+                            order: 2,
+                            value: document.getElementById('contactPhone').value,
+                            visible: true
+                        },
+                        location: {
+                            icon: "fas fa-map-marker-alt",
+                            label: "Location",
+                            order: 3,
+                            value: document.getElementById('contactLocation').value,
+                            visible: true
+                        }
+                    },
+                    whatsapp: {
+                        url: document.getElementById('whatsappUrl').value,
+                        text: document.getElementById('whatsappText').value,
+                        icon: document.getElementById('whatsappIcon').value
+                    }
+                };
+                
+                await database.ref('iam-mugera/contact').update(contactData);
+                
+                hideLoading();
+                showNotification("Contact section saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving contact section:", error);
+                hideLoading();
+                showNotification("Failed to save contact section: " + error.message, "error");
+            }
+        }
+
+        async function saveSettings() {
+            try {
+                showLoading("Saving site settings...");
+                
+                const settingsData = {
+                    siteTitle: document.getElementById('siteTitle').value,
+                    metaDescription: document.getElementById('metaDescription').value,
+                    favicon: document.getElementById('favicon').value,
+                    theme: {
+                        primaryColor: document.getElementById('primaryColorText').value,
+                        secondaryColor: document.getElementById('secondaryColorText').value,
+                        backgroundColor: document.getElementById('backgroundColorText').value,
+                        textColor: document.getElementById('textColorText').value
+                    },
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                await database.ref('iam-mugera/settings').update(settingsData);
+                
+                // Save footer settings
+                const footerData = {
+                    copyright: document.getElementById('copyright').value,
+                    description: document.getElementById('footerDescription').value,
+                    note: document.getElementById('footerNote').value,
+                    tagline: document.getElementById('footerTagline').value
+                };
+                
+                await database.ref('iam-mugera/footer').update(footerData);
+                
+                hideLoading();
+                showNotification("Site settings saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving settings:", error);
+                hideLoading();
+                showNotification("Failed to save settings: " + error.message, "error");
+            }
+        }
+
+        // CRUD Functions for Items
+        function addBook() {
+            const form = `
+                <form onsubmit="saveBook(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Book Title</label>
+                            <input type="text" class="form-input" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" name="status" required>
+                                <option value="planned">Planned</option>
+                                <option value="coming-soon">Coming Soon</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Save Book
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, 'Add New Book');
+        }
+
+        async function saveBook(e) {
+            e.preventDefault();
+            showLoading("Saving book...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const bookData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    status: formData.get('status')
+                };
+                
+                // Generate new book ID
+                const books = websiteData.author?.books || {};
+                const bookId = 'book' + (Object.keys(books).length + 1);
+                
+                await database.ref(`iam-mugera/author/books/${bookId}`).set(bookData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Book saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving book:", error);
+                hideLoading();
+                showNotification("Failed to save book: " + error.message, "error");
+            }
+        }
+
+        function editBook(bookId) {
+            const book = websiteData.author?.books?.[bookId];
+            if (!book) return;
+            
+            const form = `
+                <form onsubmit="updateBook(event, '${bookId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Book Title</label>
+                            <input type="text" class="form-input" name="title" value="${book.title || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" name="status" required>
+                                <option value="planned" ${book.status === 'planned' ? 'selected' : ''}>Planned</option>
+                                <option value="coming-soon" ${book.status === 'coming-soon' ? 'selected' : ''}>Coming Soon</option>
+                                <option value="published" ${book.status === 'published' ? 'selected' : ''}>Published</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="3" required>${book.description || ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Update Book
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, `Edit Book: ${book.title}`);
+        }
+
+        async function updateBook(e, bookId) {
+            e.preventDefault();
+            showLoading("Updating book...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const bookData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    status: formData.get('status')
+                };
+                
+                await database.ref(`iam-mugera/author/books/${bookId}`).update(bookData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Book updated successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error updating book:", error);
+                hideLoading();
+                showNotification("Failed to update book: " + error.message, "error");
+            }
+        }
+
+        async function deleteBook(bookId) {
+            if (!confirm("Are you sure you want to delete this book?")) return;
+            
+            showLoading("Deleting book...");
+            
+            try {
+                await database.ref(`iam-mugera/author/books/${bookId}`).remove();
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideLoading();
+                showNotification("Book deleted successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error deleting book:", error);
+                hideLoading();
+                showNotification("Failed to delete book: " + error.message, "error");
+            }
+        }
+
+        function addCommunity() {
+            const form = `
+                <form onsubmit="saveCommunity(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Community Name</label>
+                            <input type="text" class="form-input" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Logo URL</label>
+                            <input type="text" class="form-input" name="logo" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registration Event Type</label>
+                            <input type="text" class="form-input" name="registrationEventType" required>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" checked style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Save Community
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, 'Add New Community');
+        }
+
+        async function saveCommunity(e) {
+            e.preventDefault();
+            showLoading("Saving community...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const communityData = {
+                    name: formData.get('name'),
+                    logo: formData.get('logo'),
+                    description: formData.get('description'),
+                    order: parseInt(formData.get('order')) || 1,
+                    registrationEventType: formData.get('registrationEventType'),
+                    visible: formData.get('visible') === 'on'
+                };
+                
+                // Generate new community ID
+                const communities = websiteData.communities?.items || {};
+                let communityId = formData.get('name').toLowerCase().replace(/\s+/g, '');
+                if (communities[communityId]) {
+                    communityId = communityId + '_' + Date.now();
+                }
+                
+                await database.ref(`iam-mugera/communities/items/${communityId}`).set(communityData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Community saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving community:", error);
+                hideLoading();
+                showNotification("Failed to save community: " + error.message, "error");
+            }
+        }
+
+        function editCommunity(communityId) {
+            const community = websiteData.communities?.items?.[communityId];
+            if (!community) return;
+            
+            const form = `
+                <form onsubmit="updateCommunity(event, '${communityId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Community Name</label>
+                            <input type="text" class="form-input" name="name" value="${community.name || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Logo URL</label>
+                            <input type="text" class="form-input" name="logo" value="${community.logo || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" min="1" value="${community.order || 1}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registration Event Type</label>
+                            <input type="text" class="form-input" name="registrationEventType" value="${community.registrationEventType || ''}" required>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="3" required>${community.description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" ${community.visible ? 'checked' : ''} style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Update Community
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, `Edit Community: ${community.name}`);
+        }
+
+        async function updateCommunity(e, communityId) {
+            e.preventDefault();
+            showLoading("Updating community...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const communityData = {
+                    name: formData.get('name'),
+                    logo: formData.get('logo'),
+                    description: formData.get('description'),
+                    order: parseInt(formData.get('order')) || 1,
+                    registrationEventType: formData.get('registrationEventType'),
+                    visible: formData.get('visible') === 'on'
+                };
+                
+                await database.ref(`iam-mugera/communities/items/${communityId}`).update(communityData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Community updated successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error updating community:", error);
+                hideLoading();
+                showNotification("Failed to update community: " + error.message, "error");
+            }
+        }
+
+        async function deleteCommunity(communityId) {
+            if (!confirm("Are you sure you want to delete this community?")) return;
+            
+            showLoading("Deleting community...");
+            
+            try {
+                await database.ref(`iam-mugera/communities/items/${communityId}`).remove();
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideLoading();
+                showNotification("Community deleted successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error deleting community:", error);
+                hideLoading();
+                showNotification("Failed to delete community: " + error.message, "error");
+            }
+        }
+
+        function addProduct() {
+            const form = `
+                <form onsubmit="saveProduct(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-input" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-input" name="category" required>
+                                <option value="apparel">Apparel</option>
+                                <option value="books">Books</option>
+                                <option value="materials">Materials</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" name="price" placeholder="KSh 1,500" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Original Price (optional)</label>
+                            <input type="text" class="form-input" name="originalPrice" placeholder="KSh 2,000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-input" name="stock" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Image URL</label>
+                            <input type="text" class="form-input" name="image" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Badge (optional)</label>
+                            <input type="text" class="form-input" name="badge" placeholder="New, Sale, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" name="status" required>
+                                <option value="available">Available</option>
+                                <option value="out-of-stock">Out of Stock</option>
+                                <option value="coming-soon">Coming Soon</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" checked style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Save Product
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, 'Add New Product');
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            showLoading("Saving product...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const productData = {
+                    name: formData.get('name'),
+                    category: formData.get('category'),
+                    description: formData.get('description'),
+                    price: formData.get('price'),
+                    originalPrice: formData.get('originalPrice') || '',
+                    stock: parseInt(formData.get('stock')) || 0,
+                    image: formData.get('image'),
+                    order: parseInt(formData.get('order')) || 1,
+                    badge: formData.get('badge') || '',
+                    status: formData.get('status'),
+                    visible: formData.get('visible') === 'on'
+                };
+                
+                // Generate new product ID
+                const products = websiteData.store?.products || {};
+                const productId = 'product' + (Object.keys(products).length + 1);
+                
+                await database.ref(`iam-mugera/store/products/${productId}`).set(productData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Product saved successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error saving product:", error);
+                hideLoading();
+                showNotification("Failed to save product: " + error.message, "error");
+            }
+        }
+
+        function editProduct(productId) {
+            const product = websiteData.store?.products?.[productId];
+            if (!product) return;
+            
+            const form = `
+                <form onsubmit="updateProduct(event, '${productId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-input" name="name" value="${product.name || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-input" name="category" required>
+                                <option value="apparel" ${product.category === 'apparel' ? 'selected' : ''}>Apparel</option>
+                                <option value="books" ${product.category === 'books' ? 'selected' : ''}>Books</option>
+                                <option value="materials" ${product.category === 'materials' ? 'selected' : ''}>Materials</option>
+                                <option value="general" ${product.category === 'general' ? 'selected' : ''}>General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" name="price" value="${product.price || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Original Price (optional)</label>
+                            <input type="text" class="form-input" name="originalPrice" value="${product.originalPrice || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-input" name="stock" min="0" value="${product.stock || 0}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Image URL</label>
+                            <input type="text" class="form-input" name="image" value="${product.image || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" min="1" value="${product.order || 1}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Badge (optional)</label>
+                            <input type="text" class="form-input" name="badge" value="${product.badge || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" name="status" required>
+                                <option value="available" ${product.status === 'available' ? 'selected' : ''}>Available</option>
+                                <option value="out-of-stock" ${product.status === 'out-of-stock' ? 'selected' : ''}>Out of Stock</option>
+                                <option value="coming-soon" ${product.status === 'coming-soon' ? 'selected' : ''}>Coming Soon</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" name="description" rows="4" required>${product.description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" ${product.visible ? 'checked' : ''} style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Update Product
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, `Edit Product: ${product.name}`);
+        }
+
+        async function updateProduct(e, productId) {
+            e.preventDefault();
+            showLoading("Updating product...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const productData = {
+                    name: formData.get('name'),
+                    category: formData.get('category'),
+                    description: formData.get('description'),
+                    price: formData.get('price'),
+                    originalPrice: formData.get('originalPrice') || '',
+                    stock: parseInt(formData.get('stock')) || 0,
+                    image: formData.get('image'),
+                    order: parseInt(formData.get('order')) || 1,
+                    badge: formData.get('badge') || '',
+                    status: formData.get('status'),
+                    visible: formData.get('visible') === 'on'
+                };
+                
+                await database.ref(`iam-mugera/store/products/${productId}`).update(productData);
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Product updated successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error updating product:", error);
+                hideLoading();
+                showNotification("Failed to update product: " + error.message, "error");
+            }
+        }
+
+        async function deleteProduct(productId) {
+            if (!confirm("Are you sure you want to delete this product?")) return;
+            
+            showLoading("Deleting product...");
+            
+            try {
+                await database.ref(`iam-mugera/store/products/${productId}`).remove();
+                
+                // Reload data
+                await loadWebsiteData();
+                
+                hideLoading();
+                showNotification("Product deleted successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                hideLoading();
+                showNotification("Failed to delete product: " + error.message, "error");
+            }
+        }
+
+        // Utility Functions
+        async function refreshAllData() {
+            showLoading("Refreshing all data...");
+            await loadWebsiteData();
+            showNotification("All data refreshed successfully", "success");
+        }
+
+        function backupData() {
+            if (!websiteData) {
+                showNotification("No data to backup", "warning");
+                return;
+            }
+            
+            const dataStr = JSON.stringify(websiteData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `iam-mugera-backup-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification("Backup downloaded successfully", "success");
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Auth button
+            document.getElementById('authBtn').addEventListener('click', async () => {
+                const email = document.getElementById('authEmail').value.trim();
+                const password = document.getElementById('authPassword').value;
+                
+                if (!email || !password) {
+                    showNotification("Please enter both email and password", "error");
+                    return;
+                }
+                
+                await login(email, password);
+            });
+            
+            // Enter key in auth form
+            document.getElementById('authPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('authBtn').click();
+                }
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+            
+            // Tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Form submissions
+            document.getElementById('heroForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveHeroSection();
+            });
+            
+            document.getElementById('aboutForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveAboutSection();
+            });
+            
+            document.getElementById('featuredArticleForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveAuthorSection();
+            });
+            
+            document.getElementById('authorSectionForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveAuthorSection();
+            });
+            
+            document.getElementById('conferenceForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveConferenceSection();
+            });
+            
+            document.getElementById('storeSettingsForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveStoreSection();
+            });
+            
+            document.getElementById('storeInfoForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveStoreSection();
+            });
+            
+            document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveContactSection();
+            });
+            
+            document.getElementById('settingsForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveSettings();
+            });
+            
+            // Close modal on overlay click
+            document.getElementById('itemModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('itemModal')) {
+                    hideModal();
+                }
+            });
+            
+            // Close modal on ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideModal();
+                }
+            });
+            
+            // Color picker sync
+            document.getElementById('primaryColor').addEventListener('input', (e) => {
+                document.getElementById('primaryColorText').value = e.target.value;
+            });
+            
+            document.getElementById('secondaryColor').addEventListener('input', (e) => {
+                document.getElementById('secondaryColorText').value = e.target.value;
+            });
+            
+            document.getElementById('backgroundColor').addEventListener('input', (e) => {
+                document.getElementById('backgroundColorText').value = e.target.value;
+            });
+            
+            document.getElementById('textColor').addEventListener('input', (e) => {
+                document.getElementById('textColorText').value = e.target.value;
+            });
+            
+            document.getElementById('primaryColorText').addEventListener('input', (e) => {
+                document.getElementById('primaryColor').value = e.target.value;
+            });
+            
+            document.getElementById('secondaryColorText').addEventListener('input', (e) => {
+                document.getElementById('secondaryColor').value = e.target.value;
+            });
+            
+            document.getElementById('backgroundColorText').addEventListener('input', (e) => {
+                document.getElementById('backgroundColor').value = e.target.value;
+            });
+            
+            document.getElementById('textColorText').addEventListener('input', (e) => {
+                document.getElementById('textColor').value = e.target.value;
+            });
+        }
+
+        // Initialize
+        async function init() {
+            setupEventListeners();
+            await authenticate();
+        }
+
+        // Start when page loads
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Make functions globally available
+        window.showPage = showPage;
+        window.hideModal = hideModal;
+        window.switchTab = switchTab;
+        window.addBook = addBook;
+        window.editBook = editBook;
+        window.deleteBook = deleteBook;
+        window.addCommunity = addCommunity;
+        window.editCommunity = editCommunity;
+        window.deleteCommunity = deleteCommunity;
+        window.addProduct = addProduct;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.saveHeroSection = saveHeroSection;
+        window.saveAboutSection = saveAboutSection;
+        window.saveAuthorSection = saveAuthorSection;
+        window.saveCommunitiesSection = saveCommunitiesSection;
+        window.saveConferenceSection = saveConferenceSection;
+        window.saveStoreSection = saveStoreSection;
+        window.saveContactSection = saveContactSection;
+        window.saveSettings = saveSettings;
+        window.refreshAllData = refreshAllData;
+        window.backupData = backupData;
+    </script>
+</body>
+</html>

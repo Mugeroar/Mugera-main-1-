@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
+    <title id="pageTitle">I AM MUGERA | Reader</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    
+    <style>
+        /* ---------- SAME THEME AS AUTHOR PAGE ---------- */
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --african-brown: #8B4513;
+            --african-pattern-bg: #f5f0e6;
+            --success: #10b981;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Lora', serif;
+            background: var(--african-pattern-bg);
+            color: var(--black);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+        .inter-font { font-family: 'Inter', sans-serif; }
+
+        /* ---------- READER HEADER ---------- */
+        .reader-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: var(--shadow-md);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 3px solid transparent;
+            background-image: linear-gradient(white, white), repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 5px, var(--gold-dark) 5px, var(--gold-dark) 10px, transparent 10px, transparent 15px);
+            background-clip: padding-box, border-box;
+        }
+        .reader-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--black);
+            max-width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .reader-progress {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .progress-bar-container {
+            width: 200px;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ---------- CHAPTER NAVIGATION ---------- */
+        .chapter-nav {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 300px;
+            height: calc(100vh - 80px);
+            background: white;
+            border-right: 1px solid rgba(202,138,4,0.2);
+            overflow-y: auto;
+            padding: 2rem 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 90;
+            box-shadow: var(--shadow-lg);
+        }
+        .chapter-nav.active {
+            transform: translateX(0);
+        }
+        .chapter-nav-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 1rem;
+        }
+        .chapter-list {
+            list-style: none;
+        }
+        .chapter-item {
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+        .chapter-item:hover {
+            background: rgba(202,138,4,0.05);
+            border-left-color: var(--gold);
+        }
+        .chapter-item.active {
+            background: rgba(202,138,4,0.1);
+            border-left-color: var(--gold);
+            font-weight: 600;
+        }
+        .chapter-number {
+            color: var(--gold);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* ---------- MAIN READING AREA ---------- */
+        .reader-main {
+            margin-top: 80px;
+            margin-left: 0;
+            padding: 3rem 2rem;
+            transition: margin-left 0.3s ease;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .reader-main.nav-open {
+            margin-left: 300px;
+        }
+        .reading-content {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(202,138,4,0.2);
+        }
+        .chapter-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+        .chapter-subtitle {
+            font-size: 1.1rem;
+            color: var(--gold-dark);
+            font-style: italic;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .prose {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+        }
+        .prose p {
+            margin-bottom: 1.5rem;
+        }
+        .prose h2 {
+            font-size: 1.6rem;
+            font-family: 'Cinzel', serif;
+            margin: 2rem 0 1rem;
+            color: var(--black);
+        }
+        .prose blockquote {
+            margin: 2rem 0;
+            padding: 1.5rem 2rem;
+            background: rgba(202,138,4,0.05);
+            border-left: 4px solid var(--gold);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            font-style: italic;
+        }
+        .prose .callout {
+            background: rgba(59,130,246,0.1);
+            border-left: 4px solid var(--info);
+            padding: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 1.5rem 0;
+        }
+        .prose .exercise {
+            background: rgba(16,185,129,0.1);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 1.5rem 0;
+        }
+
+        /* ---------- HIGHLIGHT & NOTE TOOLS ---------- */
+        .highlight-toolbar {
+            position: fixed;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            padding: 0.5rem;
+            display: none;
+            gap: 0.5rem;
+            border: 2px solid var(--gold);
+            z-index: 200;
+        }
+        .highlight-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .highlight-yellow { background: #fef3c7; color: #92400e; }
+        .highlight-blue { background: #dbeafe; color: #1e40af; }
+        .highlight-green { background: #d1fae5; color: #065f46; }
+        .highlight-pink { background: #fce7f3; color: #9d174d; }
+        .highlight-btn:hover { transform: scale(1.1); }
+
+        /* ---------- SIDEBAR NOTES ---------- */
+        .notes-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 80px;
+            width: 400px;
+            height: calc(100vh - 80px);
+            background: white;
+            border-left: 1px solid rgba(202,138,4,0.2);
+            padding: 2rem;
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 89;
+            box-shadow: var(--shadow-xl);
+        }
+        .notes-sidebar.active {
+            right: 0;
+        }
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .note-item {
+            padding: 1.25rem;
+            background: rgba(202,138,4,0.05);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--gold);
+        }
+        .note-highlight {
+            background: #fef3c7;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        /* ---------- ACCESS DENIED / PAYWALL ---------- */
+        .paywall-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .paywall-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-xl);
+            max-width: 500px;
+            text-align: center;
+            border: 3px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 8px, var(--gold-dark) 8px, var(--gold-dark) 16px) border-box;
+        }
+
+        /* ---------- TOGGLE BUTTONS ---------- */
+        .toggle-chapters {
+            position: fixed;
+            left: 1rem;
+            bottom: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 95;
+            font-size: 1.2rem;
+        }
+        .toggle-notes {
+            position: fixed;
+            right: 1rem;
+            bottom: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 95;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .reader-main.nav-open { margin-left: 0; }
+            .chapter-nav { width: 100%; }
+            .notes-sidebar { width: 100%; }
+            .reading-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- READER HEADER -->
+    <header class="reader-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button class="toggle-chapters" onclick="toggleChapterNav()" style="position: static; width: 40px; height: 40px;">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="reader-title" id="readerTitle">Loading...</div>
+        </div>
+        <div class="reader-progress">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <span class="progress-text" id="progressText">0%</span>
+            <button class="toggle-notes" onclick="toggleNotesSidebar()" style="position: static; width: 40px; height: 40px; background: var(--gold);">
+                <i class="fas fa-highlighter"></i>
+            </button>
+            <a href="index.html#library" style="color: var(--dark-gray); margin-left: 1rem;">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- CHAPTER NAVIGATION SIDEBAR -->
+    <div class="chapter-nav" id="chapterNav">
+        <div class="chapter-nav-header">
+            <h3 style="font-family: 'Cinzel', serif; color: var(--gold);">Chapters</h3>
+            <p id="chapterCount" style="color: var(--dark-gray); font-size: 0.9rem;">Loading...</p>
+        </div>
+        <ul class="chapter-list" id="chapterList"></ul>
+    </div>
+
+    <!-- NOTES & HIGHLIGHTS SIDEBAR -->
+    <div class="notes-sidebar" id="notesSidebar">
+        <div class="notes-header">
+            <h3 style="font-family: 'Cinzel', serif; color: var(--gold);">My Highlights & Notes</h3>
+            <button onclick="toggleNotesSidebar()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        <div id="notesList"></div>
+        <div style="margin-top: 2rem;">
+            <button class="btn-subscribe" onclick="exportNotes()" style="width: 100%;">
+                <i class="fas fa-download"></i> Export Notes
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN READING CONTENT -->
+    <main class="reader-main" id="readerMain">
+        <div class="reading-content" id="readingContent">
+            <!-- Content loaded dynamically -->
+            <div style="text-align: center; padding: 4rem;">
+                <div class="loading-spinner" style="margin: 0 auto;"></div>
+                <p style="margin-top: 2rem;">Loading publication...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- HIGHLIGHT TOOLBAR -->
+    <div class="highlight-toolbar" id="highlightToolbar">
+        <button class="highlight-btn highlight-yellow" onclick="addHighlight('yellow')" title="Yellow Highlight">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-blue" onclick="addHighlight('blue')" title="Blue Highlight">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-green" onclick="addHighlight('green')" title="Green Highlight">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-pink" onclick="addHighlight('pink')" title="Pink Highlight">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn" onclick="addNote()" style="background: var(--gold); color: white;" title="Add Note">
+            <i class="fas fa-sticky-note"></i>
+        </button>
+    </div>
+
+    <!-- PAYWALL MODAL (for premium content) -->
+    <div id="paywallModal" style="display: none;">
+        <div class="paywall-overlay">
+            <div class="paywall-card">
+                <i class="fas fa-crown" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                <h2 style="font-family: 'Cinzel', serif; margin-bottom: 1rem;">Premium Content</h2>
+                <p style="margin-bottom: 2rem; color: var(--dark-gray);">This publication requires a subscription to access.</p>
+                <button class="btn-subscribe" onclick="window.location.href='index.html#subscription'" style="width: 100%;">
+                    <i class="fas fa-crown"></i> Subscribe Now
+                </button>
+                <button onclick="document.getElementById('paywallModal').style.display='none'" style="margin-top: 1rem; background: none; border: none; color: var(--dark-gray); cursor: pointer;">
+                    Continue with Preview
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Config - YOUR EXACT CREDENTIALS
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        // ---------- GLOBAL STATE ----------
+        let currentWork = null;
+        let currentChapter = null;
+        let currentUser = null;
+        let userData = null;
+        let userProgress = null;
+        let highlights = [];
+        let notes = [];
+
+        // Get publication ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const publicationId = urlParams.get('id');
+
+        // ---------- LOAD PUBLICATION ----------
+        async function loadPublication() {
+            if (!publicationId) {
+                document.getElementById('readingContent').innerHTML = '<p style="text-align: center; color: var(--error);">No publication specified.</p>';
+                return;
+            }
+
+            try {
+                // Load publication data from Firebase
+                const snap = await database.ref(`iam-mugera/publications/works/${publicationId}`).once('value');
+                currentWork = snap.val();
+                
+                if (!currentWork) {
+                    document.getElementById('readingContent').innerHTML = '<p style="text-align: center; color: var(--error);">Publication not found.</p>';
+                    return;
+                }
+
+                // Set title
+                document.getElementById('readerTitle').innerText = currentWork.title || 'Untitled';
+                document.title = `${currentWork.title} - I AM MUGERA Reader`;
+
+                // Check access permissions
+                await checkAccess();
+
+                // Load chapters
+                renderChapterList();
+                
+                // Load first chapter or saved progress
+                await loadUserProgress();
+                
+                // Load first chapter
+                if (currentWork.content?.chapters?.length > 0) {
+                    const savedChapter = userProgress?.lastChapter || currentWork.content.chapters[0].id;
+                    loadChapter(savedChapter);
+                }
+
+                // Load user's highlights and notes
+                await loadUserHighlights();
+
+            } catch (error) {
+                console.error('Error loading publication:', error);
+                document.getElementById('readingContent').innerHTML = '<p style="text-align: center; color: var(--error);">Error loading content.</p>';
+            }
+        }
+
+        // ---------- CHECK ACCESS & SUBSCRIPTION ----------
+        async function checkAccess() {
+            // If content is free, allow access
+            if (currentWork.access?.fullAccess === 'free' || currentWork.status === 'free') {
+                return true;
+            }
+
+            // If coming soon, show waitlist
+            if (currentWork.status === 'coming-soon') {
+                document.getElementById('readingContent').innerHTML = `
+                    <div style="text-align: center; padding: 4rem;">
+                        <i class="fas fa-clock" style="font-size: 4rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                        <h2 style="font-family: 'Cinzel', serif; margin-bottom: 1rem;">Coming Soon</h2>
+                        <p style="margin-bottom: 2rem; color: var(--dark-gray);">${currentWork.description || 'This publication is not yet available.'}</p>
+                        <button class="btn-subscribe" onclick="window.location.href='index.html?waitlist=${publicationId}'">
+                            <i class="fas fa-bell"></i> Join Waitlist
+                        </button>
+                    </div>
+                `;
+                return false;
+            }
+
+            // Check if user is authenticated
+            if (!currentUser) {
+                document.getElementById('paywallModal').style.display = 'block';
+                return false;
+            }
+
+            // Check if user has subscription
+            if (userData?.subscription?.tier === 'premium' || userData?.subscription?.tier === 'annual') {
+                return true;
+            }
+
+            // Check if user purchased this work
+            if (userData?.library?.purchased?.some(p => p.workId === publicationId)) {
+                return true;
+            }
+
+            // Show paywall
+            document.getElementById('paywallModal').style.display = 'block';
+            return false;
+        }
+
+        // ---------- LOAD USER PROGRESS ----------
+        async function loadUserProgress() {
+            if (!currentUser || !publicationId) return;
+            
+            try {
+                const progressSnap = await database.ref(`iam-mugera/readers/${currentUser.uid}/library/progress/${publicationId}`).once('value');
+                userProgress = progressSnap.val() || {
+                    lastChapter: null,
+                    percentage: 0,
+                    bookmarks: [],
+                    lastPosition: null
+                };
+
+                // Update progress bar
+                updateProgressBar(userProgress.percentage || 0);
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        // ---------- SAVE READING PROGRESS ----------
+        async function saveProgress(chapterId, percentage) {
+            if (!currentUser || !publicationId) return;
+
+            try {
+                const progressRef = database.ref(`iam-mugera/readers/${currentUser.uid}/library/progress/${publicationId}`);
+                await progressRef.update({
+                    lastChapter: chapterId,
+                    percentage: percentage,
+                    lastRead: new Date().toISOString()
+                });
+
+                updateProgressBar(percentage);
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        // ---------- UPDATE PROGRESS BAR ----------
+        function updateProgressBar(percentage) {
+            document.getElementById('progressBarFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').innerText = `${Math.round(percentage)}%`;
+        }
+
+        // ---------- RENDER CHAPTER LIST ----------
+        function renderChapterList() {
+            const chapters = currentWork.content?.chapters || [];
+            document.getElementById('chapterCount').innerText = `${chapters.length} chapters`;
+            
+            const list = document.getElementById('chapterList');
+            list.innerHTML = chapters.map((ch, index) => `
+                <li class="chapter-item ${index === 0 ? 'active' : ''}" onclick="loadChapter('${ch.id}')">
+                    <span class="chapter-number">${ch.number || index + 1}</span>
+                    ${ch.title || `Chapter ${index + 1}`}
+                </li>
+            `).join('');
+        }
+
+        // ---------- LOAD CHAPTER ----------
+        async function loadChapter(chapterId) {
+            const chapters = currentWork.content?.chapters || [];
+            const chapter = chapters.find(ch => ch.id === chapterId);
+            
+            if (!chapter) return;
+
+            currentChapter = chapter;
+
+            // Update active state in chapter list
+            document.querySelectorAll('.chapter-item').forEach(el => {
+                el.classList.remove('active');
+                if (el.textContent.includes(chapter.title || chapterId)) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Calculate reading progress
+            const chapterIndex = chapters.findIndex(ch => ch.id === chapterId);
+            const progress = ((chapterIndex + 1) / chapters.length) * 100;
+            saveProgress(chapterId, progress);
+
+            // Render chapter content
+            renderChapter(chapter);
+        }
+
+        // ---------- RENDER CHAPTER CONTENT (ProseMirror format) ----------
+        function renderChapter(chapter) {
+            const content = chapter.content || [];
+            let html = `
+                <h1 class="chapter-title">${chapter.title || 'Untitled'}</h1>
+                ${chapter.subtitle ? `<div class="chapter-subtitle">${chapter.subtitle}</div>` : ''}
+            `;
+
+            // Parse ProseMirror JSON content
+            content.forEach(node => {
+                switch (node.type) {
+                    case 'paragraph':
+                        html += `<p>${node.content || ''}</p>`;
+                        break;
+                    case 'heading':
+                        html += `<h${node.level || 2}>${node.content || ''}</h${node.level || 2}>`;
+                        break;
+                    case 'blockquote':
+                        html += `<blockquote>${node.content || ''}${node.attribution ? `<br><strong>— ${node.attribution}</strong>` : ''}</blockquote>`;
+                        break;
+                    case 'callout':
+                        html += `<div class="callout">${node.content || ''}</div>`;
+                        break;
+                    case 'exercise':
+                        html += `<div class="exercise">
+                            <h4 style="color: var(--success);">📝 ${node.title || 'Exercise'}</h4>
+                            <p>${node.instructions || ''}</p>
+                            ${node.reflection ? `<p style="margin-top: 1rem;"><em>Reflection: ${node.reflection}</em></p>` : ''}
+                            ${node.duration ? `<span style="display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(16,185,129,0.1); border-radius: var(--radius-full); font-size: 0.9rem;">
+                                <i class="fas fa-clock"></i> ${node.duration}
+                            </span>` : ''}
+                        </div>`;
+                        break;
+                    case 'list':
+                        const listType = node.style === 'bulleted' ? 'ul' : 'ol';
+                        html += `<${listType}>`;
+                        node.items?.forEach(item => {
+                            html += `<li>${item}</li>`;
+                        });
+                        html += `</${listType}>`;
+                        break;
+                    case 'pullquote':
+                        html += `<blockquote style="font-size: 1.3rem; text-align: center;">${node.content || ''}</blockquote>`;
+                        break;
+                    default:
+                        html += `<p>${node.content || ''}</p>`;
+                }
+            });
+
+            document.getElementById('readingContent').innerHTML = `<div class="prose">${html}</div>`;
+
+            // Initialize text selection listener for highlights
+            initializeTextSelection();
+        }
+
+        // ---------- HIGHLIGHT & NOTE FEATURES ----------
+        let selectedText = '';
+        let selectionRange = null;
+
+        function initializeTextSelection() {
+            document.addEventListener('mouseup', function(e) {
+                const selection = window.getSelection();
+                selectedText = selection.toString().trim();
+                
+                if (selectedText && !e.target.closest('.highlight-toolbar')) {
+                    selectionRange = selection.getRangeAt(0);
+                    const rect = selectionRange.getBoundingClientRect();
+                    
+                    const toolbar = document.getElementById('highlightToolbar');
+                    toolbar.style.display = 'flex';
+                    toolbar.style.top = `${rect.top + window.scrollY - 50}px`;
+                    toolbar.style.left = `${rect.left + (rect.width / 2) - 100}px`;
+                } else if (!e.target.closest('.highlight-btn')) {
+                    document.getElementById('highlightToolbar').style.display = 'none';
+                }
+            });
+        }
+
+        window.addHighlight = async function(color) {
+            if (!selectedText || !selectionRange || !currentUser || !publicationId) {
+                if (!currentUser) alert('Please sign in to save highlights');
+                return;
+            }
+
+            const highlight = {
+                id: 'hl_' + Date.now(),
+                workId: publicationId,
+                chapter: currentChapter?.id,
+                text: selectedText,
+                color: color,
+                timestamp: new Date().toISOString(),
+                userId: currentUser.uid
+            };
+
+            try {
+                // Save to Firebase
+                await database.ref(`iam-mugera/readers/${currentUser.uid}/library/highlights/${highlight.id}`).set(highlight);
+                
+                highlights.push(highlight);
+                loadUserHighlights(); // Refresh notes sidebar
+                
+                // Visual feedback
+                const span = document.createElement('span');
+                span.style.backgroundColor = 
+                    color === 'yellow' ? '#fef3c7' :
+                    color === 'blue' ? '#dbeafe' :
+                    color === 'green' ? '#d1fae5' : '#fce7f3';
+                span.style.borderRadius = '3px';
+                span.style.padding = '0 2px';
+                span.style.cursor = 'pointer';
+                span.title = 'Your highlight';
+                
+                selectionRange.surroundContents(span);
+                
+            } catch (error) {
+                console.error('Error saving highlight:', error);
+                alert('Failed to save highlight');
+            }
+
+            document.getElementById('highlightToolbar').style.display = 'none';
+            window.getSelection().removeAllRanges();
+        };
+
+        window.addNote = async function() {
+            if (!selectedText || !currentUser) return;
+            
+            const noteText = prompt('Add your note:');
+            if (!noteText) return;
+
+            const note = {
+                id: 'note_' + Date.now(),
+                workId: publicationId,
+                chapter: currentChapter?.id,
+                highlight: selectedText,
+                note: noteText,
+                timestamp: new Date().toISOString(),
+                userId: currentUser.uid
+            };
+
+            try {
+                await database.ref(`iam-mugera/readers/${currentUser.uid}/library/notes/${note.id}`).set(note);
+                notes.push(note);
+                loadUserHighlights();
+            } catch (error) {
+                console.error('Error saving note:', error);
+            }
+        };
+
+        // ---------- LOAD USER HIGHLIGHTS & NOTES ----------
+        async function loadUserHighlights() {
+            if (!currentUser || !publicationId) return;
+
+            try {
+                // Load highlights
+                const highlightsSnap = await database.ref(`iam-mugera/readers/${currentUser.uid}/library/highlights`).once('value');
+                highlights = [];
+                highlightsSnap.forEach(child => {
+                    const hl = child.val();
+                    if (hl.workId === publicationId) {
+                        highlights.push(hl);
+                    }
+                });
+
+                // Load notes
+                const notesSnap = await database.ref(`iam-mugera/readers/${currentUser.uid}/library/notes`).once('value');
+                notes = [];
+                notesSnap.forEach(child => {
+                    const note = child.val();
+                    if (note.workId === publicationId) {
+                        notes.push(note);
+                    }
+                });
+
+                // Render notes sidebar
+                renderNotesSidebar();
+            } catch (error) {
+                console.error('Error loading highlights:', error);
+            }
+        }
+
+        function renderNotesSidebar() {
+            const notesList = document.getElementById('notesList');
+            
+            if (highlights.length === 0 && notes.length === 0) {
+                notesList.innerHTML = '<p style="color: var(--dark-gray); text-align: center; padding: 2rem;">No highlights or notes yet. Select text to highlight.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            highlights.forEach(hl => {
+                html += `
+                    <div class="note-item" style="border-left-color: ${hl.color === 'yellow' ? '#fef3c7' : hl.color === 'blue' ? '#dbeafe' : hl.color === 'green' ? '#d1fae5' : '#fce7f3'};">
+                        <div class="note-highlight" style="background: ${hl.color === 'yellow' ? '#fef3c7' : hl.color === 'blue' ? '#dbeafe' : hl.color === 'green' ? '#d1fae5' : '#fce7f3'};">
+                            "${hl.text.substring(0, 100)}${hl.text.length > 100 ? '...' : ''}"
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--dark-gray); margin-top: 0.5rem;">
+                            ${new Date(hl.timestamp).toLocaleDateString()}
+                        </p>
+                    </div>
+                `;
+            });
+
+            notes.forEach(note => {
+                html += `
+                    <div class="note-item" style="border-left-color: var(--purple);">
+                        <strong>📝 Note:</strong>
+                        <p style="margin-top: 0.5rem;">${note.note}</p>
+                        <div style="font-size: 0.8rem; color: var(--dark-gray); margin-top: 0.5rem; background: rgba(0,0,0,0.05); padding: 0.5rem; border-radius: var(--radius-sm);">
+                            "${note.highlight.substring(0, 80)}..."
+                        </div>
+                    </div>
+                `;
+            });
+
+            notesList.innerHTML = html;
+        }
+
+        // ---------- EXPORT NOTES ----------
+        window.exportNotes = function() {
+            let content = `# Notes from "${currentWork?.title}"\n\n`;
+            
+            highlights.forEach(hl => {
+                content += `## Highlight (${hl.color})\n`;
+                content += `${hl.text}\n`;
+                content += `Date: ${new Date(hl.timestamp).toLocaleString()}\n\n`;
+            });
+            
+            notes.forEach(note => {
+                content += `## Note\n`;
+                content += `${note.note}\n`;
+                content += `> ${note.highlight}\n`;
+                content += `Date: ${new Date(note.timestamp).toLocaleString()}\n\n`;
+            });
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentWork?.title || 'notes'}.txt`;
+            a.click();
+        };
+
+        // ---------- UI TOGGLES ----------
+        window.toggleChapterNav = function() {
+            document.getElementById('chapterNav').classList.toggle('active');
+            document.getElementById('readerMain').classList.toggle('nav-open');
+        };
+
+        window.toggleNotesSidebar = function() {
+            document.getElementById('notesSidebar').classList.toggle('active');
+        };
+
+        // ---------- AUTH STATE ----------
+        auth.onAuthStateChanged(async (user) => {
+            currentUser = user;
+            if (user) {
+                const userSnap = await database.ref(`iam-mugera/readers/${user.uid}`).once('value');
+                userData = userSnap.val() || {};
+            }
+            loadPublication();
+        });
+
+        // ---------- INIT ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide toolbar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.highlight-toolbar')) {
+                    document.getElementById('highlightToolbar').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

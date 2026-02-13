@@ -1,0 +1,3058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>I AM MUGERA - Events Management</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/66rJN5PW/signature(1).png">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --teal: #14b8a6;
+            --pink: #ec4899;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .professional-bg {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(10, 10, 10, 0.92) 0%, 
+                    rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/Hn3fK4jT/20260206_1227_Image_Generation_remix_01kgs4ccqtf63rvv82pa8tmgzm.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 1;
+            transform: translateY(0);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2xl), 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo img {
+            height: 90px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .login-logo p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .alert {
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.75rem;
+            display: none;
+            border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-error {
+            border-left-color: var(--error);
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+        }
+
+        .alert-success {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+        }
+
+        .alert.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(202, 138, 4, 0.25);
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(202, 138, 4, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(202, 138, 4, 0.4);
+            color: var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Admin Panel */
+        .admin-container {
+            display: none;
+            min-height: 100vh;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(10, 10, 10, 0.92) 0%, 
+                    rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/Hn3fK4jT/20260206_1227_Image_Generation_remix_01kgs4ccqtf63rvv82pa8tmgzm.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-logo img {
+            height: 70px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--gold);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(202, 138, 4, 0.2), transparent);
+            color: var(--gold);
+        }
+
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--gold);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 2px solid rgba(202, 138, 4, 0.4);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(202, 138, 4, 0.4);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            color: var(--error);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(202, 138, 4, 0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(202, 138, 4, 0.2), rgba(161, 98, 7, 0.2));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .section-tools {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(202, 138, 4, 0.1);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(202, 138, 4, 0.2);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 180px;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(202, 138, 4, 0.25);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-sm);
+            background: rgba(255, 255, 255, 0.05);
+            margin-top: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .data-table th {
+            background: rgba(202, 138, 4, 0.2);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--gold);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-attended {
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--info);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.375rem 0.75rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .action-btn.view {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .action-btn.view:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .action-btn.edit {
+            background: rgba(202, 138, 4, 0.2);
+            color: var(--gold);
+            border: 1px solid rgba(202, 138, 4, 0.3);
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(202, 138, 4, 0.3);
+        }
+
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(202, 138, 4, 0.3);
+        }
+
+        .event-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .event-card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .event-card-badge {
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-card-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        .event-card-meta-item i {
+            color: var(--gold);
+            width: 16px;
+        }
+
+        .event-card-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-2xl);
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(202, 138, 4, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+        }
+
+        .notification.error {
+            border-left-color: var(--error);
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+        }
+
+        .notification.info {
+            border-left-color: var(--info);
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            color: var(--gold);
+        }
+
+        .empty-state-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .empty-state-text {
+            margin-bottom: 1.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .section-tools {
+                justify-content: center;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-card {
+                padding: 2.5rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar-header {
+                padding: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .modal {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="professional-bg">
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://i.postimg.cc/Kzsb3tX6/I_AM_MUGERA.png" alt="I AM MUGERA">
+                <h1>Events Management</h1>
+                <p>Admin Authentication Required</p>
+            </div>
+            
+            <div id="authError" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials or session expired</span>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    Admin Email
+                </label>
+                <input type="email" id="authEmail" class="form-input" placeholder="admin@iammugera.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <input type="password" id="authPassword" class="form-input" placeholder="••••••••" required>
+            </div>
+            
+            <button type="button" class="btn" id="authBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In to Events Portal
+            </button>
+            
+            <a href="admin.html" class="btn btn-outline" style="margin-top: 1rem;">
+                <i class="fas fa-arrow-left"></i>
+                Back to Master Portal
+            </a>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.85rem;">
+                <i class="fas fa-shield-alt"></i> Secure Admin Access
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://i.postimg.cc/Kzsb3tX6/I_AM_MUGERA.png" alt="I AM MUGERA">
+                </div>
+                <h2 class="sidebar-title">Events Management</h2>
+                <p class="sidebar-subtitle">Complete Event Administration</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="events">
+                        <i class="fas fa-calendar-alt nav-icon"></i>
+                        <span>All Events</span>
+                        <span class="nav-badge" id="eventCount">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="registrations">
+                        <i class="fas fa-users nav-icon"></i>
+                        <span>Registrations</span>
+                        <span class="nav-badge" id="regCount">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="analytics">
+                        <i class="fas fa-chart-bar nav-icon"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div style="padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto;">
+                <p style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); text-align: center;">
+                    <i class="fas fa-lock"></i> Secure Session Active
+                </p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div>
+                    <h1 class="page-title" id="pageTitle">Events Dashboard</h1>
+                    <div class="page-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="pageSubtitle">Complete Event Management System</span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <a href="master-admin.html" class="back-btn">
+                        <i class="fas fa-home"></i>
+                        Master Portal
+                    </a>
+                    <div class="user-avatar" id="userAvatar">
+                        A
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page-content">
+                <div class="dashboard-grid">
+                    <div class="stat-card" onclick="showPage('events')">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-value" id="totalEvents">0</div>
+                        <div class="stat-label">Total Events</div>
+                    </div>
+                    
+                    <div class="stat-card" onclick="showPage('registrations')">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value" id="totalRegistrations">0</div>
+                        <div class="stat-label">Total Registrations</div>
+                    </div>
+                    
+                    <div class="stat-card" onclick="showPage('registrations')">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="pendingRegistrations">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    
+                    <div class="stat-card" onclick="showPage('analytics')">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value" id="completionRate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Current Events</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="showPage('events')">
+                                <i class="fas fa-eye"></i>
+                                View All Events
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="addNewEvent()">
+                                <i class="fas fa-plus"></i>
+                                Add New Event
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="cards-grid" id="currentEventsList">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Registrations</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="showPage('registrations')">
+                                <i class="fas fa-list"></i>
+                                View All Registrations
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="refreshRegistrations()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentRegistrations">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Events Page -->
+            <div id="eventsPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Event Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="refreshEvents()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="addNewEvent()">
+                                <i class="fas fa-plus"></i>
+                                Add New Event
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Event Type</label>
+                            <select id="eventTypeFilter" class="filter-select" onchange="filterEvents()">
+                                <option value="all">All Events</option>
+                                <option value="visible">Visible Only</option>
+                                <option value="hidden">Hidden Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Sort By</label>
+                            <select id="eventSortFilter" class="filter-select" onchange="filterEvents()">
+                                <option value="order">Custom Order</option>
+                                <option value="name">Name A-Z</option>
+                                <option value="newest">Newest First</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="cards-grid" id="allEventsList">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registrations Page -->
+            <div id="registrationsPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Registration Management</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="exportRegistrations()">
+                                <i class="fas fa-file-export"></i>
+                                Export CSV
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="refreshRegistrations()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select id="regStatusFilter" class="filter-select" onchange="filterRegistrations()">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Event</label>
+                            <select id="regEventFilter" class="filter-select" onchange="filterRegistrations()">
+                                <option value="all">All Events</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Date</label>
+                            <select id="regDateFilter" class="filter-select" onchange="filterRegistrations()">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allRegistrations">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analyticsPage" class="page-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Event Analytics</h2>
+                        <div class="section-tools">
+                            <button class="btn btn-sm" onclick="refreshAnalytics()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="stat-value" id="totalEventsAnalytics">0</div>
+                            <div class="stat-label">Total Events</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-value" id="confirmedRegistrations">0</div>
+                            <div class="stat-label">Confirmed</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-value" id="conversionRate">0%</div>
+                            <div class="stat-label">Conversion Rate</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-week"></i>
+                            </div>
+                            <div class="stat-value" id="weeklyAverage">0</div>
+                            <div class="stat-label">Weekly Avg</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-lg);">
+                        <h3 style="margin-bottom: 1rem; color: var(--white);">Registration Trends</h3>
+                        <div id="analyticsContent">
+                            <!-- Analytics content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p style="color: var(--white); font-weight: 600;">Loading Events Management System...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Event</h3>
+                <button class="modal-close" onclick="hideModal()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- Dynamic form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="registrationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="registrationModalTitle">Registration Details</h3>
+                <button class="modal-close" onclick="hideRegistrationModal()">&times;</button>
+            </div>
+            <div id="registrationModalContent">
+                <!-- Dynamic registration form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+
+        // Initialize Firebase
+        let app;
+        let auth;
+        let database;
+        
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            database = firebase.database();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showNotification("Firebase initialization failed. Please refresh the page.", "error");
+        }
+
+        // Global State
+        let currentUser = null;
+        let websiteData = null;
+        let allEvents = [];
+        let allRegistrations = [];
+        let filteredEvents = [];
+        let filteredRegistrations = [];
+
+        // Utility Functions
+        function showLoading(message = "Loading...") {
+            const loading = document.getElementById('loadingOverlay');
+            loading.querySelector('p').textContent = message;
+            loading.classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icons[type] || 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Authentication
+        async function authenticate() {
+            showLoading("Checking authentication...");
+            
+            // Check for stored session
+            const storedEmail = localStorage.getItem('adminEmail');
+            const storedToken = localStorage.getItem('adminToken');
+            
+            if (storedEmail && storedToken) {
+                try {
+                    // Check if user is already signed in
+                    if (auth.currentUser) {
+                        currentUser = auth.currentUser;
+                        await loadInitialData();
+                        showPanel();
+                        hideLoading();
+                        showNotification("Welcome back!", "success");
+                        return true;
+                    }
+                } catch (error) {
+                    console.error("Session check failed:", error);
+                }
+            }
+            
+            // Check URL for token from master portal
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlToken = urlParams.get('token');
+            
+            if (urlToken) {
+                try {
+                    await auth.signInWithCustomToken(urlToken);
+                    currentUser = auth.currentUser;
+                    
+                    // Store session
+                    localStorage.setItem('adminToken', urlToken);
+                    localStorage.setItem('adminEmail', currentUser.email);
+                    
+                    await loadInitialData();
+                    showPanel();
+                    hideLoading();
+                    showNotification("Access granted from master portal", "success");
+                    
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                    return true;
+                } catch (error) {
+                    console.error("Custom token login failed:", error);
+                    showNotification("Access token invalid or expired", "error");
+                }
+            }
+            
+            // No valid session found
+            hideLoading();
+            document.getElementById('loginPage').style.display = 'flex';
+            return false;
+        }
+
+        async function login(email, password) {
+            try {
+                showLoading("Authenticating...");
+                document.getElementById('authError').style.display = 'none';
+                
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                // Get ID token
+                const token = await currentUser.getIdToken();
+                
+                // Store session
+                localStorage.setItem('adminToken', token);
+                localStorage.setItem('adminEmail', email);
+                
+                await loadInitialData();
+                showPanel();
+                hideLoading();
+                showNotification("Successfully logged in!", "success");
+                
+                return true;
+            } catch (error) {
+                console.error("Login error:", error);
+                document.getElementById('authError').style.display = 'flex';
+                document.getElementById('errorText').textContent = error.message;
+                hideLoading();
+                return false;
+            }
+        }
+
+        async function logout() {
+            try {
+                showLoading("Logging out...");
+                await auth.signOut();
+                
+                // Clear session
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminEmail');
+                currentUser = null;
+                
+                // Reset UI
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('authEmail').value = '';
+                document.getElementById('authPassword').value = '';
+                document.getElementById('authError').style.display = 'none';
+                
+                hideLoading();
+                showNotification("Successfully logged out", "success");
+            } catch (error) {
+                console.error("Logout error:", error);
+                hideLoading();
+                showNotification("Logout failed", "error");
+            }
+        }
+
+        function showPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            updateUserInfo();
+            
+            // Show dashboard by default
+            showPage('dashboard');
+        }
+
+        // Data Management
+        async function loadInitialData() {
+            try {
+                showLoading("Loading events data...");
+                
+                // Load website data
+                const snapshot = await database.ref('iam-mugera').once('value');
+                websiteData = snapshot.val();
+                
+                if (!websiteData) {
+                    throw new Error("No website data found");
+                }
+                
+                // Load registrations
+                await loadRegistrations();
+                
+                // Extract and organize events
+                extractEventsFromData();
+                
+                // Update dashboard
+                updateDashboardStats();
+                updateAnalyticsStats();
+                
+                hideLoading();
+                showNotification("Data loaded successfully", "success");
+                
+            } catch (error) {
+                console.error("Error loading data:", error);
+                hideLoading();
+                showNotification(`Failed to load data: ${error.message}`, "error");
+            }
+        }
+
+        function extractEventsFromData() {
+            allEvents = [];
+            
+            if (websiteData && websiteData.events && websiteData.events.items) {
+                // Extract only from events.items section
+                Object.entries(websiteData.events.items).forEach(([id, event]) => {
+                    allEvents.push({
+                        id: id,
+                        type: 'event',
+                        name: event.name || 'Unnamed Event',
+                        description: event.description || '',
+                        schedule: event.schedule || '',
+                        tag: event.tag || '',
+                        registrationEventType: event.registrationEventType || 'General Event',
+                        visible: event.visible !== false,
+                        order: event.order || 999,
+                        icon: event.icon || 'fas fa-calendar'
+                    });
+                });
+                
+                // Sort by order
+                allEvents.sort((a, b) => (a.order || 999) - (b.order || 999));
+            }
+            
+            filteredEvents = [...allEvents];
+            
+            // Update UI counts
+            document.getElementById('eventCount').textContent = allEvents.length;
+            updateEventFilterOptions();
+            
+            console.log('Extracted events:', allEvents);
+        }
+
+        async function loadRegistrations() {
+            try {
+                const snapshot = await database.ref('registrations').once('value');
+                const data = snapshot.val();
+                
+                if (data) {
+                    allRegistrations = Object.entries(data).map(([id, reg]) => ({
+                        id: id,
+                        fullName: reg.fullName || '',
+                        email: reg.email || '',
+                        phone: reg.phone || '',
+                        profession: reg.profession || '',
+                        location: reg.location || '',
+                        eventType: reg.eventType || '',
+                        message: reg.message || '',
+                        referralSource: reg.referralSource || '',
+                        source: reg.source || '',
+                        status: reg.status || 'pending',
+                        timestamp: reg.timestamp ? new Date(reg.timestamp) : new Date()
+                    }));
+                    
+                    // Sort by timestamp (newest first)
+                    allRegistrations.sort((a, b) => b.timestamp - a.timestamp);
+                } else {
+                    allRegistrations = [];
+                }
+                
+                filteredRegistrations = [...allRegistrations];
+                
+                // Update UI counts
+                document.getElementById('regCount').textContent = allRegistrations.length;
+                updateRegistrationFilterOptions();
+                
+                return allRegistrations;
+            } catch (error) {
+                console.error("Error loading registrations:", error);
+                showNotification("Failed to load registrations", "error");
+                return [];
+            }
+        }
+
+        function updateDashboardStats() {
+            // Total events
+            document.getElementById('totalEvents').textContent = allEvents.length;
+            
+            // Total registrations
+            const totalRegs = allRegistrations.length;
+            document.getElementById('totalRegistrations').textContent = totalRegs;
+            
+            // Pending registrations
+            const pendingRegs = allRegistrations.filter(reg => reg.status === 'pending').length;
+            document.getElementById('pendingRegistrations').textContent = pendingRegs;
+            
+            // Completion rate (confirmed vs total)
+            const confirmedRegs = allRegistrations.filter(reg => reg.status === 'confirmed').length;
+            const completionRate = totalRegs > 0 ? Math.round((confirmedRegs / totalRegs) * 100) : 0;
+            document.getElementById('completionRate').textContent = `${completionRate}%`;
+            
+            // Update recent registrations table
+            updateRecentRegistrationsTable();
+            
+            // Update current events cards
+            updateCurrentEventsCards();
+        }
+
+        function updateAnalyticsStats() {
+            document.getElementById('totalEventsAnalytics').textContent = allEvents.length;
+            
+            const confirmedRegs = allRegistrations.filter(reg => reg.status === 'confirmed').length;
+            document.getElementById('confirmedRegistrations').textContent = confirmedRegs;
+            
+            // Conversion rate (confirmed vs pending)
+            const pendingRegs = allRegistrations.filter(reg => reg.status === 'pending').length;
+            const totalRegs = allRegistrations.length;
+            const conversionRate = totalRegs > 0 ? Math.round((confirmedRegs / totalRegs) * 100) : 0;
+            document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+            
+            // Weekly average (rough estimate)
+            const weeklyAvg = totalRegs > 0 ? Math.round(totalRegs / 4) : 0;
+            document.getElementById('weeklyAverage').textContent = weeklyAvg;
+        }
+
+        function updateRecentRegistrationsTable() {
+            const tableBody = document.getElementById('recentRegistrations');
+            tableBody.innerHTML = '';
+            
+            const recentRegs = allRegistrations.slice(0, 5);
+            
+            if (recentRegs.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
+                            <i class="fas fa-users-slash" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>No recent registrations found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            recentRegs.forEach(reg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${reg.fullName || 'N/A'}</strong></td>
+                    <td>${reg.email || 'N/A'}</td>
+                    <td>${reg.eventType || 'General'}</td>
+                    <td>${reg.timestamp.toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${reg.status || 'pending'}">${reg.status || 'pending'}</span></td>
+                    <td>
+                        <button class="action-btn view" onclick="viewRegistration('${reg.id}')">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateCurrentEventsCards() {
+            const container = document.getElementById('currentEventsList');
+            container.innerHTML = '';
+            
+            // Show all events
+            const currentEvents = allEvents.slice(0, 4);
+            
+            if (currentEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <h3 class="empty-state-title">No Events Found</h3>
+                        <p class="empty-state-text">Start by adding your first event to the management system.</p>
+                        <button class="btn btn-sm" onclick="addNewEvent()">
+                            <i class="fas fa-plus"></i>
+                            Create First Event
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            currentEvents.forEach(event => {
+                const registrationsForEvent = allRegistrations.filter(reg => 
+                    reg.eventType === event.registrationEventType
+                ).length;
+                
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <div class="event-card-header">
+                        <h3 class="event-card-title">${event.name}</h3>
+                        <span class="event-card-badge">${event.tag || 'Event'}</span>
+                    </div>
+                    <div class="event-card-meta">
+                        ${event.schedule ? `
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${event.schedule}</span>
+                        </div>
+                        ` : ''}
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>${registrationsForEvent} Registrations</span>
+                        </div>
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${event.visible ? 'Visible' : 'Hidden'}</span>
+                        </div>
+                    </div>
+                    <p class="event-card-description">${event.description || 'No description available'}</p>
+                    <div class="event-card-footer">
+                        <button class="action-btn edit" onclick="editEvent('${event.id}')">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="action-btn view" onclick="viewEventDetails('${event.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Page Management
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            const page = document.getElementById(pageId + 'Page');
+            if (page) {
+                page.style.display = 'block';
+                
+                // Update page title
+                const titles = {
+                    'dashboard': 'Events Dashboard',
+                    'events': 'Event Management',
+                    'registrations': 'Registration Management',
+                    'analytics': 'Event Analytics'
+                };
+                
+                const subtitles = {
+                    'dashboard': 'Complete Event Management System',
+                    'events': 'Manage all events and schedules',
+                    'registrations': 'View and manage all event registrations',
+                    'analytics': 'Analytics and performance reports'
+                };
+                
+                document.getElementById('pageTitle').textContent = titles[pageId] || pageId;
+                document.getElementById('pageSubtitle').textContent = subtitles[pageId] || '';
+                
+                // Load page-specific content
+                switch (pageId) {
+                    case 'events':
+                        updateEventsList();
+                        break;
+                    case 'registrations':
+                        updateRegistrationsTable();
+                        break;
+                    case 'dashboard':
+                        updateDashboardStats();
+                        break;
+                    case 'analytics':
+                        updateAnalyticsStats();
+                        break;
+                }
+            }
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
+        }
+
+        function updateUserInfo() {
+            const email = localStorage.getItem('adminEmail') || currentUser?.email || 'admin@iammugera.com';
+            const name = email.split('@')[0];
+            
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        // Event List Functions
+        function updateEventsList() {
+            const container = document.getElementById('allEventsList');
+            container.innerHTML = '';
+            
+            if (filteredEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <h3 class="empty-state-title">No Events Found</h3>
+                        <p class="empty-state-text">No events match your current filters.</p>
+                        <button class="btn btn-sm" onclick="clearEventFilters()">
+                            <i class="fas fa-filter"></i>
+                            Clear Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredEvents.forEach(event => {
+                const registrationsForEvent = allRegistrations.filter(reg => 
+                    reg.eventType === event.registrationEventType
+                ).length;
+                
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <div class="event-card-header">
+                        <h3 class="event-card-title">${event.name}</h3>
+                        <span class="event-card-badge">${event.tag || 'Event'}</span>
+                    </div>
+                    <div class="event-card-meta">
+                        ${event.schedule ? `
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${event.schedule}</span>
+                        </div>
+                        ` : ''}
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>${registrationsForEvent} Registrations</span>
+                        </div>
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${event.visible ? 'Visible' : 'Hidden'}</span>
+                        </div>
+                        ${event.order ? `
+                        <div class="event-card-meta-item">
+                            <i class="fas fa-sort-numeric-down"></i>
+                            <span>Order: ${event.order}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <p class="event-card-description">${event.description || 'No description available'}</p>
+                    <div class="event-card-footer">
+                        <button class="action-btn edit" onclick="editEvent('${event.id}')">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="action-btn view" onclick="viewEventDetails('${event.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                        ${allRegistrations.filter(reg => reg.eventType === event.registrationEventType).length === 0 ? `
+                        <button class="action-btn delete" onclick="deleteEvent('${event.id}')">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterEvents() {
+            const typeFilter = document.getElementById('eventTypeFilter').value;
+            const sortFilter = document.getElementById('eventSortFilter').value;
+            
+            filteredEvents = allEvents.filter(event => {
+                // Visibility filter
+                if (typeFilter === 'visible' && !event.visible) {
+                    return false;
+                }
+                if (typeFilter === 'hidden' && event.visible) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Sorting
+            filteredEvents.sort((a, b) => {
+                switch (sortFilter) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'newest':
+                        return (b.order || 0) - (a.order || 0);
+                    default: // 'order'
+                        return (a.order || 999) - (b.order || 999);
+                }
+            });
+            
+            updateEventsList();
+        }
+
+        function clearEventFilters() {
+            document.getElementById('eventTypeFilter').value = 'all';
+            document.getElementById('eventSortFilter').value = 'order';
+            filterEvents();
+        }
+
+        // Registration Functions
+        function updateRegistrationsTable() {
+            const tableBody = document.getElementById('allRegistrations');
+            tableBody.innerHTML = '';
+            
+            if (filteredRegistrations.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: rgba(255, 255, 255, 0.7);">
+                            <i class="fas fa-users-slash" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>No registrations found matching your filters</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            filteredRegistrations.forEach(reg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <strong>${reg.fullName || 'N/A'}</strong>
+                        ${reg.profession ? `<br><small style="color: rgba(255, 255, 255, 0.7);">${reg.profession}</small>` : ''}
+                    </td>
+                    <td>
+                        <div>${reg.email || 'N/A'}</div>
+                        <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.875rem;">${reg.phone || ''}</div>
+                    </td>
+                    <td>${reg.eventType || 'General'}</td>
+                    <td>
+                        <div>${reg.timestamp.toLocaleDateString()}</div>
+                        <small style="color: rgba(255, 255, 255, 0.7);">${reg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                    </td>
+                    <td><span class="status-badge status-${reg.status || 'pending'}">${reg.status || 'pending'}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn view" onclick="viewRegistration('${reg.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit" onclick="editRegistration('${reg.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteRegistration('${reg.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterRegistrations() {
+            const statusFilter = document.getElementById('regStatusFilter').value;
+            const eventFilter = document.getElementById('regEventFilter').value;
+            const dateFilter = document.getElementById('regDateFilter').value;
+            
+            filteredRegistrations = allRegistrations.filter(reg => {
+                // Status filter
+                if (statusFilter !== 'all' && reg.status !== statusFilter) {
+                    return false;
+                }
+                
+                // Event filter
+                if (eventFilter !== 'all' && reg.eventType !== eventFilter) {
+                    return false;
+                }
+                
+                // Date filter
+                if (dateFilter !== 'all') {
+                    const now = new Date();
+                    const regDate = reg.timestamp;
+                    
+                    switch (dateFilter) {
+                        case 'today':
+                            if (regDate.toDateString() !== now.toDateString()) return false;
+                            break;
+                        case 'week':
+                            const weekStart = new Date(now);
+                            weekStart.setDate(now.getDate() - now.getDay());
+                            weekStart.setHours(0, 0, 0, 0);
+                            if (regDate < weekStart) return false;
+                            break;
+                        case 'month':
+                            if (regDate.getMonth() !== now.getMonth() || regDate.getFullYear() !== now.getFullYear()) return false;
+                            break;
+                    }
+                }
+                
+                return true;
+            });
+            
+            updateRegistrationsTable();
+        }
+
+        function updateEventFilterOptions() {
+            const select = document.getElementById('regEventFilter');
+            const currentValue = select.value;
+            
+            // Clear existing options except "All Events"
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            // Get unique event types from events
+            const eventTypes = [...new Set(allEvents.map(event => event.registrationEventType))];
+            
+            eventTypes.forEach(type => {
+                if (type) {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type;
+                    select.appendChild(option);
+                }
+            });
+            
+            // Restore previous selection if possible
+            if (currentValue !== 'all') {
+                select.value = currentValue;
+            }
+        }
+
+        function updateRegistrationFilterOptions() {
+            updateEventFilterOptions();
+        }
+
+        // Modal Functions
+        function hideModal() {
+            document.getElementById('eventModal').classList.remove('active');
+        }
+
+        function showModal(content, title = 'Modal') {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('eventModal').classList.add('active');
+        }
+
+        function hideRegistrationModal() {
+            document.getElementById('registrationModal').classList.remove('active');
+        }
+
+        function showRegistrationModal(content, title = 'Registration') {
+            document.getElementById('registrationModalTitle').textContent = title;
+            document.getElementById('registrationModalContent').innerHTML = content;
+            document.getElementById('registrationModal').classList.add('active');
+        }
+
+        // Event CRUD Functions
+        function addNewEvent() {
+            const form = `
+                <form id="eventForm" onsubmit="saveNewEvent(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Event Name *</label>
+                            <input type="text" class="form-input" name="name" required placeholder="Enter event name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Schedule</label>
+                            <input type="text" class="form-input" name="schedule" placeholder="e.g., Saturdays 7-8 PM EAT">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tag</label>
+                            <input type="text" class="form-input" name="tag" placeholder="e.g., Weekly Series">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registration Event Type *</label>
+                            <input type="text" class="form-input" name="registrationEventType" required placeholder="Used for registrations">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Icon Class</label>
+                            <input type="text" class="form-input" name="icon" placeholder="fas fa-calendar" value="fas fa-calendar">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea class="form-input" name="description" rows="4" required placeholder="Enter event description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" checked style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Save Event
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, 'Add New Event');
+        }
+
+        async function saveNewEvent(e) {
+            e.preventDefault();
+            showLoading("Saving event...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const eventData = {
+                    name: formData.get('name'),
+                    description: formData.get('description'),
+                    schedule: formData.get('schedule') || '',
+                    tag: formData.get('tag') || '',
+                    registrationEventType: formData.get('registrationEventType'),
+                    icon: formData.get('icon') || 'fas fa-calendar',
+                    visible: formData.get('visible') === 'on',
+                    order: parseInt(formData.get('order')) || 1
+                };
+                
+                // Generate a new event ID
+                const eventId = 'event' + (allEvents.length + 1);
+                
+                // Save to Firebase
+                await database.ref(`iam-mugera/events/items/${eventId}`).set(eventData);
+                
+                // Reload data
+                await loadInitialData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Event created successfully!", "success");
+                
+                // Show events page
+                showPage('events');
+                
+            } catch (error) {
+                console.error("Error saving event:", error);
+                hideLoading();
+                showNotification("Failed to save event: " + error.message, "error");
+            }
+        }
+
+        function editEvent(eventId) {
+            const event = allEvents.find(e => e.id === eventId);
+            if (!event) {
+                showNotification("Event not found", "error");
+                return;
+            }
+            
+            const form = `
+                <form id="eventForm" onsubmit="updateEvent(event, '${eventId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Event Name *</label>
+                            <input type="text" class="form-input" name="name" value="${event.name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Schedule</label>
+                            <input type="text" class="form-input" name="schedule" value="${event.schedule || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tag</label>
+                            <input type="text" class="form-input" name="tag" value="${event.tag || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registration Event Type *</label>
+                            <input type="text" class="form-input" name="registrationEventType" value="${event.registrationEventType}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Icon Class</label>
+                            <input type="text" class="form-input" name="icon" value="${event.icon || 'fas fa-calendar'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-input" name="order" value="${event.order || 1}" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea class="form-input" name="description" rows="4" required>${event.description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="visible" ${event.visible ? 'checked' : ''} style="accent-color: var(--gold);">
+                                Visible on website
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Update Event
+                        </button>
+                    </div>
+                </form>
+            `;
+            showModal(form, `Edit: ${event.name}`);
+        }
+
+        async function updateEvent(e, eventId) {
+            e.preventDefault();
+            showLoading("Updating event...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const eventData = {
+                    name: formData.get('name'),
+                    description: formData.get('description'),
+                    schedule: formData.get('schedule') || '',
+                    tag: formData.get('tag') || '',
+                    registrationEventType: formData.get('registrationEventType'),
+                    icon: formData.get('icon') || 'fas fa-calendar',
+                    visible: formData.get('visible') === 'on',
+                    order: parseInt(formData.get('order')) || 1
+                };
+                
+                // Update in Firebase
+                await database.ref(`iam-mugera/events/items/${eventId}`).update(eventData);
+                
+                // Reload data
+                await loadInitialData();
+                
+                hideModal();
+                hideLoading();
+                showNotification("Event updated successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error updating event:", error);
+                hideLoading();
+                showNotification("Failed to update event: " + error.message, "error");
+            }
+        }
+
+        async function deleteEvent(eventId) {
+            if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
+                return;
+            }
+            
+            showLoading("Deleting event...");
+            
+            try {
+                // Check if event has registrations
+                const event = allEvents.find(e => e.id === eventId);
+                const hasRegistrations = allRegistrations.some(reg => reg.eventType === event.registrationEventType);
+                
+                if (hasRegistrations) {
+                    hideLoading();
+                    showNotification("Cannot delete event with existing registrations", "error");
+                    return;
+                }
+                
+                // Delete from Firebase
+                await database.ref(`iam-mugera/events/items/${eventId}`).remove();
+                
+                // Reload data
+                await loadInitialData();
+                
+                hideLoading();
+                showNotification("Event deleted successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error deleting event:", error);
+                hideLoading();
+                showNotification("Failed to delete event: " + error.message, "error");
+            }
+        }
+
+        // Registration CRUD Functions
+        function viewRegistration(regId) {
+            const reg = allRegistrations.find(r => r.id === regId);
+            if (!reg) {
+                showNotification("Registration not found", "error");
+                return;
+            }
+            
+            const content = `
+                <div style="line-height: 1.8; color: var(--white);">
+                    <h4 style="margin-bottom: 1rem;">Registration Details</h4>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: var(--radius-lg);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div><strong>Full Name:</strong><br>${reg.fullName || 'N/A'}</div>
+                            <div><strong>Email:</strong><br>${reg.email || 'N/A'}</div>
+                            <div><strong>Phone:</strong><br>${reg.phone || 'N/A'}</div>
+                            <div><strong>Profession:</strong><br>${reg.profession || 'N/A'}</div>
+                            <div><strong>Location:</strong><br>${reg.location || 'N/A'}</div>
+                            <div><strong>Event Type:</strong><br>${reg.eventType || 'N/A'}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Registration Date:</strong><br>
+                            ${reg.timestamp.toLocaleString()}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Status:</strong><br>
+                            <span class="status-badge status-${reg.status || 'pending'}">${reg.status || 'pending'}</span>
+                        </div>
+                        ${reg.referralSource ? `
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Referral Source:</strong><br>
+                            ${reg.referralSource}
+                        </div>
+                        ` : ''}
+                        ${reg.message ? `
+                        <div style="margin-top: 1rem;">
+                            <strong>Message:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.9);">${reg.message}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="editRegistration('${reg.id}')">
+                        <i class="fas fa-edit"></i>
+                        Edit Registration
+                    </button>
+                    <button type="button" class="btn" onclick="hideRegistrationModal()">
+                        Close
+                    </button>
+                </div>
+            `;
+            showRegistrationModal(content, `Registration: ${reg.fullName || 'View Details'}`);
+        }
+
+        function editRegistration(regId) {
+            const reg = allRegistrations.find(r => r.id === regId);
+            if (!reg) {
+                showNotification("Registration not found", "error");
+                return;
+            }
+            
+            const form = `
+                <form id="registrationForm" onsubmit="updateRegistration(event, '${regId}')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-input" name="fullName" value="${reg.fullName || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-input" name="email" value="${reg.email || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-input" name="phone" value="${reg.phone || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Profession</label>
+                            <input type="text" class="form-input" name="profession" value="${reg.profession || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" name="location" value="${reg.location || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Type</label>
+                            <select class="form-input" name="eventType">
+                                <option value="">Select Event Type</option>
+                                ${allEvents.map(event => `
+                                    <option value="${event.registrationEventType}" ${reg.eventType === event.registrationEventType ? 'selected' : ''}>
+                                        ${event.name}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-input" name="status">
+                                <option value="pending" ${reg.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="confirmed" ${reg.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                <option value="cancelled" ${reg.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-input" name="message" rows="3">${reg.message || ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="hideRegistrationModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i>
+                            Update Registration
+                        </button>
+                    </div>
+                </form>
+            `;
+            showRegistrationModal(form, `Edit Registration: ${reg.fullName}`);
+        }
+
+        async function updateRegistration(e, regId) {
+            e.preventDefault();
+            showLoading("Updating registration...");
+            
+            try {
+                const form = e.target;
+                const formData = new FormData(form);
+                const regData = {
+                    fullName: formData.get('fullName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone') || '',
+                    profession: formData.get('profession') || '',
+                    location: formData.get('location') || '',
+                    eventType: formData.get('eventType') || '',
+                    status: formData.get('status') || 'pending',
+                    message: formData.get('message') || '',
+                    // Keep original timestamp and other fields
+                    timestamp: allRegistrations.find(r => r.id === regId).timestamp.toISOString(),
+                    referralSource: allRegistrations.find(r => r.id === regId).referralSource || '',
+                    source: allRegistrations.find(r => r.id === regId).source || 'website'
+                };
+                
+                // Update in Firebase
+                await database.ref(`registrations/${regId}`).update(regData);
+                
+                // Reload data
+                await loadRegistrations();
+                
+                // Update current view
+                if (document.getElementById('registrationsPage').style.display !== 'none') {
+                    updateRegistrationsTable();
+                }
+                if (document.getElementById('dashboardPage').style.display !== 'none') {
+                    updateRecentRegistrationsTable();
+                    updateDashboardStats();
+                }
+                
+                hideRegistrationModal();
+                hideLoading();
+                showNotification("Registration updated successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error updating registration:", error);
+                hideLoading();
+                showNotification("Failed to update registration: " + error.message, "error");
+            }
+        }
+
+        async function deleteRegistration(regId) {
+            if (!confirm("Are you sure you want to delete this registration? This action cannot be undone.")) {
+                return;
+            }
+            
+            showLoading("Deleting registration...");
+            
+            try {
+                // Delete from Firebase
+                await database.ref(`registrations/${regId}`).remove();
+                
+                // Reload data
+                await loadRegistrations();
+                
+                // Update current view
+                if (document.getElementById('registrationsPage').style.display !== 'none') {
+                    updateRegistrationsTable();
+                }
+                if (document.getElementById('dashboardPage').style.display !== 'none') {
+                    updateRecentRegistrationsTable();
+                    updateDashboardStats();
+                    updateAnalyticsStats();
+                }
+                
+                hideLoading();
+                showNotification("Registration deleted successfully!", "success");
+                
+            } catch (error) {
+                console.error("Error deleting registration:", error);
+                hideLoading();
+                showNotification("Failed to delete registration: " + error.message, "error");
+            }
+        }
+
+        // Utility Functions
+        function refreshEvents() {
+            showLoading("Refreshing events...");
+            extractEventsFromData();
+            updateEventsList();
+            hideLoading();
+            showNotification("Events refreshed successfully", "success");
+        }
+
+        async function refreshRegistrations() {
+            showLoading("Refreshing registrations...");
+            await loadRegistrations();
+            if (document.getElementById('registrationsPage').style.display !== 'none') {
+                updateRegistrationsTable();
+            }
+            if (document.getElementById('dashboardPage').style.display !== 'none') {
+                updateRecentRegistrationsTable();
+                updateDashboardStats();
+            }
+            hideLoading();
+            showNotification("Registrations refreshed successfully", "success");
+        }
+
+        function refreshAnalytics() {
+            updateAnalyticsStats();
+            showNotification("Analytics refreshed", "success");
+        }
+
+        function exportRegistrations() {
+            if (allRegistrations.length === 0) {
+                showNotification("No registrations to export", "warning");
+                return;
+            }
+            
+            // Create CSV content
+            let csv = 'Name,Email,Phone,Event,Status,Date\n';
+            allRegistrations.forEach(reg => {
+                csv += `"${reg.fullName || ''}","${reg.email || ''}","${reg.phone || ''}","${reg.eventType || ''}","${reg.status || ''}","${reg.timestamp.toLocaleDateString()}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `registrations_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification("Export completed successfully", "success");
+        }
+
+        function viewEventDetails(eventId) {
+            const event = allEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            const registrationsForEvent = allRegistrations.filter(reg => 
+                reg.eventType === event.registrationEventType
+            );
+            
+            const content = `
+                <div style="line-height: 1.8; color: var(--white);">
+                    <h4 style="margin-bottom: 1rem;">${event.name}</h4>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: var(--radius-lg);">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Description:</strong><br>
+                            <p>${event.description || 'No description'}</p>
+                        </div>
+                        ${event.schedule ? `
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Schedule:</strong><br>
+                            ${event.schedule}
+                        </div>
+                        ` : ''}
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Registration Event Type:</strong><br>
+                            ${event.registrationEventType}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Status:</strong><br>
+                            <span class="status-badge ${event.visible ? 'status-confirmed' : 'status-pending'}">
+                                ${event.visible ? 'Visible' : 'Hidden'}
+                            </span>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Total Registrations:</strong><br>
+                            ${registrationsForEvent.length} registrations
+                        </div>
+                        ${registrationsForEvent.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            <strong>Recent Registrations:</strong><br>
+                            <ul style="margin-top: 0.5rem; padding-left: 1rem;">
+                                ${registrationsForEvent.slice(0, 3).map(reg => `
+                                    <li>${reg.fullName} - ${reg.status}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="hideModal()">
+                        Close
+                    </button>
+                </div>
+            `;
+            showModal(content, `Event Details: ${event.name}`);
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Auth button
+            document.getElementById('authBtn').addEventListener('click', async () => {
+                const email = document.getElementById('authEmail').value.trim();
+                const password = document.getElementById('authPassword').value;
+                
+                if (!email || !password) {
+                    showNotification("Please enter both email and password", "error");
+                    return;
+                }
+                
+                await login(email, password);
+            });
+            
+            // Enter key in auth form
+            document.getElementById('authPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('authBtn').click();
+                }
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+            
+            // Close modals on overlay click
+            document.getElementById('eventModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('eventModal')) {
+                    hideModal();
+                }
+            });
+            
+            document.getElementById('registrationModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('registrationModal')) {
+                    hideRegistrationModal();
+                }
+            });
+            
+            // Close modals on ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideModal();
+                    hideRegistrationModal();
+                }
+            });
+        }
+
+        // Initialize
+        async function init() {
+            setupEventListeners();
+            await authenticate();
+        }
+
+        // Start when page loads
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Make functions globally available
+        window.showPage = showPage;
+        window.hideModal = hideModal;
+        window.hideRegistrationModal = hideRegistrationModal;
+        window.addNewEvent = addNewEvent;
+        window.refreshEvents = refreshEvents;
+        window.refreshRegistrations = refreshRegistrations;
+        window.refreshAnalytics = refreshAnalytics;
+        window.exportRegistrations = exportRegistrations;
+        window.filterEvents = filterEvents;
+        window.filterRegistrations = filterRegistrations;
+        window.clearEventFilters = clearEventFilters;
+        window.viewRegistration = viewRegistration;
+        window.editRegistration = editRegistration;
+        window.viewEventDetails = viewEventDetails;
+    </script>
+</body>
+</html>

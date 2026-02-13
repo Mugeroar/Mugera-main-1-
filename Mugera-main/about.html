@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>About - I AM MUGERA | Public Speaking, Life Coaching & Author</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/66rJN5PW/signature(1).png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        /* MODERN PROFESSIONAL CSS - Matching Homepage */
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --primary: #111827;
+            --secondary: #6b7280;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --radius-3xl: 28px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+            font-size: 15px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: var(--secondary);
+        }
+
+        .highlight {
+            color: var(--gold);
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: var(--gold);
+            opacity: 0.2;
+            z-index: -1;
+            border-radius: var(--radius-xs);
+        }
+
+        /* HEADER - Matching Homepage */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            padding: 0;
+            box-shadow: var(--shadow-sm);
+            height: 80px;
+        }
+
+        .header-scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        /* LOGO */
+        .brand-signature {
+            height: 50px;
+            width: auto;
+            transition: var(--transition);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: white;
+            padding: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .brand-signature:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* NAVIGATION */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-nav {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            white-space: nowrap;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link i {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: 1px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            background: rgba(202, 138, 4, 0.05);
+        }
+
+        .nav-link:hover::after {
+            width: 70%;
+        }
+
+        .nav-link.active {
+            color: var(--gold);
+            background: rgba(202, 138, 4, 0.08);
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* BUTTONS */
+        .cta-button {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-button.outline {
+            background: transparent;
+            border: 1.5px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .cta-button.outline:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        /* HERO SECTION FOR ABOUT PAGE */
+        .about-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 10, 0.97) 0%, 
+                rgba(10, 10, 10, 0.92) 50%,
+                rgba(10, 10, 10, 0.88) 100%),
+                url('https://i.postimg.cc/9M9YnthW/vecteezy-abstract-background-with-colored-african-patterns-32427619.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 5rem 1.5rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .about-hero-tagline {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(202, 138, 4, 0.1);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(202, 138, 4, 0.2);
+        }
+
+        .about-hero-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* ABOUT CONTENT SECTIONS */
+        section {
+            padding: 4rem 1.5rem;
+        }
+
+        .about-section {
+            background: var(--white);
+        }
+
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-xs);
+        }
+
+        /* CONTENT BLOCKS */
+        .content-block {
+            margin-bottom: 4rem;
+        }
+
+        .content-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-block h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .content-block h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-xs);
+        }
+
+        .content-block p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* VISION & MISSION SECTION */
+        .vision-mission-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision-mission-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .vision-card, .mission-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+        }
+
+        .vision-card:hover, .mission-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 25px rgba(202, 138, 4, 0.2);
+        }
+
+        .vision-icon, .mission-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .vision-card:hover .vision-icon,
+        .mission-card:hover .mission-icon {
+            transform: scale(1.05);
+        }
+
+        .vision-card h3, .mission-card h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .vision-card p, .mission-card p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* APPROACH SECTION */
+        .approach-section {
+            background: linear-gradient(135deg, #fef9f3 0%, var(--white) 100%);
+        }
+
+        .approach-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .approach-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .approach-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .approach-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.75rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .approach-card:hover .approach-icon {
+            transform: scale(1.05);
+        }
+
+        .approach-card h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .approach-card p {
+            color: var(--secondary);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact {
+            background-color: var(--white);
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-option {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.75rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .contact-option:hover .contact-icon {
+            transform: rotate(5deg);
+        }
+
+        .whatsapp-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: var(--white);
+            padding: 3rem 1.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .footer-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-column h3 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            position: relative;
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: var(--radius-xs);
+        }
+
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.75rem;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--gold);
+            transform: translateX(4px);
+        }
+
+        .footer-logo {
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-tagline {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* SOCIAL LINKS */
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px) rotate(5deg);
+            box-shadow: 0 6px 15px rgba(202, 138, 4, 0.3);
+        }
+
+        /* Individual social media colors on hover */
+        .social-link[title*="LinkedIn"]:hover {
+            background: #0077B5;
+            border-color: #0077B5;
+        }
+
+        .social-link[title*="Twitter"]:hover {
+            background: #1DA1F2;
+            border-color: #1DA1F2;
+        }
+
+        .social-link[title*="Instagram"]:hover {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            border-color: transparent;
+        }
+
+        .social-link[title*="YouTube"]:hover {
+            background: #FF0000;
+            border-color: #FF0000;
+        }
+
+        .social-link[title*="Facebook"]:hover {
+            background: #1877F2;
+            border-color: #1877F2;
+        }
+
+        .social-link[title*="WhatsApp"]:hover {
+            background: #25D366;
+            border-color: #25D366;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* REGISTRATION MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .registration-modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-2xl);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .registration-modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--black);
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--black);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .mobile-menu-toggle span::before,
+        .mobile-menu-toggle span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: var(--black);
+            transition: var(--transition);
+        }
+
+        .mobile-menu-toggle span::before {
+            top: -6px;
+        }
+
+        .mobile-menu-toggle span::after {
+            bottom: -6px;
+        }
+
+        .mobile-menu-toggle.active span {
+            background: transparent;
+        }
+
+        .mobile-menu-toggle.active span::before {
+            top: 0;
+            transform: rotate(45deg);
+        }
+
+        .mobile-menu-toggle.active span::after {
+            bottom: 0;
+            transform: rotate(-45deg);
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--white);
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav {
+            list-style: none;
+            flex: 1;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: rgba(202, 138, 4, 0.1);
+            color: var(--gold);
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .nav-container {
+                display: none;
+            }
+
+            .vision-mission-grid,
+            .approach-grid {
+                grid-template-columns: 1fr;
+            }
+
+            html {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 2.25rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            section {
+                padding: 3rem 1.25rem;
+            }
+
+            .about-hero {
+                min-height: 50vh;
+                padding: 4rem 1.25rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .vision-card, .mission-card, .approach-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="mainHeader">
+        <div class="header-container">
+            <div class="brand-container">
+                <a href="index.html">
+                    <img src="https://i.postimg.cc/ncw7xn7V/Untitled-design-18-1.png" alt="I AM MUGERA" class="brand-signature">
+                </a>
+            </div>
+
+            <div class="nav-container">
+                <nav>
+                    <ul class="main-nav">
+                        <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                        <li class="nav-item"><a href="author.html" class="nav-link"><i class="fas fa-book"></i> Author</a></li>
+                        <li class="nav-item"><a href="events.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                        <li class="nav-item"><a href="about.html" class="nav-link active"><i class="fas fa-user"></i> About</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link" onclick="openRegistrationModal('General Inquiry'); return false;"><i class="fas fa-calendar-check"></i> Booking</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <button class="cta-button" onclick="openRegistrationModal('General Inquiry')">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Book Session</span>
+            </button>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <img src="https://i.postimg.cc/ncw7xn7V/Untitled-design-18-1.png" alt="I AM MUGERA" class="brand-signature" style="height: 40px;">
+        </div>
+        <ul class="mobile-nav">
+            <li class="mobile-nav-item"><a href="index.html" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li class="mobile-nav-item"><a href="author.html" class="mobile-nav-link"><i class="fas fa-book"></i> Author</a></li>
+            <li class="mobile-nav-item"><a href="events.html" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
+            <li class="mobile-nav-item"><a href="about.html" class="mobile-nav-link active"><i class="fas fa-user"></i> About</a></li>
+            <li class="mobile-nav-item"><a href="#" class="mobile-nav-link" onclick="openRegistrationModal('General Inquiry'); return false;"><i class="fas fa-calendar-check"></i> Booking</a></li>
+        </ul>
+        <div class="mobile-menu-footer">
+            <button class="cta-button" onclick="openRegistrationModal('General Inquiry')" style="width: 100%; justify-content: center;">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Book Session</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- About Hero Section -->
+    <section class="about-hero" id="about-hero">
+        <div class="about-hero-content">
+            <div class="about-hero-tagline">The Essence & Purpose</div>
+            <h1>About <span class="highlight">MUGERA</span></h1>
+            <div class="about-hero-subtitle">
+                Discover the meaning behind the name, the purpose behind the mission, and the vision that drives transformative change across generations.
+            </div>
+        </div>
+    </section>
+
+    <!-- The Meaning of Mugera Section -->
+    <section class="about-section" id="meaning">
+        <div class="about-container">
+            <div class="section-title">
+                <h2>The <span class="highlight">Meaning</span> of Mugera</h2>
+            </div>
+            
+            <div class="content-block">
+                <h3>A Stream of Water</h3>
+                <p>The name Mugera originates from African roots, with its meaning - <strong>A stream of water</strong>. To me, Mugera is more than a name, it is an assignment, a mandate and an instruction – <strong>To become an endless stream of inspiration and empowerment to a people and a generation after another</strong>.</p>
+                
+                <p>Like a stream that flows continuously, nourishing everything in its path, I AM MUGERA represents a constant source of wisdom, guidance, and transformation. The stream never runs dry, always providing life-giving water to the land - just as my mission is to continuously provide life-giving inspiration to those I serve.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Understanding Section -->
+    <section class="vision-mission-section" id="understanding">
+        <div class="vision-mission-container">
+            <div class="section-title">
+                <h2 style="color: var(--white);">The <span class="highlight">Understanding</span></h2>
+            </div>
+            
+            <div class="content-block">
+                <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.125rem; text-align: center; max-width: 800px; margin: 0 auto 3rem;">
+                    In my years of passionate service to humanity, I have come to a complete understanding that; <strong>We – Humans, are very unique, beautiful and very blessed beings. We only need to be constantly reminded of these truths</strong>.
+                </p>
+                
+                <div class="vision-mission-grid">
+                    <div class="vision-card">
+                        <div class="vision-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>The Vision</h3>
+                        <p>To create a world where every individual recognizes their inherent worth, embraces their unique purpose, and lives a life of meaningful contribution and fulfillment.</p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>The Mission</h3>
+                        <p>To provide constant reminders of human potential through transformative speaking, personalized coaching, and impactful programs that reconnect people with their truth.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Brand Purpose Section -->
+    <section class="about-section" id="brand-purpose">
+        <div class="about-container">
+            <div class="section-title">
+                <h2>The <span class="highlight">Brand</span> Purpose</h2>
+            </div>
+            
+            <div class="content-block">
+                <h3>I AM MUGERA: More Than a Brand</h3>
+                <p><strong>I AM MUGERA</strong> therefore is a brand that exercises these truths. It seeks to <strong>provide scripts for a better life lived in purpose</strong>, answers to the question <strong>"Who am I to the world?"</strong> and <strong>restoration to those that think they've lost it all</strong>. Our mission spans beyond individuals, to families, organizations and communities.</p>
+                
+                <p>We believe that every person has a unique script to write for their life. Our role is to help you discover that script, refine it, and live it with purpose and passion. Whether you're an individual seeking direction, a family looking to build legacy, an organization aiming for transformative growth, or a community seeking empowerment - I AM MUGERA provides the framework for your transformation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Approach Section -->
+    <section class="approach-section" id="approach">
+        <div class="approach-container">
+            <div class="section-title">
+                <h2>Our <span class="highlight">Approach</span></h2>
+            </div>
+            
+            <div class="content-block">
+                <h3 style="text-align: center; margin-bottom: 2rem;">Modeling Excellence, Not Just Motivation</h3>
+                <p style="text-align: center; font-size: 1.125rem; max-width: 800px; margin: 0 auto 3rem;">
+                    Our approach is simple, instead of motivating you to achieve higher goals, <strong>we model you into becoming the top performer</strong>. We provide personalized scripts that translate your dreams and visions into real world applications. Through our programs we focus on the complete human figure in you, that is the <strong>physical, mental, emotional and the spiritual structure</strong>.
+                </p>
+                
+                <div class="approach-grid">
+                    <div class="approach-card">
+                        <div class="approach-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h4>Physical Structure</h4>
+                        <p>Building resilience, energy, and vitality through holistic wellness practices that sustain high performance.</p>
+                    </div>
+                    
+                    <div class="approach-card">
+                        <div class="approach-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>Mental Structure</h4>
+                        <p>Cultivating a growth mindset, strategic thinking, and cognitive frameworks for success and innovation.</p>
+                    </div>
+                    
+                    <div class="approach-card">
+                        <div class="approach-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Emotional Structure</h4>
+                        <p>Developing emotional intelligence, resilience, and authentic connection with self and others.</p>
+                    </div>
+                    
+                    <div class="approach-card">
+                        <div class="approach-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <h4>Spiritual Structure</h4>
+                        <p>Connecting with purpose, values, and the deeper meaning that drives sustainable fulfillment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="vision-mission-section" id="cta">
+        <div class="vision-mission-container" style="text-align: center;">
+            <h2 style="color: var(--white); margin-bottom: 1.5rem;">Ready to Write Your Script?</h2>
+            <p style="color: rgba(255, 255, 255, 0.9); max-width: 700px; margin: 0 auto 2rem; font-size: 1.125rem;">
+                Let's begin the journey of transforming your dreams into reality, your potential into performance, and your life into a legacy.
+            </p>
+            <button class="cta-button" onclick="openRegistrationModal('Coaching Session')" style="font-size: 1rem; padding: 0.875rem 2.5rem;">
+                <i class="fas fa-handshake"></i>
+                <span>Start Your Transformation</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-title">
+            <h2>Connect With <span class="highlight">Mugera</span></h2>
+        </div>
+        <div class="contact-container">
+            <p>Have questions about our approach? Ready to begin your transformation journey? Reach out to us.</p>
+            
+            <div class="contact-options">
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p>info.iammugera@gmail.com</p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>+254 727 211 191</p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Location</h3>
+                    <p>Nairobi, Kenya</p>
+                </div>
+                <div class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Book a Session</h3>
+                    <p>Schedule a consultation</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <a href="#" onclick="openRegistrationModal('General Inquiry'); return false;" style="color: var(--gold); text-decoration: none;">
+                            <i class="fas fa-arrow-right"></i> Book Now
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <a href="https://wa.me/254727211191?text=Hi%20Mugera,%20I'm%20interested%20in%20learning%20more%20about%20your%20approach%20and%20services" class="whatsapp-button" target="_blank">
+                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <img src="https://i.postimg.cc/02f4k9ww/signature(2).png" alt="I AM MUGERA" class="footer-signature" style="height: 40px;">
+                <div class="footer-tagline">The Endless Stream of Inspiration</div>
+                <p>Providing personalized scripts for purposeful living, answering "Who am I to the world?", and restoring hope to those who feel lost.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://whatsapp.com/channel/0029VbBQKpAJJhzWClgEGF2P" class="social-link" title="SonGa WhatsApp Channel" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="author.html">Author</a>
+                <a href="events.html">Events</a>
+                <a href="about.html">About</a>
+                <a href="index.html#communities">Communities</a>
+                <a href="#" onclick="openRegistrationModal('General Inquiry'); return false;">Booking</a>
+            </div>
+            <div class="footer-column">
+                <h3>Our Approach</h3>
+                <a href="#meaning">The Meaning of Mugera</a>
+                <a href="#understanding">Our Understanding</a>
+                <a href="#brand-purpose">Brand Purpose</a>
+                <a href="#approach">Holistic Approach</a>
+                <a href="index.html#programs">Inspired.Me Program</a>
+                <a href="index.html#current-talk">Talk Series</a>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                <p><i class="fas fa-phone"></i> +254 727 211 191</p>
+                <p><i class="fas fa-envelope"></i> info.iammugera@gmail.com</p>
+                <p><i class="fas fa-users"></i> Transformative Speaking & Coaching</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear());</script> I AM MUGERA. All rights reserved. | An Endless Stream of Inspiration & Empowerment</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">Modeling Excellence Across Physical, Mental, Emotional & Spiritual Dimensions</p>
+        </div>
+    </footer>
+
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="registrationModal">
+        <div class="registration-modal">
+            <button class="modal-close" onclick="closeRegistrationModal()">&times;</button>
+            <h2 class="modal-title" id="modalTitle">Begin Your Transformation</h2>
+            <p class="modal-subtitle" id="modalSubtitle">Fill out the form below to start your journey with Mugera</p>
+            
+            <div class="registration-form" id="registrationForm">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-user"></i> Full Name *</label>
+                    <input type="text" class="form-input" id="fullName" required placeholder="Enter your full name">
+                    <div class="form-error" id="nameError">Please enter your full name</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email *</label>
+                        <input type="email" class="form-input" id="email" required placeholder="your.email@example.com">
+                        <div class="form-error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-phone"></i> Phone *</label>
+                        <input type="tel" class="form-input" id="phone" required placeholder="+254 XXX XXX XXX">
+                        <div class="form-error" id="phoneError">Please enter a valid phone number</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-briefcase"></i> Profession/Occupation</label>
+                    <input type="text" class="form-input" id="profession" placeholder="What do you do?">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                    <input type="text" class="form-input" id="location" placeholder="City, Country">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-calendar"></i> Interest Area *</label>
+                    <select class="form-select" id="eventType" required>
+                        <option value="">Select an area of interest</option>
+                        <option value="Coaching Session">One-on-One Coaching Session</option>
+                        <option value="Inspired.Me Program">Inspired.Me Program</option>
+                        <option value="Become What You Believe Talk Series">Talk Series Registration</option>
+                        <option value="Speaking Engagement">Speaking Engagement</option>
+                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Learn More About Approach">Learn More About Our Approach</option>
+                    </select>
+                    <div class="form-error" id="eventTypeError">Please select an area of interest</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-comment"></i> What transformation are you seeking?</label>
+                    <textarea class="form-textarea" id="message" placeholder="Tell us about your goals and what you hope to achieve..."></textarea>
+                </div>
+                
+                <button type="submit" class="form-submit" onclick="submitRegistration()" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Begin Transformation Journey</span>
+                </button>
+            </div>
+            
+            <div class="form-success" id="formSuccess" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <h3>Journey Begun!</h3>
+                <p>Thank you for taking the first step. Mugera will contact you shortly to discuss your transformation path.</p>
+                <button class="cta-button" onclick="closeRegistrationModal()" style="margin-top: 1rem;">
+                    <i class="fas fa-check"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+
+        // Initialize Firebase
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initSmoothScrolling();
+            initHeaderScroll();
+        });
+
+        function initMobileMenu() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+                mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+            }
+
+            function toggleMobileMenu() {
+                mobileMenuToggle.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mobile-nav-link')) {
+                    toggleMobileMenu();
+                }
+            });
+        }
+
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        function initHeaderScroll() {
+            const header = document.getElementById('mainHeader');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+        }
+
+        function openRegistrationModal(eventType = 'General Inquiry') {
+            const modal = document.getElementById('registrationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const eventTypeSelect = document.getElementById('eventType');
+            
+            modalTitle.textContent = 'Begin Your Transformation';
+            modalSubtitle.textContent = 'Fill out the form below to start your journey with Mugera';
+            
+            if (eventType) {
+                eventTypeSelect.value = eventType;
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            clearForm();
+        }
+
+        function closeRegistrationModal() {
+            const modal = document.getElementById('registrationModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('registrationForm').style.display = 'flex';
+            document.getElementById('formSuccess').style.display = 'none';
+        }
+
+        function clearForm() {
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('profession').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('message').value = '';
+        }
+
+        async function submitRegistration() {
+            const submitBtn = document.getElementById('submitBtn');
+            const form = document.getElementById('registrationForm');
+            const successMsg = document.getElementById('formSuccess');
+            
+            const registrationData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                profession: document.getElementById('profession').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                eventType: document.getElementById('eventType').value,
+                message: document.getElementById('message').value.trim(),
+                timestamp: new Date().toISOString(),
+                status: 'pending',
+                source: 'about-page',
+                page: 'about'
+            };
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
+                
+                const registrationId = 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Save to Firebase
+                await database.ref('registrations/' + registrationId).set(registrationData);
+                
+                form.style.display = 'none';
+                successMsg.style.display = 'block';
+                
+                console.log('Registration submitted successfully from About page');
+                
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i><span>Begin Transformation Journey</span>';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error submitting registration:', error);
+                
+                alert('There was an error submitting your form. Please try again or contact us directly at info.iammugera@gmail.com');
+                
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i><span>Begin Transformation Journey</span>';
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeRegistrationModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('registrationModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('registrationModal')) {
+                closeRegistrationModal();
+            }
+        });
+    </script>
+</body>
+</html>

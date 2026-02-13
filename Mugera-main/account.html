@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
+    <title>I AM MUGERA | My Account</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    
+    <style>
+        /* ---------- SAME THEME ---------- */
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --dark-gray: #1a1a1a;
+            --light-gray: #e8e8e8;
+            --gold: #ca8a04;
+            --gold-light: #fef3c7;
+            --gold-dark: #a16207;
+            --african-brown: #8B4513;
+            --african-pattern-bg: #f5f0e6;
+            --success: #10b981;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--african-pattern-bg);
+            color: var(--black);
+            line-height: 1.6;
+        }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+
+        /* ---------- ACCOUNT HEADER ---------- */
+        .account-header {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: white;
+            padding: 3rem 1.5rem;
+            border-bottom: 4px solid transparent;
+            background-image: linear-gradient(#0a0a0a, #0a0a0a), repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 5px, var(--gold-dark) 5px, var(--gold-dark) 10px, transparent 10px, transparent 15px);
+            background-clip: padding-box, border-box;
+        }
+        .account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .account-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .account-sidebar {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(202,138,4,0.2);
+            height: fit-content;
+        }
+        .user-profile {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+        .subscription-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+        .account-nav {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        .account-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .account-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+        .account-nav a:hover, .account-nav a.active {
+            background: rgba(202,138,4,0.1);
+            color: var(--gold);
+        }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .account-main {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 8px, var(--gold-dark) 8px, var(--gold-dark) 16px) border-box;
+        }
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--black);
+        }
+
+        /* ---------- SUBSCRIPTION CARDS ---------- */
+        .current-plan {
+            background: rgba(202,138,4,0.05);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--gold);
+        }
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold-dark);
+        }
+        .plan-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--black);
+        }
+
+        /* ---------- READING PROGRESS CARDS ---------- */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .book-progress-card {
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        .book-progress-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        .book-title-small {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .progress-small-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: var(--radius-full);
+            margin: 1rem 0;
+        }
+        .progress-small-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: var(--radius-full);
+        }
+
+        /* ---------- WAITLIST CARDS ---------- */
+        .waitlist-card {
+            background: rgba(245,158,11,0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+
+        /* ---------- M-PESA PAYMENT FORM ---------- */
+        .payment-section {
+            background: linear-gradient(135deg, #f5f0e6, white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin-top: 2rem;
+        }
+        .mpesa-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-width: 500px;
+        }
+        .mpesa-input {
+            padding: 1rem;
+            border: 2px solid rgba(202,138,4,0.2);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+        }
+        .mpesa-input:focus {
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        @media (max-width: 768px) {
+            .account-grid { grid-template-columns: 1fr; }
+            .mpesa-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header style="background: white; box-shadow: var(--shadow-sm); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/Kzsb3tX6/I-AM-MUGERA.png" style="height: 45px;" alt="I AM MUGERA">
+            </a>
+            <a href="index.html#library" style="color: var(--dark-gray); text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Back to Library
+            </a>
+        </div>
+    </header>
+
+    <!-- ACCOUNT HEADER -->
+    <div class="account-header">
+        <div class="account-container">
+            <h1 class="cinzel-font" style="font-size: 2.2rem; color: white;">My Account</h1>
+            <p style="color: rgba(255,255,255,0.8); margin-top: 0.5rem;">Manage your subscription, track reading progress, and view your library</p>
+        </div>
+    </div>
+
+    <!-- ACCOUNT CONTENT -->
+    <div class="account-container" style="padding: 2rem 1.5rem;">
+        <div id="accountContent">
+            <!-- Dynamic content loaded via Firebase -->
+            <div style="text-align: center; padding: 4rem;">
+                <div class="loading-spinner" style="margin: 0 auto;"></div>
+                <p style="margin-top: 2rem;">Loading your account...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Config - YOUR EXACT CREDENTIALS
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        // ---------- GLOBAL STATE ----------
+        let currentUser = null;
+        let userData = null;
+        let publicationsWorks = {};
+        let subscriptionTiers = {};
+
+        // ---------- LOAD USER ACCOUNT ----------
+        async function loadAccount() {
+            auth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    // Redirect to login
+                    window.location.href = 'login.html?redirect=account.html';
+                    return;
+                }
+
+                currentUser = user;
+                
+                // Load user data
+                const userSnap = await database.ref(`iam-mugera/readers/${user.uid}`).once('value');
+                userData = userSnap.val() || {};
+                
+                // Load publications for reference
+                const pubsSnap = await database.ref('iam-mugera/publications/works').once('value');
+                publicationsWorks = pubsSnap.val() || {};
+                
+                // Load subscription tiers
+                const tiersSnap = await database.ref('iam-mugera/publications/subscriptionTiers').once('value');
+                subscriptionTiers = tiersSnap.val() || {};
+
+                // Render account dashboard
+                renderAccountDashboard();
+            });
+        }
+
+        // ---------- RENDER ACCOUNT DASHBOARD ----------
+        function renderAccountDashboard() {
+            const container = document.getElementById('accountContent');
+            
+            // Determine subscription status
+            const subscription = userData.subscription || { tier: null, status: 'inactive' };
+            const tierDetails = subscriptionTiers[subscription.tier] || null;
+            
+            // Get reading progress
+            const progress = userData.library?.progress || {};
+            const purchased = userData.library?.purchased || [];
+            const waitlists = userData.waitlists || [];
+
+            container.innerHTML = `
+                <div class="account-grid">
+                    <!-- Sidebar -->
+                    <div class="account-sidebar">
+                        <div class="user-profile">
+                            <div class="user-avatar-large">
+                                ${(userData.fullName || currentUser.email || 'U').charAt(0).toUpperCase()}
+                            </div>
+                            <h3 style="margin-bottom: 0.25rem;">${userData.fullName || 'Reader'}</h3>
+                            <p style="color: var(--dark-gray); font-size: 0.9rem;">${currentUser.email}</p>
+                            ${subscription.tier ? 
+                                `<span class="subscription-badge">
+                                    ${subscription.tier.toUpperCase()} MEMBER
+                                </span>` : 
+                                `<span style="display: inline-block; padding: 0.4rem 1.2rem; background: var(--light-gray); color: var(--dark-gray); border-radius: var(--radius-full); font-size: 0.85rem; margin-top: 1rem;">
+                                    FREE MEMBER
+                                </span>`
+                            }
+                        </div>
+                        
+                        <ul class="account-nav">
+                            <li><a href="#" class="active" onclick="showSection('overview', this)"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
+                            <li><a href="#" onclick="showSection('subscription', this)"><i class="fas fa-crown"></i> Subscription</a></li>
+                            <li><a href="#" onclick="showSection('library', this)"><i class="fas fa-book-open"></i> My Library</a></li>
+                            <li><a href="#" onclick="showSection('progress', this)"><i class="fas fa-chart-line"></i> Reading Progress</a></li>
+                            <li><a href="#" onclick="showSection('waitlists', this)"><i class="fas fa-bell"></i> Waitlists</a></li>
+                            <li><a href="#" onclick="showSection('settings', this)"><i class="fas fa-cog"></i> Settings</a></li>
+                        </ul>
+                        
+                        <button onclick="logout()" style="width: 100%; margin-top: 2rem; padding: 0.75rem; background: transparent; border: 2px solid var(--error); color: var(--error); border-radius: var(--radius-md); font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i> Sign Out
+                        </button>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="account-main" id="accountMainContent">
+                        ${renderOverviewSection()}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ---------- RENDER OVERVIEW SECTION ----------
+        function renderOverviewSection() {
+            const subscription = userData.subscription || { tier: null, status: 'inactive' };
+            const tierDetails = subscriptionTiers[subscription.tier] || null;
+            const progress = userData.library?.progress || {};
+            const progressCount = Object.keys(progress).length;
+            const purchasedCount = userData.library?.purchased?.length || 0;
+            const waitlistCount = userData.waitlists?.length || 0;
+
+            // Get current reading (last opened)
+            let currentReading = null;
+            let currentProgress = 0;
+            if (progressCount > 0) {
+                const entries = Object.entries(progress);
+                const lastRead = entries.sort((a,b) => 
+                    new Date(b[1].lastRead || 0) - new Date(a[1].lastRead || 0)
+                )[0];
+                
+                if (lastRead) {
+                    currentReading = publicationsWorks[lastRead[0]];
+                    currentProgress = lastRead[1].percentage || 0;
+                }
+            }
+
+            return `
+                <h2 class="section-title">Welcome back, ${userData.fullName?.split(' ')[0] || 'Reader'}!</h2>
+                
+                ${!subscription.tier ? `
+                    <div style="background: linear-gradient(135deg, rgba(202,138,4,0.1), rgba(161,98,7,0.1)); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="color: var(--gold-dark);">Unlock Premium Access</h3>
+                            <p style="color: var(--dark-gray); margin-top: 0.5rem;">Get unlimited access to all books, articles, and exclusive content.</p>
+                        </div>
+                        <button class="btn-subscribe" onclick="showSection('subscription')" style="width: auto; padding: 0.75rem 2rem;">
+                            <i class="fas fa-crown"></i> View Plans
+                        </button>
+                    </div>
+                ` : `
+                    <div class="current-plan">
+                        <span style="color: var(--dark-gray); text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">Current Plan</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                            <div>
+                                <span class="plan-name">${tierDetails?.name || subscription.tier} Membership</span>
+                                <div style="margin-top: 0.5rem;">
+                                    <span class="plan-price">${tierDetails?.price?.KSh || ''} KSh</span>
+                                    <span style="color: var(--dark-gray);">/${subscription.interval || 'month'}</span>
+                                </div>
+                            </div>
+                            <span style="padding: 0.5rem 1rem; background: var(--success); color: white; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600;">
+                                ACTIVE
+                            </span>
+                        </div>
+                        <p style="margin-top: 1rem; color: var(--dark-gray);">Next billing: ${subscription.expires ? new Date(subscription.expires).toLocaleDateString() : 'N/A'}</p>
+                    </div>
+                `}
+
+                <!-- Stats Grid -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
+                    <div style="background: white; border: 1px solid var(--light-gray); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-book-reader" style="font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem;"></i>
+                        <div style="font-size: 1.8rem; font-weight: 800;">${progressCount}</div>
+                        <div style="color: var(--dark-gray);">Books in Progress</div>
+                    </div>
+                    <div style="background: white; border: 1px solid var(--light-gray); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"></i>
+                        <div style="font-size: 1.8rem; font-weight: 800;">${purchasedCount}</div>
+                        <div style="color: var(--dark-gray);">Completed</div>
+                    </div>
+                    <div style="background: white; border: 1px solid var(--light-gray); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-bell" style="font-size: 2rem; color: #f59e0b; margin-bottom: 0.5rem;"></i>
+                        <div style="font-size: 1.8rem; font-weight: 800;">${waitlistCount}</div>
+                        <div style="color: var(--dark-gray);">Waitlists</div>
+                    </div>
+                </div>
+
+                ${currentReading ? `
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Continue Reading</h3>
+                        <div class="book-progress-card" onclick="window.location.href='reader.html?id=${Object.keys(progress).sort((a,b) => new Date(b[1].lastRead) - new Date(a[1].lastRead))[0]}'">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 80px; height: 80px; background: rgba(202,138,4,0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-book" style="font-size: 2rem; color: var(--gold);"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div class="book-title-small">${currentReading?.title || 'Untitled'}</div>
+                                    <div style="color: var(--dark-gray); font-size: 0.9rem; margin-bottom: 0.5rem;">${currentReading?.subtitle || ''}</div>
+                                    <div class="progress-small-bar">
+                                        <div class="progress-small-fill" style="width: ${currentProgress}%;"></div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                        <span style="font-size: 0.85rem;">${Math.round(currentProgress)}% complete</span>
+                                        <span style="color: var(--gold); font-size: 0.85rem;">Continue <i class="fas fa-arrow-right"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // ---------- RENDER SUBSCRIPTION SECTION ----------
+        function renderSubscriptionSection() {
+            let tiersHtml = '';
+            Object.entries(subscriptionTiers).forEach(([id, tier]) => {
+                const isRecommended = tier.recommended || id === 'premium';
+                tiersHtml += `
+                    <div class="tier-card" style="position: relative; margin-bottom: 1.5rem;">
+                        ${isRecommended ? '<div class="tier-recommended">RECOMMENDED</div>' : ''}
+                        <div class="tier-name">${tier.name}</div>
+                        <div class="tier-price">
+                            ${tier.price?.KSh ? `KSh ${tier.price.KSh}` : ''}
+                            <span>/${tier.interval || 'month'}</span>
+                        </div>
+                        <ul class="tier-features">
+                            ${tier.features ? tier.features.map(f => `<li><i class="fas fa-check-circle"></i> ${f}</li>`).join('') : ''}
+                        </ul>
+                        <button class="btn-subscribe" onclick="initiatePayment('${id}')" style="width: 100%;">
+                            ${tier.buttonText || 'Subscribe Now'}
+                        </button>
+                    </div>
+                `;
+            });
+
+            return `
+                <h2 class="section-title">Subscription Plans</h2>
+                
+                ${userData.subscription?.tier ? `
+                    <div class="current-plan">
+                        <h3 style="margin-bottom: 0.5rem;">Current Subscription</h3>
+                        <p><strong>Plan:</strong> ${userData.subscription.tier}</p>
+                        <p><strong>Status:</strong> Active until ${new Date(userData.subscription.expires).toLocaleDateString()}</p>
+                        <button onclick="cancelSubscription()" style="margin-top: 1rem; background: none; border: 2px solid var(--error); color: var(--error); padding: 0.5rem 1rem; border-radius: var(--radius-md); cursor: pointer;">
+                            Cancel Subscription
+                        </button>
+                    </div>
+                ` : ''}
+
+                <div class="tiers-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                    ${tiersHtml}
+                </div>
+
+                <!-- M-Pesa Payment Section -->
+                <div class="payment-section">
+                    <h3 style="font-family: 'Cinzel', serif; margin-bottom: 1.5rem;">Pay with M-Pesa</h3>
+                    <div class="mpesa-form" id="mpesaForm">
+                        <input type="text" class="mpesa-input" id="mpesaPhone" placeholder="Phone Number (e.g. 0722123456)" required>
+                        <select class="mpesa-input" id="mpesaTier">
+                            <option value="">Select Plan</option>
+                            ${Object.entries(subscriptionTiers).map(([id, tier]) => 
+                                `<option value="${id}">${tier.name} - KSh ${tier.price?.KSh || ''}/${tier.interval}</option>`
+                            ).join('')}
+                        </select>
+                        <button onclick="processMpesaPayment()" style="grid-column: span 2; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 1rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;">
+                            <i class="fab fa-whatsapp"></i> Pay with M-Pesa
+                        </button>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--dark-gray); margin-top: 1rem;">
+                        You will receive an STK push prompt on your phone. Enter your M-Pesa PIN to complete payment.
+                    </p>
+                </div>
+            `;
+        }
+
+        // ---------- RENDER LIBRARY SECTION ----------
+        function renderLibrarySection() {
+            const purchased = userData.library?.purchased || [];
+            const premium = userData.library?.premium || [];
+            const saved = userData.library?.saved || [];
+
+            let purchasedHtml = '';
+            purchased.forEach(item => {
+                const work = publicationsWorks[item.workId];
+                if (!work) return;
+                purchasedHtml += `
+                    <div class="book-progress-card" onclick="window.location.href='reader.html?id=${item.workId}'">
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="width: 60px; height: 60px; background: rgba(202,138,4,0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-book" style="font-size: 1.5rem; color: var(--gold);"></i>
+                            </div>
+                            <div>
+                                <div class="book-title-small">${work.title || 'Untitled'}</div>
+                                <div style="color: var(--success); font-size: 0.85rem; margin-top: 0.25rem;">
+                                    <i class="fas fa-check-circle"></i> Purchased
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <h2 class="section-title">My Library</h2>
+                
+                <h3 style="margin: 2rem 0 1rem;">Purchased Books</h3>
+                <div class="progress-grid">
+                    ${purchasedHtml || '<p style="color: var(--dark-gray);">No purchased books yet.</p>'}
+                </div>
+
+                ${premium.length > 0 ? `
+                    <h3 style="margin: 2rem 0 1rem;">Premium Access</h3>
+                    <div class="progress-grid">
+                        ${premium.map(id => {
+                            const work = publicationsWorks[id];
+                            if (!work) return '';
+                            return `
+                                <div class="book-progress-card" onclick="window.location.href='reader.html?id=${id}'">
+                                    <div class="book-title-small">${work.title}</div>
+                                    <div style="color: var(--purple); font-size: 0.85rem; margin-top: 0.25rem;">
+                                        <i class="fas fa-crown"></i> Premium
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // ---------- RENDER PROGRESS SECTION ----------
+        function renderProgressSection() {
+            const progress = userData.library?.progress || {};
+            
+            let progressHtml = '';
+            Object.entries(progress).forEach(([workId, data]) => {
+                const work = publicationsWorks[workId];
+                if (!work) return;
+                
+                progressHtml += `
+                    <div class="book-progress-card" onclick="window.location.href='reader.html?id=${workId}'">
+                        <div class="book-title-small">${work.title || 'Untitled'}</div>
+                        <div style="color: var(--dark-gray); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                            Last read: ${data.lastRead ? new Date(data.lastRead).toLocaleDateString() : 'N/A'}
+                        </div>
+                        <div class="progress-small-bar">
+                            <div class="progress-small-fill" style="width: ${data.percentage || 0}%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                            <span style="font-size: 0.85rem; font-weight: 600;">${Math.round(data.percentage || 0)}% complete</span>
+                            <span style="color: var(--gold);">Continue Reading →</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <h2 class="section-title">Reading Progress</h2>
+                
+                ${progressHtml ? `
+                    <div class="progress-grid">
+                        ${progressHtml}
+                    </div>
+                ` : `
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-book-open" style="font-size: 3rem; color: var(--light-gray); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--dark-gray);">You haven't started reading any books yet.</p>
+                        <a href="index.html#library" class="btn-subscribe" style="display: inline-block; margin-top: 1.5rem;">
+                            Browse Library
+                        </a>
+                    </div>
+                `}
+            `;
+        }
+
+        // ---------- RENDER WAITLISTS SECTION ----------
+        function renderWaitlistsSection() {
+            const waitlists = userData.waitlists || [];
+            
+            let waitlistHtml = '';
+            waitlists.forEach(item => {
+                const work = publicationsWorks[item.publicationId] || { title: item.publicationTitle || 'Unknown Publication' };
+                
+                waitlistHtml += `
+                    <div class="waitlist-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">${work.title}</h4>
+                                <p style="color: var(--dark-gray); font-size: 0.9rem;">
+                                    Joined: ${new Date(item.timestamp).toLocaleDateString()}
+                                </p>
+                                <span style="display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(245,158,11,0.2); color: #b45309; border-radius: var(--radius-full); font-size: 0.75rem;">
+                                    ${item.interest || 'General Interest'}
+                                </span>
+                            </div>
+                            <span style="color: var(--dark-gray); font-size: 0.85rem;">Waiting</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <h2 class="section-title">My Waitlists</h2>
+                
+                ${waitlistHtml || `
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-bell" style="font-size: 3rem; color: var(--light-gray); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--dark-gray);">You haven't joined any waitlists yet.</p>
+                        <a href="index.html#library" class="btn-subscribe" style="display: inline-block; margin-top: 1.5rem;">
+                            Browse Coming Soon
+                        </a>
+                    </div>
+                `}
+            `;
+        }
+
+        // ---------- RENDER SETTINGS SECTION ----------
+        function renderSettingsSection() {
+            return `
+                <h2 class="section-title">Account Settings</h2>
+                
+                <form id="profileForm" onsubmit="updateProfile(event)">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Full Name</label>
+                        <input type="text" class="mpesa-input" id="profileName" value="${userData.fullName || ''}" style="width: 100%; max-width: 400px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Phone Number</label>
+                        <input type="tel" class="mpesa-input" id="profilePhone" value="${userData.phone || ''}" style="width: 100%; max-width: 400px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Profession</label>
+                        <input type="text" class="mpesa-input" id="profileProfession" value="${userData.profession || ''}" style="width: 100%; max-width: 400px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Location</label>
+                        <input type="text" class="mpesa-input" id="profileLocation" value="${userData.location || ''}" style="width: 100%; max-width: 400px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="emailNotifications" ${userData.preferences?.emailNotifications ? 'checked' : ''}>
+                            <span>Receive email notifications about new releases and updates</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-subscribe" style="width: auto; padding: 0.75rem 2rem;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </form>
+                
+                <hr style="margin: 3rem 0; border: none; border-top: 1px solid var(--light-gray);">
+                
+                <h3 style="color: var(--error); margin-bottom: 1rem;">Danger Zone</h3>
+                <button onclick="deleteAccount()" style="background: none; border: 2px solid var(--error); color: var(--error); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-trash"></i> Delete Account
+                </button>
+            `;
+        }
+
+        // ---------- SECTION SWITCHING ----------
+        window.showSection = function(section, element) {
+            // Update active nav
+            document.querySelectorAll('.account-nav a').forEach(el => {
+                el.classList.remove('active');
+            });
+            if (element) element.classList.add('active');
+            
+            // Render section
+            const mainContent = document.getElementById('accountMainContent');
+            
+            switch(section) {
+                case 'overview':
+                    mainContent.innerHTML = renderOverviewSection();
+                    break;
+                case 'subscription':
+                    mainContent.innerHTML = renderSubscriptionSection();
+                    break;
+                case 'library':
+                    mainContent.innerHTML = renderLibrarySection();
+                    break;
+                case 'progress':
+                    mainContent.innerHTML = renderProgressSection();
+                    break;
+                case 'waitlists':
+                    mainContent.innerHTML = renderWaitlistsSection();
+                    break;
+                case 'settings':
+                    mainContent.innerHTML = renderSettingsSection();
+                    break;
+            }
+        };
+
+        // ---------- PROFILE UPDATE ----------
+        window.updateProfile = async function(e) {
+            e.preventDefault();
+            
+            try {
+                await database.ref(`iam-mugera/readers/${currentUser.uid}`).update({
+                    fullName: document.getElementById('profileName').value,
+                    phone: document.getElementById('profilePhone').value,
+                    profession: document.getElementById('profileProfession').value,
+                    location: document.getElementById('profileLocation').value,
+                    preferences: {
+                        emailNotifications: document.getElementById('emailNotifications').checked
+                    }
+                });
+                
+                alert('Profile updated successfully!');
+                
+                // Reload user data
+                const userSnap = await database.ref(`iam-mugera/readers/${currentUser.uid}`).once('value');
+                userData = userSnap.val();
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile.');
+            }
+        };
+
+        // ---------- M-PESA PAYMENT ----------
+        window.initiatePayment = function(tierId) {
+            document.getElementById('mpesaTier').value = tierId;
+            document.getElementById('mpesaForm').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.processMpesaPayment = async function() {
+            const phone = document.getElementById('mpesaPhone').value;
+            const tierId = document.getElementById('mpesaTier').value;
+            
+            if (!phone || !tierId) {
+                alert('Please enter phone number and select a plan.');
+                return;
+            }
+
+            const tier = subscriptionTiers[tierId];
+            if (!tier) return;
+
+            const button = event.target;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                // Simulate M-Pesa STK push (in production, call your backend)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Create subscription record
+                const subscriptionData = {
+                    tier: tierId,
+                    status: 'active',
+                    startDate: new Date().toISOString(),
+                    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    paymentMethod: 'M-Pesa',
+                    phone: phone,
+                    amount: tier.price?.KSh || 0,
+                    currency: 'KSh',
+                    autoRenew: true
+                };
+
+                await database.ref(`iam-mugera/readers/${currentUser.uid}/subscription`).set(subscriptionData);
+                
+                // Also create subscription record in subscriptions node
+                await database.ref(`subscriptions/sub_${Date.now()}`).set({
+                    userId: currentUser.uid,
+                    ...subscriptionData
+                });
+
+                alert('Payment successful! Your subscription is now active.');
+                
+                // Reload user data
+                const userSnap = await database.ref(`iam-mugera/readers/${currentUser.uid}`).once('value');
+                userData = userSnap.val();
+                
+                // Refresh subscription section
+                showSection('subscription', document.querySelector('.account-nav a[href="#"]:nth-child(2)'));
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment failed. Please try again.');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fab fa-whatsapp"></i> Pay with M-Pesa';
+            }
+        };
+
+        // ---------- CANCEL SUBSCRIPTION ----------
+        window.cancelSubscription = async function() {
+            if (!confirm('Are you sure you want to cancel your subscription? You will lose access to premium content at the end of your billing period.')) {
+                return;
+            }
+
+            try {
+                await database.ref(`iam-mugera/readers/${currentUser.uid}/subscription/cancelAtPeriodEnd`).set(true);
+                alert('Subscription will be cancelled at the end of your billing period.');
+            } catch (error) {
+                console.error('Error cancelling subscription:', error);
+                alert('Failed to cancel subscription.');
+            }
+        };
+
+        // ---------- DELETE ACCOUNT ----------
+        window.deleteAccount = async function() {
+            if (!confirm('WARNING: This will permanently delete your account and all your data. This action cannot be undone. Continue?')) {
+                return;
+            }
+
+            try {
+                await database.ref(`iam-mugera/readers/${currentUser.uid}`).remove();
+                await currentUser.delete();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Failed to delete account. Please contact support.');
+            }
+        };
+
+        // ---------- LOGOUT ----------
+        window.logout = function() {
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        };
+
+        // ---------- INIT ----------
+        loadAccount();
+    </script>
+</body>
+</html>
